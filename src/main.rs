@@ -3,15 +3,15 @@
 extern crate docopt;
 extern crate rustc_serialize;
 
-mod args;
-mod cargo;
-mod cmd_build;
-mod cmd_clean;
-mod cmd_module;
-mod cmd_new;
-mod cmd_publish;
-mod cmd_run;
-mod flag_version;
+pub mod args;
+pub mod cargo;
+pub mod cmd_build;
+pub mod cmd_clean;
+pub mod cmd_module;
+pub mod cmd_new;
+pub mod cmd_publish;
+pub mod cmd_run;
+pub mod flag_version;
 
 use args::{Args, process_args, USAGE};
 
