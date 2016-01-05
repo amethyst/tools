@@ -2,6 +2,7 @@
 
 use docopt::Docopt;
 
+/// The program usage string.
 pub const USAGE: &'static str =
 "Command-line interface for working with Amethyst.
 
