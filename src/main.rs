@@ -1,8 +1,8 @@
 //! Amethyst-CLI is a command-line interface for working with the [Amethyst][am]
 //! game engine. This project is a *work in progress* and very incomplete;
 //! pardon the dust!
-
-[am]: https://github.com/ebkalderon/amethyst
+//!
+//! [am]: https://github.com/ebkalderon/amethyst
 
 extern crate docopt;
 extern crate rustc_serialize;
