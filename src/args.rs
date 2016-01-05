@@ -24,7 +24,7 @@ Commands:
     build       Compile the current project
     clean       Remove the target directory
     module      Add/remove/modify engine systems and features
-    new         Create a new amethyst project
+    new         Create a new Amethyst game project
     publish     Compress and deploy the project as a distributable program
     run         Build and execute the application
 
