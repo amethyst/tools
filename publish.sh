@@ -3,7 +3,7 @@
 # Publish the book and the API documentation to the `gh-pages' branch.
 
 mkdir web
-cp -r target/doc/amethyst/* web/
+cp -r target/doc/* web/
 
 sudo pip install ghp-import
 ghp-import -n web/
