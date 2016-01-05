@@ -17,3 +17,4 @@ path = "src/main.rs"
 [dependencies]
 docopt = "0.6"
 rustc-serialize = "0.3"
+toml = "0.1"
