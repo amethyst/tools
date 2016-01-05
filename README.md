@@ -1,4 +1,4 @@
-# Amethyst - CLI Tool
+# amethyst_cli
 
 [![Build Status][s1]][tc]
 
