@@ -38,9 +38,9 @@ use args::{Args, process_args, USAGE};
 /// }
 /// ```
 macro_rules! execute {
-    ($args:expr, $cmd:ident) => (
+    ($args:expr, $cmd:ident $(,$option:ident)*) => (
         if $args.$cmd {
-            match $cmd::execute(&$args.arg_args) {
+            match $cmd::execute($(&$args.$option),*) {
                 Ok(_v) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);
@@ -55,12 +55,12 @@ macro_rules! execute {
 fn main() {
     let arguments: Args = process_args();
 
-    execute!(arguments, cmd_build);
-    execute!(arguments, cmd_clean);
-    execute!(arguments, cmd_module);
-    execute!(arguments, cmd_new);
-    execute!(arguments, cmd_publish);
-    execute!(arguments, cmd_run);
+    execute!(arguments, cmd_build, arg_args);
+    execute!(arguments, cmd_clean, arg_args);
+    execute!(arguments, cmd_module, arg_args);
+    execute!(arguments, cmd_new, arg_args);
+    execute!(arguments, cmd_publish, arg_args);
+    execute!(arguments, cmd_run, arg_args);
     execute!(arguments, flag_version);
 
     print!("{}", USAGE);
