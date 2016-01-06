@@ -16,12 +16,12 @@ mod subcmds;
 /// corresponding action.
 ///
 /// ```
-/// execute_if!(matches, say_blah);
+/// execute_if!(matches, say-blah);
 /// ```
 /// is the same as:
 /// ```
-/// if let Some(matches) = matches.subcommand_matches("say_blah") {
-///     match subcmds::say_blah::execute(matches) {
+/// if let Some(matches) = matches.subcommand_matches("say-blah") {
+///     match subcmds::say-blah::execute(matches) {
 ///         Ok(_v) => std::process::exit(0),
 ///         Err(e) => {
 ///             println!("Error: {}", e);
