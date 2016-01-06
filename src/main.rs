@@ -55,19 +55,24 @@ fn main() {
                           "-v --verbose... 'Use verbose output'
                            -q --quiet...   'No output printed to stdout'")
                       .subcommand(SubCommand::with_name("build")
-                                             .about("Compile the current project")
+                                             .about("Compiles the current project and all of its dependencies")
                                              .arg_from_usage("--release 'Build artifacts in release mode, with optimizations'"))
                       .subcommand(SubCommand::with_name("clean")
-                                             .about("Remove the target directory")
+                                             .about("Removes the target directory")
                                              .arg_from_usage("--release 'Whether or not to clean release artifacts'"))
+                      .subcommand(SubCommand::with_name("deploy")
+                                             .about("Compresses and deploys the project as a distributable program"))
                       .subcommand(SubCommand::with_name("module")
-                                             .about("Add/remove engine subsystems"))
+                                             .about("Adds or removes engine subsystems"))
+                      .subcommand(SubCommand::with_name("run")
+                                             .about("Runs the main binary of the game")
+                                             .arg_from_usage("--release 'Build artifacts in release mode, with optimizations'"))
                       .get_matches();
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
+    execute_if!(matches, deploy);
     execute_if!(matches, module);
     execute_if!(matches, new);
-    execute_if!(matches, publish);
     execute_if!(matches, run);
 }
