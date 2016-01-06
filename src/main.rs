@@ -4,20 +4,13 @@
 //!
 //! [am]: https://github.com/ebkalderon/amethyst
 
-extern crate docopt;
-extern crate rustc_serialize;
+#[macro_use]
+extern crate clap;
 
-pub mod args;
-pub mod cargo;
-pub mod cmd_build;
-pub mod cmd_clean;
-pub mod cmd_module;
-pub mod cmd_new;
-pub mod cmd_publish;
-pub mod cmd_run;
-pub mod flag_version;
+use clap::{App, AppSettings, Arg, SubCommand};
 
-use args::{Args, process_args, USAGE};
+mod cargo;
+mod subcmds;
 
 /// Check if a command-line argument was used, and if so, perform the
 /// corresponding action.
@@ -37,11 +30,11 @@ use args::{Args, process_args, USAGE};
 ///     }
 /// }
 /// ```
-macro_rules! execute {
-    ($args:expr, $cmd:ident $(,$option:ident)*) => (
-        if $args.$cmd {
-            match $cmd::execute($(&$args.$option),*) {
-                Ok(_v) => std::process::exit(0),
+macro_rules! execute_if {
+    ($matches:expr, $cmd:ident) => (
+        if let Some(matches) = $matches.subcommand_matches("$cmd") {
+            match subcmds::$cmd::execute(matches) {
+                Ok(_) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);
                     std::process::exit(1);
@@ -53,15 +46,28 @@ macro_rules! execute {
 
 /// The main function.
 fn main() {
-    let arguments: Args = process_args();
+    let matches = App::new("amethyst_cli")
+                      .setting(AppSettings::ArgRequiredElseHelp)
+                      .setting(AppSettings::GlobalVersion)
+                      .version(&crate_version!()[..])
+                      .about("Command-line interface for working with Amethyst")
+                      .args_from_usage(
+                          "-v --verbose... 'Use verbose output'
+                           -q --quiet...   'No output printed to stdout'")
+                      .subcommand(SubCommand::with_name("build")
+                                             .about("Compile the current project")
+                                             .arg_from_usage("--release 'Build artifacts in release mode, with optimizations'"))
+                      .subcommand(SubCommand::with_name("clean")
+                                             .about("Remove the target directory")
+                                             .arg_from_usage("--release 'Whether or not to clean release artifacts'"))
+                      .subcommand(SubCommand::with_name("module")
+                                             .about("Add/remove engine subsystems"))
+                      .get_matches();
 
-    execute!(arguments, cmd_build, arg_args);
-    execute!(arguments, cmd_clean, arg_args);
-    execute!(arguments, cmd_module, arg_args);
-    execute!(arguments, cmd_new, arg_args);
-    execute!(arguments, cmd_publish, arg_args);
-    execute!(arguments, cmd_run, arg_args);
-    execute!(arguments, flag_version);
-
-    print!("{}", USAGE);
+    execute_if!(matches, build);
+    execute_if!(matches, clean);
+    execute_if!(matches, module);
+    execute_if!(matches, new);
+    execute_if!(matches, publish);
+    execute_if!(matches, run);
 }
