@@ -12,16 +12,16 @@ use clap::{App, AppSettings, Arg, SubCommand};
 mod cargo;
 mod subcmds;
 
-/// Check if a command-line argument was used, and if so, perform the
+/// Ask clap if a given command-line argument was used, and if so, perform the
 /// corresponding action.
 ///
 /// ```
-/// execute!(arguments, cmd_say_blah);
+/// execute_if!(matches, say_blah);
 /// ```
 /// is the same as:
 /// ```
-/// if arguments.cmd_say_blah {
-///     match cmd_say_blah::execute(argmuents.arg_args) {
+/// if let Some(matches) = matches.subcommand_matches("say_blah") {
+///     match subcmds::say_blah::execute(matches) {
 ///         Ok(_v) => std::process::exit(0),
 ///         Err(e) => {
 ///             println!("Error: {}", e);
