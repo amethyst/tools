@@ -4,31 +4,23 @@
 //!
 //! [am]: https://github.com/ebkalderon/amethyst
 
-extern crate docopt;
-extern crate rustc_serialize;
+#[macro_use]
+extern crate clap;
+extern crate zip;
 
-pub mod args;
-pub mod cargo;
-pub mod cmd_build;
-pub mod cmd_clean;
-pub mod cmd_module;
-pub mod cmd_new;
-pub mod cmd_publish;
-pub mod cmd_run;
-pub mod flag_version;
+mod cargo;
+mod subcmds;
 
-use args::{Args, process_args, USAGE};
-
-/// Check if a command-line argument was used, and if so, perform the
+/// Ask clap if a given command-line argument was used, and if so, perform the
 /// corresponding action.
 ///
 /// ```
-/// execute!(arguments, cmd_say_blah);
+/// execute_if!(matches, say-blah);
 /// ```
 /// is the same as:
 /// ```
-/// if arguments.cmd_say_blah {
-///     match cmd_say_blah::execute(argmuents.arg_args) {
+/// if let Some(matches) = matches.subcommand_matches("say-blah") {
+///     match subcmds::say-blah::execute(matches) {
 ///         Ok(_v) => std::process::exit(0),
 ///         Err(e) => {
 ///             println!("Error: {}", e);
@@ -37,11 +29,11 @@ use args::{Args, process_args, USAGE};
 ///     }
 /// }
 /// ```
-macro_rules! execute {
-    ($args:expr, $cmd:ident $(,$option:ident)*) => (
-        if $args.$cmd {
-            match $cmd::execute($(&$args.$option),*) {
-                Ok(_v) => std::process::exit(0),
+macro_rules! execute_if {
+    ($matches:expr, $term:ident) => (
+        if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
+            match subcmds::$term::execute(matches) {
+                Ok(_) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);
                     std::process::exit(1);
@@ -53,15 +45,35 @@ macro_rules! execute {
 
 /// The main function.
 fn main() {
-    let arguments: Args = process_args();
+    let matches = clap_app!(amethyst_cli =>
+        (version: &crate_version!()[..])
+        (about: "Command-line interface for working with Amethyst")
+        (@setting ArgRequiredElseHelp)
+        (@setting GlobalVersion)
+        (@arg verbose: -v --verbose +global "Use verbose output")
+        (@arg quiet: -q --quiet +global "No output printed to stdout")
+        (@subcommand build =>
+            (about: "Compiles the current project and all of its dependencies")
+            (@arg release: --release "Build artifacts in release mode, with optimizations"))
+        (@subcommand clean =>
+            (about: "Removes the target directory")
+            (@arg release: --release "Whether or not to clean release artifacts"))
+        (@subcommand deploy =>
+            (about: "Compresses and deploys the project as a distributable program"))
+        (@subcommand module =>
+            (about: "Adds or removes engine subsystems"))
+        (@subcommand new =>
+            (about: "Creates a new Amethyst game project")
+            (@arg path: +required "Relative path to the project folder"))
+        (@subcommand run =>
+            (about: "Runs the main binary of the game")
+            (@arg release: --release "Build artifacts in release mode, with optimizations"))
+        ).get_matches();
 
-    execute!(arguments, cmd_build, arg_args);
-    execute!(arguments, cmd_clean, arg_args);
-    execute!(arguments, cmd_module, arg_args);
-    execute!(arguments, cmd_new, arg_args);
-    execute!(arguments, cmd_publish, arg_args);
-    execute!(arguments, cmd_run, arg_args);
-    execute!(arguments, flag_version);
-
-    print!("{}", USAGE);
+    execute_if!(matches, build);
+    execute_if!(matches, clean);
+    execute_if!(matches, deploy);
+    execute_if!(matches, module);
+    execute_if!(matches, new);
+    execute_if!(matches, run);
 }

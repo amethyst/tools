@@ -1,16 +1,14 @@
 language: rust
 
 rust:
+    - beta
     - nightly
     - stable
 
-script:
-    - cargo doc --no-deps
-    - cargo build -v
-
 sudo: true
 
-after_success: |
-    [ $TRAVIS_BRANCH = master ] &&
-    [ $TRAVIS_PULL_REQUEST = false ] &&
-    ./publish.sh
+script:
+    - cargo build -v
+
+after_success:
+    ./tests.sh

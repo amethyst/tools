@@ -1,4 +1,4 @@
-# amethyst_cli
+# Amethyst-CLI
 
 [![Build Status][s1]][tc] [![GPL3 License][s2]][gl]
 
