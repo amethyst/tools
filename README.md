@@ -15,7 +15,7 @@ This project is a *work in progress* and very incomplete; pardon the dust!
 
 ## Usage
 
-The CLI interface is intentionally very similar to [Cargo][ca]: so it is easily
+The CLI interface is intentionally very similar to [Cargo][ca], so it is easily
 intelligible to Rustaceans. Unfortunately, it is very limited at the moment in
 terms of features. Below are the subcommands ~~hacked together~~ implemented so
 far.
