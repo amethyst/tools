@@ -7,8 +7,6 @@
 #[macro_use]
 extern crate clap;
 
-use clap::{App, AppSettings, Arg, SubCommand};
-
 mod cargo;
 mod subcmds;
 
@@ -31,9 +29,9 @@ mod subcmds;
 /// }
 /// ```
 macro_rules! execute_if {
-    ($matches:expr, $cmd:ident) => (
-        if let Some(matches) = $matches.subcommand_matches("$cmd") {
-            match subcmds::$cmd::execute(matches) {
+    ($matches:expr, $term:ident) => (
+        if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
+            match subcmds::$term::execute(matches) {
                 Ok(_) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);
@@ -46,28 +44,27 @@ macro_rules! execute_if {
 
 /// The main function.
 fn main() {
-    let matches = App::new("amethyst_cli")
-                      .setting(AppSettings::ArgRequiredElseHelp)
-                      .setting(AppSettings::GlobalVersion)
-                      .version(&crate_version!()[..])
-                      .about("Command-line interface for working with Amethyst")
-                      .args_from_usage(
-                          "-v --verbose... 'Use verbose output'
-                           -q --quiet...   'No output printed to stdout'")
-                      .subcommand(SubCommand::with_name("build")
-                                             .about("Compiles the current project and all of its dependencies")
-                                             .arg_from_usage("--release 'Build artifacts in release mode, with optimizations'"))
-                      .subcommand(SubCommand::with_name("clean")
-                                             .about("Removes the target directory")
-                                             .arg_from_usage("--release 'Whether or not to clean release artifacts'"))
-                      .subcommand(SubCommand::with_name("deploy")
-                                             .about("Compresses and deploys the project as a distributable program"))
-                      .subcommand(SubCommand::with_name("module")
-                                             .about("Adds or removes engine subsystems"))
-                      .subcommand(SubCommand::with_name("run")
-                                             .about("Runs the main binary of the game")
-                                             .arg_from_usage("--release 'Build artifacts in release mode, with optimizations'"))
-                      .get_matches();
+    let matches = clap_app!(amethyst_cli =>
+        (version: &crate_version!()[..])
+        (about: "Command-line interface for working with Amethyst")
+        (@setting ArgRequiredElseHelp)
+        (@setting GlobalVersion)
+        (@arg verbose: -v --verbose +global "Use verbose output")
+        (@arg quiet: -q --quiet +global "No output printed to stdout")
+        (@subcommand build =>
+            (about: "Compiles the current project and all of its dependencies")
+            (@arg release: --release "Build artifacts in release mode, with optimizations"))
+        (@subcommand clean =>
+            (about: "Removes the target directory")
+            (@arg release: --release "Whether or not to clean release artifacts"))
+        (@subcommand deploy =>
+            (about: "Compresses and deploys the project as a distributable program"))
+        (@subcommand module =>
+            (about: "Adds or removes engine subsystems"))
+        (@subcommand run =>
+            (about: "Runs the main binary of the game")
+            (@arg release: --release "Build artifacts in release mode, with optimizations"))
+        ).get_matches();
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
