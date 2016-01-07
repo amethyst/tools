@@ -52,8 +52,8 @@ And no, you're not dreaming. The `--release` flag doesn't work yet.
 #### clean
 
 Removes the `target` directory. Again, just like in Cargo. One day, this will
-have switches whether or not to clear out the precompiled script or shader
-program bytecode.
+have switches whether or not to clear out said precompiled scripts or cached
+shader program bytecode.
 
 #### run
 
