@@ -31,7 +31,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
 
     }
 
-    Ok(()) 
+    Ok(())
 }
 
 fn sanitize_filename(filename: &str) -> path::PathBuf {
@@ -41,10 +41,10 @@ fn sanitize_filename(filename: &str) -> path::PathBuf {
     };
 
     path::Path::new(no_null_filename)
-               .components()
-               .filter(|component| *component != path::Component::ParentDir)
-               .fold(path::PathBuf::new(), |mut path, ref cur| {
-                   path.push(cur.as_os_str());
-                   path
-               })
+        .components()
+        .filter(|component| *component != path::Component::ParentDir)
+        .fold(path::PathBuf::new(), |mut path, ref cur| {
+            path.push(cur.as_os_str());
+            path
+        })
 }

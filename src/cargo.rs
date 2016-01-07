@@ -4,7 +4,7 @@
 /// Cargo couldn't be run.
 pub fn call(args: Vec<&str>) -> Option<&'static str> {
     use std::process::Command;
-    
+
     let mut command = Command::new("cargo");
 
     for arg in args {
@@ -19,9 +19,7 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
             print!("{}", String::from_utf8_lossy(&text.stdout));
             print!("{}", String::from_utf8_lossy(&text.stderr));
             None
-        },
-        None => {
-            Some("Failed to run Cargo!")
-        },
+        }
+        None => Some("Failed to run Cargo!"),
     }
 }
