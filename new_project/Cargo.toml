@@ -1,7 +1,0 @@
-[package]
-name = "new_project"
-version = "0.1.0"
-authors = ["Your Name <yourname@youremail.com>"]
-
-[dependencies]
-amethyst = "*"

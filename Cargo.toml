@@ -17,3 +17,4 @@ path = "src/main.rs"
 [dependencies]
 clap = "1.5.5"
 toml = "0.1"
+zip = "0.1.15"

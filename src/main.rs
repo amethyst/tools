@@ -6,6 +6,7 @@
 
 #[macro_use]
 extern crate clap;
+extern crate zip;
 
 mod cargo;
 mod subcmds;
@@ -61,6 +62,9 @@ fn main() {
             (about: "Compresses and deploys the project as a distributable program"))
         (@subcommand module =>
             (about: "Adds or removes engine subsystems"))
+        (@subcommand new =>
+            (about: "Creates a new Amethyst game project")
+            (@arg path: +required "Relative path to the project folder"))
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
