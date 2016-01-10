@@ -15,7 +15,7 @@ This project is a *work in progress* and very incomplete; pardon the dust!
 
 ## Usage
 
-The CLI interface is intentionally very similar to [Cargo][ca]: so it is easily
+The CLI interface is intentionally very similar to [Cargo][ca], so it is easily
 intelligible to Rustaceans. Unfortunately, it is very limited at the moment in
 terms of features. Below are the subcommands ~~hacked together~~ implemented so
 far.
@@ -83,6 +83,6 @@ Amethyst is an open-source project that values community contribution. Pull
 requests are welcome!
 
 We assume you have granted non-exclusive right to your source code under the
-[MIT license][ml] and you have processed your code with `rustfmt` prior to
+[GNU General Public License 3.0][gl] and you have processed your code with `rustfmt` prior to
 submission. If you want to be known as an author, please add your name to the
 AUTHORS.md file in the pull request.
