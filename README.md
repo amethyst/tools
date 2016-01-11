@@ -1,10 +1,13 @@
 # Amethyst-CLI
 
-[![Build Status][s1]][tc] [![GPL3 License][s2]][gl]
+[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl]
 
 [s1]: https://api.travis-ci.org/ebkalderon/amethyst_cli.svg
-[s2]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
+[s2]: https://img.shields.io/badge/crates.io-0.1.2-orange.svg
+[s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
 
+[tc]: https://travis-ci.org/ebkalderon/amethyst/
+[ci]: https://crates.io/crates/amethyst/
 [tc]: https://travis-ci.org/ebkalderon/amethyst_cli
 [gl]: https://github.com/ebkalderon/amethyst_cli/blob/master/COPYING
 
