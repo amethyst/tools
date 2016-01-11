@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 ()
+
+* Update template project's `main.rs` to eliminate unused variable warning
+
 ## 0.1.1 (07b34e75dc6bd87fd5a03cb31841ea802e95d392)
 
 * Update included `main.rs` in the template project to API version 0.1.3
