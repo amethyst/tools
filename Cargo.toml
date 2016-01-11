@@ -16,5 +16,4 @@ path = "src/main.rs"
 
 [dependencies]
 clap = "1.5.5"
-toml = "0.1"
 zip = { version = "0.1.15", default-features = false }
