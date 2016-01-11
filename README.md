@@ -6,9 +6,8 @@
 [s2]: https://img.shields.io/badge/crates.io-0.1.2-orange.svg
 [s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
 
-[tc]: https://travis-ci.org/ebkalderon/amethyst/
-[ci]: https://crates.io/crates/amethyst/
-[tc]: https://travis-ci.org/ebkalderon/amethyst_cli
+[tc]: https://travis-ci.org/ebkalderon/amethyst_cli/
+[ci]: https://crates.io/crates/amethyst_cli/
 [gl]: https://github.com/ebkalderon/amethyst_cli/blob/master/COPYING
 
 Command-line interface for creating and deploying [Amethyst][am] game projects.
