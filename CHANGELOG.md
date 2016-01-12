@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+* Do not print to stdout when extracting the template project files
+
 ## 0.1.2
 
 * Update template project's `main.rs` to eliminate unused variable warning

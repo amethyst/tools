@@ -20,7 +20,6 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
         let outpath = base.join(sanitize_filename(file.name()));
-        println!("{}", outpath.display());
 
         if (&*file.name()).ends_with("/") {
             fs::create_dir_all(&outpath).unwrap();
