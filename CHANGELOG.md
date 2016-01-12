@@ -3,6 +3,7 @@
 ## 0.1.3
 
 * Do not print to stdout when extracting the template project files
+* Eliminate all unused variable warnings
 
 ## 0.1.2
 

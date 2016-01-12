@@ -5,7 +5,7 @@ use clap::ArgMatches;
 use cargo;
 
 /// Builds and executes the application.
-pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
+pub fn execute(_matches: &ArgMatches) -> Result<(), &'static str> {
     let error = cargo::call(vec!["run", "--color=always"]);
 
     match error {
