@@ -1,6 +1,6 @@
 [package]
 name = "amethyst_cli"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Command-line interface for managing Amethyst projects"
 keywords = ["game", "engine", "cli", "tool", "amethyst"]

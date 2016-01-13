@@ -3,7 +3,7 @@
 /// Executes Cargo with the provided arguments. Returns a failure string if
 /// Cargo couldn't be run.
 pub fn call(args: Vec<&str>) -> Option<&'static str> {
-    use std::process::Command;
+    use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");
 
@@ -11,7 +11,8 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
         command.arg(arg);
     }
 
-    let output = command.output()
+    let output = command.stdout(Stdio::inherit())
+                        .output()
                         .ok();
 
     match output {

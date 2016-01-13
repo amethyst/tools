@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+* Display Cargo's stdout in real-time, not when the process exits (fix issue #1)
+
 ## 0.1.3
 
 * Do not print to stdout when extracting the template project files
