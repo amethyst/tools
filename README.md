@@ -1,14 +1,16 @@
 # Amethyst-CLI
 
-[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl]
+[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl] [![Join the chat][s4]][gc]
 
 [s1]: https://api.travis-ci.org/ebkalderon/amethyst_cli.svg
 [s2]: https://img.shields.io/badge/crates.io-0.1.4-orange.svg
 [s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
+[s4]: https://badges.gitter.im/ebkalderon/amethyst.svg
 
 [tc]: https://travis-ci.org/ebkalderon/amethyst_cli/
 [ci]: https://crates.io/crates/amethyst_cli/
 [gl]: https://github.com/ebkalderon/amethyst_cli/blob/master/COPYING
+[gc]: https://gitter.im/ebkalderon/amethyst?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 Command-line interface for creating and deploying [Amethyst][am] game projects.
 This project is a *work in progress* and very incomplete; pardon the dust!
