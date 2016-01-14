@@ -83,10 +83,11 @@ start writing your game logic.
 
 ## Contributing
 
-Amethyst is an open-source project that values community contribution. Pull
-requests are welcome!
+We are a community project that welcomes contribution from anyone. If you're
+interested in helping out, please read the [CONTRIBUTING.md][cm] file before
+getting started. Don't know what to hack on? See the [Development Roadmap][dr]
+on our wiki, or search though [our issue tracker][it].
 
-We assume you have granted non-exclusive right to your source code under the
-[GNU General Public License 3.0][gl] and you have processed your code with `rustfmt` prior to
-submission. If you want to be known as an author, please add your name to the
-AUTHORS.md file in the pull request.
+[cm]: https://github.com/ebkalderon/amethyst/blob/master/CONTRIBUTING.md
+[dr]: https://github.com/ebkalderon/amethyst/wiki/Roadmap
+[it]: https://github.com/ebkalderon/amethyst_cli/issues
