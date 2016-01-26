@@ -1,18 +1,18 @@
 [package]
-name = "amethyst_cli"
-version = "0.1.4"
+name = "amethyst_tools"
+version = "0.2.0"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Command-line interface for managing Amethyst projects"
-keywords = ["game", "engine", "cli", "tool", "amethyst"]
+keywords = ["game", "engine", "tool", "editor", "amethyst"]
 
-repository = "https://github.com/ebkalderon/amethyst_cli"
+repository = "https://github.com/ebkalderon/amethyst_tools"
 
 readme = "README.md"
 license = "GPL-3.0"
 
 [[bin]]
 name = "amethyst"
-path = "src/main.rs"
+path = "src/cli/main.rs"
 
 [dependencies]
 clap = "1.5.5"
