@@ -8,6 +8,8 @@ adheres to [Semantic Versioning][sv].
 ## 0.2.0 (2015-01-27)
 
 ### Added
+* General
+  * New repo-wide README.md
 * Amethyst CLI
   * New project template, updated to use 0.2.0 engine API
 
