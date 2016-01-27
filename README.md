@@ -1,4 +1,4 @@
-# Amethyst-CLI
+# Amethyst Tools
 
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl] [![Join the chat][s4]][gc]
 
@@ -12,74 +12,40 @@
 [gl]: https://github.com/ebkalderon/amethyst_tools/blob/master/COPYING
 [gc]: https://gitter.im/ebkalderon/amethyst?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-Command-line interface for creating and deploying [Amethyst][am] game projects.
-This project is a *work in progress* and very incomplete; pardon the dust!
+A suite of game development tools written in [Rust][rl], intended for use with
+the [Amethyst][am] engine. This project is a *work in progress* and is very
+incomplete; pardon the dust!
 
 [am]: https://github.com/ebkalderon/amethyst
 
-## Usage
+## Vision
 
-The CLI interface is intentionally very similar to [Cargo][ca], so it is easily
-intelligible to Rustaceans. Unfortunately, it is very limited at the moment in
-terms of features. Below are the subcommands ~~hacked together~~ implemented so
-far.
+One of the goals of [Amethyst][am] is to split up the traditional "mega-editor"
+seen in many other game engines into several small but well-integrated tools,
+adhering to the [Unix philosophy][up]. This approach allows for nifty things
+like:
 
+[up]: https://en.wikipedia.org/wiki/Unix_philosophy
+
+* Piping and streaming data between tools like regular Unix commands.
+* Network transparency (e.g. mirroring gameplay from your development machine
+  onto a testbed computer or smartphone).
+* Customizing your workflow to your liking with plain ol' shell scripts.
+* Stripping out tools you don't want or need, or easily supplanting them with
+  third-party utilities.
+* Serving as backends for various "mega-editors" provided by third parties or
+  written in-house.
+
+## Included tools
+
+At the moment, there is only one tool available in this distribution. However,
+plenty more are in the works.
+
+* [Amethyst CLI][ac] - Command-line interface for creating and deploying
+  Amethyst game projects, intentionally very similar to [Cargo][ca].
+
+[ac]: https://github.com/ebkalderon/amethyst_tools/tree/master/src/cli
 [ca]: https://github.com/rust-lang/cargo
-
-#### new
-
-Generates an empty game project, a fresh white canvas for your next masterpiece.
-The default directory structure is laid out like this:
-
-```
-project/
-├── Cargo.toml
-├── resources
-│   ├── config.yml
-│   ├── entities/
-│   ├── input.yml
-│   └── prefabs/
-└── src
-    └── main.rs
-```
-
-#### build
-
-Compiles the current project. It's currently just a frontend for `cargo build`,
-but more features are in the works, like [Lua][lu] or [mruby][mr] script
-precompilation and offline GPU shader compilation for APIs that support it.
-And no, you're not dreaming. The `--release` flag doesn't work yet.
-
-[lu]: http://www.lua.org/
-[mr]: http://mruby.org/
-
-#### clean
-
-Removes the `target` directory. Again, just like in Cargo. One day, this will
-have switches whether or not to clear out said precompiled scripts or cached
-shader program bytecode.
-
-#### run
-
-Runs the main binary of the project. A frontend to `cargo run`. Proposed extra
-features include real-time profiling and debugging, and manual skipping of
-levels when playtesting. Oh, and `--release` doesn't work here yet either.
-
-## What's missing?
-
-#### deploy
-
-Performs a clean rebuild of the game and engine, runs any unit and integration
-tests if there are any, zips up the `resources` directory, and places it and
-the game binary in a directory called `deployed`.
-
-#### module
-
-Grabs forthcoming Amethyst engine modules (e.g. rendering, scripting, physics,
-etc.) from either crates.io or GitHub, configures your `Cargo.toml` and
-modifies the `resources` directory accordingly. Once a new module is installed
-and configured, just drop your assets into the appropriate folders and you can
-start writing your game logic.
 
 ## Contributing
 
