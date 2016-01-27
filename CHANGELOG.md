@@ -1,23 +1,51 @@
-# Changelog
+# Change Log
 
-## 0.1.4
+All notable per-release changes will be documented in this file. This project
+adheres to [Semantic Versioning][sv].
 
-* Display Cargo's stdout in real-time, not when the process exits (fix issue #1)
+[sv]: http://semver.org/
 
-## 0.1.3
+## 0.2.0 (2015-01-27)
 
-* Do not print to stdout when extracting the template project files
-* Eliminate all unused variable warnings
+### Added
+* CLI Build Tool
+  * New project template, updated to use 0.2.0 engine API
 
-## 0.1.2
+### Changed
+* Renamed repository to `amethyst_tools`, general restructuring (issue [#4])
+* New change log format (issue [#5])
 
-* Update template project's `main.rs` to eliminate unused variable warning
+[#4]: https://github.com/ebkalderon/amethyst_tools/issues/4
+[#5]: https://github.com/ebkalderon/amethyst_tools/issues/5
 
-## 0.1.1
+## 0.1.4 (2016-01-13)
 
-* Update included `main.rs` in the template project to API version 0.1.3
-* Remove unused zip-rs dependency "bzip2"
+### Changed
+* CLI Build Tool
+  * Display Cargo stdout in real-time, not when the process exits (issue [#1])
 
-## 0.1.0
+[#1]: https://github.com/ebkalderon/amethyst_tools/issues/1
+
+## 0.1.3 (2016-01-12)
+
+### Changed
+* CLI Build Tool
+  * Do not print to stdout when extracting the template project files
+  * Eliminate all unused variable warnings
+
+## 0.1.2 (2016-01-11)
+
+## Changed
+* CLI Build Tool
+  * Update template project's `main.rs` to eliminate unused variable warning
+
+## 0.1.1 (2016-01-10)
+
+## Changed
+* CLI Build Tool
+  * Update included `main.rs` in the template project to API version 0.1.3
+  * Remove unused zip-rs dependency "bzip2"
+
+## 0.1.0 (2016-01-07)
 
 * Initial release
