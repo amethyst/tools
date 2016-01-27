@@ -16,6 +16,7 @@ A suite of game development tools written in [Rust][rl], intended for use with
 the [Amethyst][am] engine. This project is a *work in progress* and is very
 incomplete; pardon the dust!
 
+[rl]: https://www.rust-lang.org/
 [am]: https://github.com/ebkalderon/amethyst
 
 ## Vision
