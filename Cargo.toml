@@ -2,7 +2,7 @@
 name = "amethyst_tools"
 version = "0.2.0"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
-description = "Command-line interface for managing Amethyst projects"
+description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
 
 repository = "https://github.com/ebkalderon/amethyst_tools"
