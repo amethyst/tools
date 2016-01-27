@@ -39,8 +39,10 @@ like:
 
 ## Included tools
 
-At the moment, there is only one tool available in this distribution (*lame*).
-Suggest more ideas on [Gitter][gc]!
+At the moment, there is only one tool available in this distribution. Please
+suggest ideas for more tools on [our issue tracker][it].
+
+[it]: https://github.com/ebkalderon/amethyst_tools/issues
 
 * [Amethyst CLI][ac] - Command-line interface for creating and deploying game
   projects, intentionally very similar to [Cargo][ca].
@@ -57,4 +59,3 @@ on our wiki, or search though [our issue tracker][it].
 
 [cm]: https://github.com/ebkalderon/amethyst/blob/master/CONTRIBUTING.md
 [dr]: https://github.com/ebkalderon/amethyst/wiki/Roadmap
-[it]: https://github.com/ebkalderon/amethyst_tools/issues
