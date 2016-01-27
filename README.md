@@ -40,10 +40,10 @@ like:
 ## Included tools
 
 At the moment, there is only one tool available in this distribution. However,
-plenty more are in the works.
+plenty more are in the works. Suggest your ideas on [Gitter][gc]!
 
-* [Amethyst CLI][ac] - Command-line interface for creating and deploying
-  Amethyst game projects, intentionally very similar to [Cargo][ca].
+* [Amethyst CLI][ac] - Command-line interface for creating and deploying game
+  projects, intentionally very similar to [Cargo][ca].
 
 [ac]: https://github.com/ebkalderon/amethyst_tools/tree/master/src/cli
 [ca]: https://github.com/rust-lang/cargo
