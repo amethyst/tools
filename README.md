@@ -37,7 +37,7 @@ like:
 * Serving as backends for various "mega-editors" provided by third parties or
   written in-house.
 
-## Included tools
+## Toolchain
 
 At the moment, there is only one tool available in this distribution. Please
 suggest ideas for more tools on [our issue tracker][it].
