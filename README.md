@@ -39,8 +39,8 @@ like:
 
 ## Included tools
 
-At the moment, there is only one tool available in this distribution. However,
-plenty more are in the works. Suggest your ideas on [Gitter][gc]!
+At the moment, there is only one tool available in this distribution (*lame*).
+Suggest more ideas on [Gitter][gc]!
 
 * [Amethyst CLI][ac] - Command-line interface for creating and deploying game
   projects, intentionally very similar to [Cargo][ca].
