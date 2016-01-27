@@ -8,7 +8,7 @@ adheres to [Semantic Versioning][sv].
 ## 0.2.0 (2015-01-27)
 
 ### Added
-* CLI Build Tool
+* Amethyst CLI
   * New project template, updated to use 0.2.0 engine API
 
 ### Changed
@@ -21,7 +21,7 @@ adheres to [Semantic Versioning][sv].
 ## 0.1.4 (2016-01-13)
 
 ### Changed
-* CLI Build Tool
+* Amethyst CLI
   * Display Cargo stdout in real-time, not when the process exits (issue [#1])
 
 [#1]: https://github.com/ebkalderon/amethyst_tools/issues/1
@@ -29,20 +29,20 @@ adheres to [Semantic Versioning][sv].
 ## 0.1.3 (2016-01-12)
 
 ### Changed
-* CLI Build Tool
+* Amethyst CLI
   * Do not print to stdout when extracting the template project files
   * Eliminate all unused variable warnings
 
 ## 0.1.2 (2016-01-11)
 
 ## Changed
-* CLI Build Tool
+* Amethyst CLI
   * Update template project's `main.rs` to eliminate unused variable warning
 
 ## 0.1.1 (2016-01-10)
 
 ## Changed
-* CLI Build Tool
+* Amethyst CLI
   * Update included `main.rs` in the template project to API version 0.1.3
   * Remove unused zip-rs dependency "bzip2"
 
