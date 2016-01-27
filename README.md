@@ -2,14 +2,14 @@
 
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl] [![Join the chat][s4]][gc]
 
-[s1]: https://api.travis-ci.org/ebkalderon/amethyst_cli.svg
-[s2]: https://img.shields.io/badge/crates.io-0.1.4-orange.svg
+[s1]: https://api.travis-ci.org/ebkalderon/amethyst_tools.svg
+[s2]: https://img.shields.io/badge/crates.io-0.2.0-orange.svg
 [s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
 [s4]: https://badges.gitter.im/ebkalderon/amethyst.svg
 
-[tc]: https://travis-ci.org/ebkalderon/amethyst_cli/
-[ci]: https://crates.io/crates/amethyst_cli/
-[gl]: https://github.com/ebkalderon/amethyst_cli/blob/master/COPYING
+[tc]: https://travis-ci.org/ebkalderon/amethyst_tools/
+[ci]: https://crates.io/crates/amethyst_tools/
+[gl]: https://github.com/ebkalderon/amethyst_tools/blob/master/COPYING
 [gc]: https://gitter.im/ebkalderon/amethyst?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 Command-line interface for creating and deploying [Amethyst][am] game projects.
@@ -90,4 +90,4 @@ on our wiki, or search though [our issue tracker][it].
 
 [cm]: https://github.com/ebkalderon/amethyst/blob/master/CONTRIBUTING.md
 [dr]: https://github.com/ebkalderon/amethyst/wiki/Roadmap
-[it]: https://github.com/ebkalderon/amethyst_cli/issues
+[it]: https://github.com/ebkalderon/amethyst_tools/issues
