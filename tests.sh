@@ -13,7 +13,9 @@ function check_new() {
        [ -d mygame/resources/prefabs/ ] &&
        [ -f mygame/resources/config.yml ] &&
        [ -f mygame/resources/input.yml ] &&
-       [ -f mygame/src/main.rs ]; then
+       [ -f mygame/src/main.rs ] &&
+       [ -d mygame/.git/ ] &&
+       [ -f mygame/.gitignore ]; then
         echo "--- Passed!"
 	echo
 	return
