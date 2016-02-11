@@ -13,6 +13,9 @@ adheres to [Semantic Versioning][sv].
   * Overhaul `new` command and stomp out bugs (issue [#8], [#9], [#10])
 
 [#7]: https://github.com/ebkalderon/amethyst_tools/issues/7
+[#8]: https://github.com/ebkalderon/amethyst_tools/issues/8
+[#9]: https://github.com/ebkalderon/amethyst_tools/issues/9
+[#10]: https://github.com/ebkalderon/amethyst_tools/issues/10
 
 ## 0.2.0 (2016-01-27)
 
