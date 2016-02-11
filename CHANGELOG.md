@@ -5,7 +5,7 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## 0.2.0 (2015-01-27)
+## 0.2.0 (2016-01-27)
 
 ### Added
 * General
