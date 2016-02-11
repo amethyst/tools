@@ -7,9 +7,10 @@ adheres to [Semantic Versioning][sv].
 
 ## 0.2.4 (2016-02-XX)
 
-### Changed
+### Fixed
 * Amethyst CLI
   * Properly print errors and warnings from Cargo (issue [#7])
+  * Overhaul `new` command and stomp out bugs (issue [#8], [#9], [#10])
 
 [#7]: https://github.com/ebkalderon/amethyst_tools/issues/7
 
