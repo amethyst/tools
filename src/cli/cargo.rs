@@ -17,11 +17,7 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
                         .ok();
 
     match output {
-        Some(text) => {
-            print!("{}", String::from_utf8_lossy(&text.stdout));
-            print!("{}", String::from_utf8_lossy(&text.stderr));
-            None
-        }
+        Some(_) => None,
         None => Some("Failed to run Cargo!"),
     }
 }
