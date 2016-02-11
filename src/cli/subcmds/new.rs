@@ -11,7 +11,7 @@ use cargo;
 /// Creates a new Amethyst game project.
 pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
     let project_path = matches.value_of("path").unwrap();
-    //Running `cargo new -q --bin --vcs git path`
+    // Running `cargo new -q --bin --vcs git path`
     if let Some(e) = cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]) {
         return Err(e);
     }
@@ -37,19 +37,14 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
 
     }
 
-    //Appending amethyst dependency to Cargo.toml
-    //from "folder" to "folder/" -- better safe than sorry
-    let cargo_toml_path = if project_path.ends_with("/"){
-        project_path.to_string() + "Cargo.toml"
-    } else {
-        project_path.to_string() + "/Cargo.toml"
-    };
+    // Appending amethyst dependency to Cargo.toml
+    let cargo_toml_path = path::Path::new(project_path).join("Cargo.toml");
     let _ = try!(match fs::OpenOptions::new().append(true).open(cargo_toml_path) {
         Ok(ref mut file) => {
-            writeln!(file, "amethyst = \"*\"\n").unwrap();
+            writeln!(file, "amethyst = \"*\"").unwrap();
             Ok(())
-        },
-        Err(_) => Err("Failed to open Cargo.toml")
+        }
+        Err(_) => Err("Failed to open Cargo.toml"),
     });
 
     Ok(())
