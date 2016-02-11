@@ -2,35 +2,27 @@
 
 use clap::ArgMatches;
 use std::fs;
-use std::io;
+use std::io::{copy, Write};
 use std::path;
 use zip::ZipArchive;
-use std::process::Command;
-use std::fs::OpenOptions;
-use std::io::Write;
+
+use cargo;
 
 /// Creates a new Amethyst game project.
 pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
     let project_path = matches.value_of("path").unwrap();
     //Running `cargo new -q --bin --vcs git path`
-    let _ = try!(Command::new("cargo")
-                    .arg("new")
-                    .arg("-q")
-                    .arg("--bin")
-                    .arg("--vcs")
-                    .arg("git")
-                    .arg(project_path)
-                    .output()
-                    .map_err(|_| "Failed to execute cargo.\nEnsure cargo is installed."));
+    if let Some(e) = cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]) {
+        return Err(e);
+    }
 
     let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
 
     let file = fs::File::open(&new_project).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
 
-    let out_path = project_path;
-    fs::create_dir_all(&out_path).unwrap();
-    let base = path::Path::new(out_path);
+    fs::create_dir_all(&project_path).unwrap();
+    let base = path::Path::new(project_path);
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
@@ -40,7 +32,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
             fs::create_dir_all(&outpath).unwrap();
         } else {
             let mut outfile = fs::File::create(&outpath).unwrap();
-            io::copy(&mut file, &mut outfile).unwrap();
+            copy(&mut file, &mut outfile).unwrap();
         }
 
     }
@@ -52,7 +44,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
     } else {
         project_path.to_string() + "/Cargo.toml"
     };
-    let _ = try!(match OpenOptions::new().append(true).open(cargo_toml_path) {
+    let _ = try!(match fs::OpenOptions::new().append(true).open(cargo_toml_path) {
         Ok(ref mut file) => {
             writeln!(file, "amethyst = \"*\"\n").unwrap();
             Ok(())
