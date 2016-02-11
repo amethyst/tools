@@ -5,6 +5,14 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.2.4 (2016-02-XX)
+
+### Changed
+* Amethyst CLI
+  * Properly print errors and warnings from Cargo (issue [#7])
+
+[#7]: https://github.com/ebkalderon/amethyst_tools/issues/7
+
 ## 0.2.0 (2016-01-27)
 
 ### Added
