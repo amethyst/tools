@@ -2,20 +2,27 @@
 
 use clap::ArgMatches;
 use std::fs;
-use std::io;
+use std::io::{copy, Write};
 use std::path;
 use zip::ZipArchive;
 
+use cargo;
+
 /// Creates a new Amethyst game project.
 pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
+    let project_path = matches.value_of("path").unwrap();
+    // Running `cargo new -q --bin --vcs git path`
+    if let Some(e) = cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]) {
+        return Err(e);
+    }
+
     let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
 
     let file = fs::File::open(&new_project).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
 
-    let out_path = matches.value_of("path").unwrap();
-    fs::create_dir_all(&out_path).unwrap();
-    let base = path::Path::new(out_path);
+    fs::create_dir_all(&project_path).unwrap();
+    let base = path::Path::new(project_path);
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i).unwrap();
@@ -25,10 +32,20 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
             fs::create_dir_all(&outpath).unwrap();
         } else {
             let mut outfile = fs::File::create(&outpath).unwrap();
-            io::copy(&mut file, &mut outfile).unwrap();
+            copy(&mut file, &mut outfile).unwrap();
         }
 
     }
+
+    // Appending amethyst dependency to Cargo.toml
+    let cargo_toml_path = path::Path::new(project_path).join("Cargo.toml");
+    let _ = try!(match fs::OpenOptions::new().append(true).open(cargo_toml_path) {
+        Ok(ref mut file) => {
+            writeln!(file, "amethyst = \"*\"").unwrap();
+            Ok(())
+        }
+        Err(_) => Err("Failed to open Cargo.toml"),
+    });
 
     Ok(())
 }
