@@ -5,15 +5,30 @@ use std::fs;
 use std::io;
 use std::path;
 use zip::ZipArchive;
+use std::process::Command;
+use std::fs::OpenOptions;
+use std::io::Write;
 
 /// Creates a new Amethyst game project.
 pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
+    let project_path = matches.value_of("path").unwrap();
+    //Running `cargo new -q --bin --vcs git path`
+    let _ = try!(Command::new("cargo")
+                    .arg("new")
+                    .arg("-q")
+                    .arg("--bin")
+                    .arg("--vcs")
+                    .arg("git")
+                    .arg(project_path)
+                    .output()
+                    .map_err(|_| "Failed to execute cargo.\nEnsure cargo is installed."));
+
     let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
 
     let file = fs::File::open(&new_project).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
 
-    let out_path = matches.value_of("path").unwrap();
+    let out_path = project_path;
     fs::create_dir_all(&out_path).unwrap();
     let base = path::Path::new(out_path);
 
@@ -29,6 +44,21 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
         }
 
     }
+
+    //Appending amethyst dependency to Cargo.toml
+    //from "folder" to "folder/" -- better safe than sorry
+    let cargo_toml_path = if project_path.ends_with("/"){
+        project_path.to_string() + "Cargo.toml"
+    } else {
+        project_path.to_string() + "/Cargo.toml"
+    };
+    let _ = try!(match OpenOptions::new().append(true).open(cargo_toml_path) {
+        Ok(ref mut file) => {
+            writeln!(file, "amethyst = \"*\"\n").unwrap();
+            Ok(())
+        },
+        Err(_) => Err("Failed to open Cargo.toml")
+    });
 
     Ok(())
 }
