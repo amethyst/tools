@@ -12,6 +12,7 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
     }
 
     let output = command.stdout(Stdio::inherit())
+                        .stderr(Stdio::inherit())
                         .output()
                         .ok();
 
