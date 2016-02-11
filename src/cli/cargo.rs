@@ -11,13 +11,18 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
         command.arg(arg);
     }
 
-    let output = command.stdout(Stdio::inherit())
-                        .stderr(Stdio::inherit())
-                        .output()
-                        .ok();
+    let output_result = command.stdout(Stdio::inherit())
+                               .stderr(Stdio::inherit())
+                               .output();
 
-    match output {
-        Some(_) => None,
-        None => Some("Failed to run Cargo!"),
+    match output_result {
+        Ok(output) => {
+            if output.status.success() {
+                None
+            } else {
+                Some("Cargo task failed!")
+            }
+        }
+        Err(_) => Some("Failed to run Cargo!"),
     }
 }
