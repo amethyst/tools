@@ -8,7 +8,8 @@ function check_new() {
     ln -s ./target/debug/amethyst .
     ./amethyst new mygame
 
-    if [ -f mygame/Cargo.toml ] &&
+    if [ $? -eq 0 ] &&
+       [ -f mygame/Cargo.toml ] &&
        [ -d mygame/resources/entities/ ] &&
        [ -d mygame/resources/prefabs/ ] &&
        [ -f mygame/resources/config.yml ] &&
