@@ -80,7 +80,7 @@ function check_bad_build() {
 
     if [ $? -ne 0 ]; then
         echo "--- Passed!"
-	echo
+        echo
         return
     fi
 
