@@ -34,7 +34,7 @@ adheres to [Semantic Versioning][sv].
 
 ## 0.1.4 (2016-01-13)
 
-### Changed
+### Fixed
 * Amethyst CLI
   * Display Cargo stdout in real-time, not when the process exits (issue [#1])
 
@@ -49,13 +49,13 @@ adheres to [Semantic Versioning][sv].
 
 ## 0.1.2 (2016-01-11)
 
-## Changed
+### Changed
 * Amethyst CLI
   * Update template project's `main.rs` to eliminate unused variable warning
 
 ## 0.1.1 (2016-01-10)
 
-## Changed
+### Changed
 * Amethyst CLI
   * Update included `main.rs` in the template project to API version 0.1.3
   * Remove unused zip-rs dependency "bzip2"
