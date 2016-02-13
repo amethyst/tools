@@ -37,16 +37,15 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     }
 
     // Append amethyst dependency to the project's Cargo.toml.
-    let cargo_toml_path = path::Path::new(project_path).join("Cargo.toml");
-    let _ = try!(match fs::OpenOptions::new().append(true).open(cargo_toml_path) {
-        Ok(ref mut file) => {
-            writeln!(file, "amethyst = \"*\"").unwrap();
-            Ok(())
-        }
-        Err(_) => Err("Failed to open Cargo.toml"),
-    });
+    let manifest_path = path::Path::new(project_path).join("Cargo.toml");
+    let manifest = fs::OpenOptions::new().append(true).open(manifest_path);
 
-    Ok(())
+    if manifest.is_ok() {
+        writeln!(manifest.unwrap(), "amethyst = \"*\"").unwrap();
+        Ok(())
+    } else {
+        Err("Failed to open Cargo.toml!")
+    }
 }
 
 fn sanitize_filename(filename: &str) -> path::PathBuf {
