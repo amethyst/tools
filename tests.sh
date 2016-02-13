@@ -72,8 +72,8 @@ function check_clean() {
     exit 1
 }
 
-function check_bad_build() {
-    echo "--- amethyst build"
+function check_corrupt_build() {
+    echo "--- amethyst build (corrupt)"
 
     cd mygame
     rm -rf src
@@ -93,7 +93,7 @@ check_new
 check_build
 check_run
 check_clean
-check_bad_build
+check_corrupt_build
 
 echo
 echo "All tests pass!"
