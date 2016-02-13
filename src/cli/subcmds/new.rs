@@ -33,7 +33,6 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
             let mut outfile = fs::File::create(&outpath).unwrap();
             copy(&mut file, &mut outfile).unwrap();
         }
-
     }
 
     // Append amethyst dependency to the project's Cargo.toml.
