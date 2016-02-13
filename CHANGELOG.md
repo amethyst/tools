@@ -5,6 +5,14 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.2.5 (2016-02-XX)
+
+### Fixed
+* Amethyst CLI
+  * Expose Cargo exit status if non-zero (issue [#13])
+
+[#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
+
 ## 0.2.4 (2016-02-11)
 
 ### Fixed
