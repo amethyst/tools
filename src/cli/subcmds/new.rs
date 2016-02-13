@@ -39,8 +39,8 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     let manifest_path = path::Path::new(project_path).join("Cargo.toml");
     let manifest = fs::OpenOptions::new().append(true).open(manifest_path);
 
-    if manifest.is_ok() {
-        writeln!(manifest.unwrap(), "amethyst = \"*\"").unwrap();
+    if let Ok(mut file) = manifest {
+        writeln!(file, "amethyst = \"*\"").unwrap();
         Ok(())
     } else {
         Err("Failed to open Cargo.toml!")
