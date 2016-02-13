@@ -1,8 +1,10 @@
 //! Wrapper module around Cargo.
 
+pub type CmdResult = Result<(), &'static str>;
+
 /// Executes Cargo with the provided arguments. Returns a failure string if
 /// Cargo couldn't be run.
-pub fn call(args: Vec<&str>) -> Option<&'static str> {
+pub fn call(args: Vec<&str>) -> CmdResult {
     use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");
@@ -11,17 +13,17 @@ pub fn call(args: Vec<&str>) -> Option<&'static str> {
         command.arg(arg);
     }
 
-    let output_result = command.stdout(Stdio::inherit())
-                               .stderr(Stdio::inherit())
-                               .output();
+    let exec_result = command.stdout(Stdio::inherit())
+                             .stderr(Stdio::inherit())
+                             .output();
 
-    if let Ok(output) = output_result {
+    if let Ok(output) = exec_result {
         if output.status.success() {
-            None
+            Ok(())
         } else {
-            Some("Cargo task failed!")
+            Err("Cargo task failed!")
         }
     } else {
-        Some("Failed to run Cargo!")
+        Err("Failed to run Cargo!")
     }
 }

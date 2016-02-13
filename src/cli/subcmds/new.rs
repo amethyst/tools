@@ -9,10 +9,11 @@ use zip::ZipArchive;
 use cargo;
 
 /// Creates a new Amethyst game project.
-pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
+pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     let project_path = matches.value_of("path").unwrap();
-    // Running `cargo new -q --bin --vcs git path`
-    if let Some(e) = cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]) {
+
+    // Execute `cargo new -q --bin --vcs git path`.
+    if let Err(e) = cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]) {
         return Err(e);
     }
 
@@ -37,7 +38,7 @@ pub fn execute(matches: &ArgMatches) -> Result<(), &'static str> {
 
     }
 
-    // Appending amethyst dependency to Cargo.toml
+    // Append amethyst dependency to the project's Cargo.toml.
     let cargo_toml_path = path::Path::new(project_path).join("Cargo.toml");
     let _ = try!(match fs::OpenOptions::new().append(true).open(cargo_toml_path) {
         Ok(ref mut file) => {

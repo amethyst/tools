@@ -2,6 +2,8 @@
 
 use clap::ArgMatches;
 
-pub fn execute(_matches: &ArgMatches) -> Result<(), &'static str> {
+use cargo;
+
+pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
     unimplemented!();
 }
