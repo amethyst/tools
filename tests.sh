@@ -72,10 +72,28 @@ function check_clean() {
     exit 1
 }
 
+function check_bad_build() {
+    echo "--- amethyst build"
+
+    cd mygame
+    rm -rf src
+    ../amethyst build
+
+    if [ $? -ne 0 ]; then
+        echo "--- Passed!"
+        echo
+        return
+    fi
+
+    ls -l
+    exit 1
+}
+
 check_new
 check_build
 check_run
 check_clean
+check_bad_build
 
 echo
 echo "All tests pass!"
