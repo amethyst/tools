@@ -5,7 +5,7 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## 0.3.7 (2016-02-23)
+## 0.3.0 (2016-02-23)
 
 ### Added
 * Amethyst CLI
