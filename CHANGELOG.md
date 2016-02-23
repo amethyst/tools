@@ -5,13 +5,21 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## 0.2.5 (2016-02-XX)
+## 0.3.7 (2016-02-23)
+
+### Added
+* Amethyst CLI
+  * New integration test for detecting failed builds
 
 ### Fixed
+* General
+  * Recent changes to crates.io breaks `amethyst_tools` installation for some
+    users (issue [#17])
 * Amethyst CLI
   * Expose Cargo exit status if non-zero (issue [#13])
 
 [#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
+[#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
 
 ## 0.2.4 (2016-02-11)
 
