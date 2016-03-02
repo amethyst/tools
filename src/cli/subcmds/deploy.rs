@@ -9,22 +9,30 @@ use std::io::{Read, Write, Error, ErrorKind};
 use std::path::Path;
 use zip::{ZipWriter, CompressionMethod};
 
+const DEPLOY_DIR: &'static str = "deploy";
+const RESOURCES_DIR: &'static str = "resources";
+const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
+const RELEASE_BUILD_DIR: &'static str = "target/release";
+
+// FIXME Implement method of getting correct binary name - Find built binary and blind copy that?
+// TODO Work out way to conver std::io::Error to &str
+// TODO Simplify this repeated code
+// TODO Simplify the folder paths
+
 /// Print all files in resources directory. Currently only being used for debugging
-fn list_files() {
-    let paths = fs::read_dir("resources").unwrap();
+fn list_files(dir: &str) {
+    let paths = fs::read_dir(dir).unwrap();
 
     for path in paths {
         println!("File: {}", path.unwrap().path().display())
     }
 }
 
-const DEPLOY_DIR: &'static str = "deployed";
-
 /// Create a deployment directory
 fn setup_deploy_dir() -> Result<(), Error> {
     fs::create_dir(DEPLOY_DIR).or_else(|e| match e.kind() {
         ErrorKind::AlreadyExists => Ok(()),
-        _ => Err(e),
+        _ => return Err(e),
     });
 
     // Clean out any existing files that have been deployed.
@@ -36,12 +44,10 @@ fn setup_deploy_dir() -> Result<(), Error> {
 }
 
 /// Compress a directory and all of it's files
-fn zip_dir<P: AsRef<Path>>(dir: P, target_file: P) -> Result<(), Error> {
-    let zip_file = fs::File::create(&target_file).unwrap();
+fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
+    let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
     let mut zip = ZipWriter::new(zip_file);
-    //try!(zip.start_file(dir, CompressionMethod::Deflated));
-    // FIXME Make this use dir parameter
-    try!(zip.start_file("resources", CompressionMethod::Deflated));
+    try!(zip.start_file(dir, CompressionMethod::Deflated));
 
     for path in fs::read_dir(dir).unwrap() {
         let file_path = path.unwrap();
@@ -64,9 +70,8 @@ pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
     try!(::subcmds::test::execute(_matches));
     match ::subcmds::build::execute(_matches) {
         Ok(a) => {
-            list_files();
-            // FIXME Work out way to conver std::io::Error to &str
-            // TODO simplify this repeated code
+            list_files(RESOURCES_DIR);
+            
             match setup_deploy_dir() {
                 Ok(()) => (),
                 Err(e) => {
@@ -75,8 +80,7 @@ pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
                 },
             };
             
-            // FIXME Change format! macro to something better
-            match zip_dir("resources", &format!("{}/{}", DEPLOY_DIR, "resources.zip")) {
+            match zip_dir(RESOURCES_DIR, &format!("{}/{}", DEPLOY_DIR, RESOURCES_ZIP_FILENAME)) {
                 Ok(()) => (),
                 Err(e) => {
                     println!("{}", e);
@@ -84,8 +88,7 @@ pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
                 },
             };
             
-            // TODO Implement method of getting correct binary name
-            match fs::copy("target/release/filename", &format!("{}/{}", DEPLOY_DIR, "filename")) {
+            match fs::copy(&format!("{}/filename", RELEASE_BUILD_DIR), &format!("{}/{}", DEPLOY_DIR, "filename")) {
                 // function returns an unsigned int code. 
                 Ok(a) => (),
                 Err(e) => {
