@@ -20,6 +20,7 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     let file = fs::File::open(&new_project).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
 
+
     fs::create_dir_all(&project_path).unwrap();
     let base = path::Path::new(project_path);
 
@@ -37,7 +38,7 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
 
     // Append amethyst dependency to the project's Cargo.toml.
     let manifest_path = path::Path::new(project_path).join("Cargo.toml");
-    let manifest = fs::OpenOptions::new().append(true).open(manifest_path);
+    let manifest = fs::OpenOptions::new().write(true).append(true).open(manifest_path);
 
     if let Ok(mut file) = manifest {
         writeln!(file, "amethyst = \"*\"").unwrap();
