@@ -20,7 +20,6 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     let file = fs::File::open(&new_project).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
 
-
     fs::create_dir_all(&project_path).unwrap();
     let base = path::Path::new(project_path);
 
