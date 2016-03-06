@@ -8,6 +8,7 @@
 extern crate clap;
 extern crate zip;
 
+#[macro_use]
 mod cargo;
 mod subcmds;
 

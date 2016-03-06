@@ -2,6 +2,12 @@
 
 pub type CmdResult = Result<(), &'static str>;
 
+/// try! macro that handles functions that return results containing non string containing Errors. Primarily std::io::Error
+// FIXME change println! and stringify! to format! or other way of getting the error string
+macro_rules! tryio {
+     ($e:expr) => (match $e { Ok(_) => (), Err(e) => { println!("{}", e); return Err(&stringify!(e)); }})
+}
+
 /// Executes Cargo with the provided arguments. Returns a failure string if
 /// Cargo couldn't be run.
 pub fn call(args: Vec<&str>) -> CmdResult {

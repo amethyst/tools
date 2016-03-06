@@ -15,16 +15,12 @@ const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
 const RELEASE_BUILD_DIR: &'static str = "target/release";
 
 // FIXME Implement method of getting correct binary name - Find built binary and blind copy that?
-// TODO Work out way to conver std::io::Error to &str
-// TODO Simplify this repeated code
-// TODO Simplify the folder paths
+// FIXME cargo runtime arguments - build should include --release
 
 /// Print all files in resources directory. Currently only being used for debugging
 fn list_files(dir: &str) {
-    let paths = fs::read_dir(dir).unwrap();
-
-    for path in paths {
-        println!("File: {}", path.unwrap().path().display())
+    for path in fs::read_dir(dir).unwrap() {
+        println!("{}", path.unwrap().path().display())
     }
 }
 
@@ -39,12 +35,15 @@ fn setup_deploy_dir() -> Result<(), Error> {
     for path in fs::read_dir(Path::new(DEPLOY_DIR)).unwrap() {
         try!(fs::remove_file(path.unwrap().path().as_path()));
     }
-    
+
     Ok(())
 }
 
 /// Compress a directory and all of it's files
 fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
+    println!("Compressing the following resources to: {}", target_file);
+    list_files(dir);
+
     let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
     let mut zip = ZipWriter::new(zip_file);
     try!(zip.start_file(dir, CompressionMethod::Deflated));
@@ -57,46 +56,25 @@ fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
         let mut file_body = String::new();
         try!(file.read_to_string(&mut file_body));
         try!(zip.write_all(file_body.as_bytes()));
-    } 
+    }
 
     try!(zip.finish());
-    
+
     Ok(())
 }
 
 /// Compresses and deploys the project as a distributable program.
 pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
+    println!("CLI args: {:?}", _matches);
+
     try!(::subcmds::clean::execute(_matches));
     try!(::subcmds::test::execute(_matches));
     match ::subcmds::build::execute(_matches) {
         Ok(a) => {
-            list_files(RESOURCES_DIR);
-            
-            match setup_deploy_dir() {
-                Ok(()) => (),
-                Err(e) => {
-                    println!("{}", e);
-                    return Err(&stringify!(e));
-                },
-            };
-            
-            match zip_dir(RESOURCES_DIR, &format!("{}/{}", DEPLOY_DIR, RESOURCES_ZIP_FILENAME)) {
-                Ok(()) => (),
-                Err(e) => {
-                    println!("{}", e);
-                    return Err(&stringify!(e));
-                },
-            };
-            
-            match fs::copy(&format!("{}/filename", RELEASE_BUILD_DIR), &format!("{}/{}", DEPLOY_DIR, "filename")) {
-                // function returns an unsigned int code. 
-                Ok(a) => (),
-                Err(e) => {
-                    println!("{}", e);
-                    return Err(&stringify!(e));
-                },
-            };
-            
+            tryio!(setup_deploy_dir());
+            tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
+            tryio!(fs::copy(&Path::new(RELEASE_BUILD_DIR).join("filename").to_str().unwrap(), &Path::new(DEPLOY_DIR).join("filename").to_str().unwrap()));
+
             Ok(a)
         },
         Err(e) => Err(e),
