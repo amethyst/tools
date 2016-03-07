@@ -17,9 +17,11 @@ adheres to [Semantic Versioning][sv].
     users (issue [#17])
 * Amethyst CLI
   * Expose Cargo exit status if non-zero (issue [#13])
+  * Fix for bad file descriptor error for new command (pull request [#18])
 
 [#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
 [#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
+[#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
 
 ## 0.2.4 (2016-02-11)
 
