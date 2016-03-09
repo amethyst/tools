@@ -66,7 +66,19 @@ function check_run() {
     if [ $? -eq 0 ]; then
         echo "--- Passed!"
 	echo
-        return
+    else
+	ls -la
+	exit 1
+    fi
+
+    echo "--- amethyst run --release"
+
+    ../amethyst run --release
+
+    if [ $? -eq 0 ]; then
+	echo "--- Passed!"
+	echo
+	return
     fi
 
     ls -l
