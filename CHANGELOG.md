@@ -22,6 +22,12 @@ adheres to [Semantic Versioning][sv].
 
 [#14]: https://github.com/ebkalderon/amethyst_tools/issues/14
 
+### Changed
+* Amethyst CLI
+  * Reduce verbosity with `try!` (pull request [#16])
+
+[#16]: https://github.com/ebkalderon/amethyst_tools/issues/16
+
 ### Fixed
 * General
   * Recent changes to crates.io breaks `amethyst_tools` installation for some
