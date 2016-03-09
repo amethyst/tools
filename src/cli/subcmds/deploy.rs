@@ -67,7 +67,6 @@ fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
 pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
     println!("CLI args: {:?}", _matches);
 
-    try!(::subcmds::clean::execute(_matches));
     try!(::subcmds::test::execute(_matches));
     match ::subcmds::build::execute(_matches) {
         Ok(a) => {

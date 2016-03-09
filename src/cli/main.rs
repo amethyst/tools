@@ -63,6 +63,7 @@ fn main() {
             (about: "Executes all unit and integration tests for the current project"))
         (@subcommand deploy =>
             (about: "Compresses and deploys the project as a distributable program"))
+            // TODO add argument to force clean before build
         (@subcommand module =>
             (about: "Adds or removes engine subsystems"))
         (@subcommand new =>
