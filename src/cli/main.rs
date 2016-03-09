@@ -68,8 +68,7 @@ fn main() {
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
-        )
-                      .get_matches();
+        ).get_matches();
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
