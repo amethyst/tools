@@ -68,7 +68,8 @@ fn main() {
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
-        ).get_matches();
+        )
+                      .get_matches();
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
@@ -76,4 +77,16 @@ fn main() {
     execute_if!(matches, module);
     execute_if!(matches, new);
     execute_if!(matches, run);
+}
+
+#[cfg(test)]
+#[test]
+fn cli() {
+    use std::process::Command;
+
+    let output = Command::new("./tests.sh").output().unwrap_or_else(|e| {
+        panic!("failed to execute test script");
+    });
+
+    assert!(output.status.success());
 }
