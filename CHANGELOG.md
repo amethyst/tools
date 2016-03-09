@@ -5,6 +5,12 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.3.1 (2016-03-XX)
+
+### Fixed
+* Amethyst CLI
+  * Fix for bad file descriptor error for new command (pull request [#18])
+
 ## 0.3.0 (2016-02-23)
 
 ### Added
@@ -17,7 +23,6 @@ adheres to [Semantic Versioning][sv].
     users (issue [#17])
 * Amethyst CLI
   * Expose Cargo exit status if non-zero (issue [#13])
-  * Fix for bad file descriptor error for new command (pull request [#18])
 
 [#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
 [#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
