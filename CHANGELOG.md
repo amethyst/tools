@@ -17,7 +17,10 @@ adheres to [Semantic Versioning][sv].
 
 ### Added
 * Amethyst CLI
+  * `check_new` integration test checks for exit status (pull request [#14])
   * New integration test for detecting failed builds
+
+[#14]: https://github.com/ebkalderon/amethyst_tools/issues/14
 
 ### Fixed
 * General
