@@ -11,6 +11,8 @@ adheres to [Semantic Versioning][sv].
 * Amethyst CLI
   * Fix for bad file descriptor error for new command (pull request [#18])
 
+[#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
+
 ## 0.3.0 (2016-02-23)
 
 ### Added
@@ -26,7 +28,6 @@ adheres to [Semantic Versioning][sv].
 
 [#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
 [#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
-[#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
 
 ## 0.2.4 (2016-02-11)
 
