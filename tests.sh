@@ -33,9 +33,25 @@ function check_build() {
     ../amethyst build
 
     if [ $? -eq 0 ]; then
-        echo "--- Passed!"
-	echo
-        return
+	if [ -d "target/debug" ]; then
+            echo "--- Passed!"
+	    echo
+	fi
+    else
+	ls -l
+	exit 1
+    fi
+
+    echo "--- amethyst build --release"
+    ../amethyst build --release
+
+    # TODO: check if build actually was ran in release mode
+    if [ $? -eq 0 ]; then
+	if [ -d "target/release" ] ; then
+	   echo "-- Passed!"
+	   echo
+	   return
+	fi
     fi
 
     ls -l
@@ -50,7 +66,19 @@ function check_run() {
     if [ $? -eq 0 ]; then
         echo "--- Passed!"
 	echo
-        return
+    else
+	ls -la
+	exit 1
+    fi
+
+    echo "--- amethyst run --release"
+
+    ../amethyst run --release
+
+    if [ $? -eq 0 ]; then
+	echo "--- Passed!"
+	echo
+	return
     fi
 
     ls -l
@@ -89,6 +117,10 @@ function check_corrupt_build() {
     exit 1
 }
 
+function clean_up() {
+    rm -r amethyst mygame
+}
+
 check_new
 check_build
 check_run
@@ -98,4 +130,4 @@ check_corrupt_build
 echo
 echo "All tests pass!"
 cd ..
-rm -r amethyst mygame
+clean_up
