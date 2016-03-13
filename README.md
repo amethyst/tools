@@ -3,7 +3,7 @@
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl] [![Join the chat][s4]][gc]
 
 [s1]: https://api.travis-ci.org/ebkalderon/amethyst_tools.svg
-[s2]: https://img.shields.io/badge/crates.io-0.3.0-orange.svg
+[s2]: https://img.shields.io/badge/crates.io-0.4.0-orange.svg
 [s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
 [s4]: https://badges.gitter.im/ebkalderon/amethyst.svg
 

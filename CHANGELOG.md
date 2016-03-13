@@ -5,13 +5,18 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## 0.3.1 (2016-03-XX)
+## 0.4.0 (2016-03-XX)
+
+### Added
+* Amethyst CLI
+  * Add support for `--release` flag (issue #19)
 
 ### Fixed
 * Amethyst CLI
   * Fix for bad file descriptor error for new command (pull request [#18])
 
 [#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
+[#19]: https://github.com/ebkalderon/amethyst_tools/issues/19
 
 ## 0.3.0 (2016-02-23)
 
