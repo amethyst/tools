@@ -89,6 +89,9 @@ function check_corrupt_build() {
     exit 1
 }
 
+rm -r amethyst mygame
+cargo build
+
 check_new
 check_build
 check_run
