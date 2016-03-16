@@ -98,7 +98,6 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     match ::subcmds::build::execute(matches) {
         Ok(a) => {
             tryio!(setup_deploy_dir());
-            tryio!(create_dir(&Path::new(DEPLOY_DIR).join("save").to_str().unwrap()));
 
             // Compress Resources to zipfile in deploy directory
             tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
