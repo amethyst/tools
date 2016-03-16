@@ -7,6 +7,7 @@
 #[macro_use]
 extern crate clap;
 extern crate zip;
+extern crate walkdir;
 
 #[macro_use]
 mod cargo;
