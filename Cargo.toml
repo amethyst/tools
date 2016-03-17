@@ -1,6 +1,6 @@
 [package]
 name = "amethyst_tools"
-version = "0.2.4"
+version = "0.4.0"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
@@ -16,6 +16,6 @@ path = "src/cli/main.rs"
 
 [dependencies]
 clap = "1.5.5"
-zip = { version = "0.1.15", default-features = false }
+zip = { version = "0.1.16", default-features = false }
 walkdir = "0.1"
 toml = "0.1"

@@ -5,13 +5,42 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## 0.2.5 (2016-02-XX)
+## 0.4.0 (2016-03-XX)
+
+### Added
+* Amethyst CLI
+  * Add support for `--release` flag (issue #19)
 
 ### Fixed
+* Amethyst CLI
+  * Fix for bad file descriptor error for new command (pull request [#18])
+
+[#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
+[#19]: https://github.com/ebkalderon/amethyst_tools/issues/19
+
+## 0.3.0 (2016-02-23)
+
+### Added
+* Amethyst CLI
+  * New integration test for detecting failed builds
+
+### Changed
+* Amethyst CLI
+  * `check_new` integration test checks for exit status (pull request [#14])
+  * Reduce verbosity with `try!` (pull request [#16])
+
+[#14]: https://github.com/ebkalderon/amethyst_tools/issues/14
+[#16]: https://github.com/ebkalderon/amethyst_tools/issues/16
+
+### Fixed
+* General
+  * Recent changes to crates.io breaks `amethyst_tools` installation for some
+    users (issue [#17])
 * Amethyst CLI
   * Expose Cargo exit status if non-zero (issue [#13])
 
 [#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
+[#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
 
 ## 0.2.4 (2016-02-11)
 
