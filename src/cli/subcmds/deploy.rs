@@ -17,7 +17,7 @@ const BUILD_DIR: &'static str = "target/debug";
 
 // FIXME cargo runtime arguments - build should include --release
 
-fn get_executable_filename() -> Result<&'static str, Error> {
+fn get_executable_filename() -> Result<String, Error> {
     let mut file = try!(fs::File::open("Cargo.toml"));
     let mut cargo_file_body = String::new();
     try!(file.read_to_string(&mut cargo_file_body));
@@ -25,9 +25,9 @@ fn get_executable_filename() -> Result<&'static str, Error> {
     let cargo_toml: ::toml::Value = cargo_file_body.parse().unwrap();
 
     match cargo_toml.lookup("bin.0.name") {
-        Some(name) => Ok(name.as_str().unwrap()),
+        Some(name) => Ok(name.as_str().unwrap().into()),
         // FIXME Unable to infer type information?????
-        None => Err(Error::new(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
+        None => Err(Error::new::<String>(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
     }
 }
 
