@@ -13,21 +13,42 @@ use walkdir::WalkDir;
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
 const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
-const RELEASE_BUILD_DIR: &'static str = "target/release";
+const BUILD_DIR: &'static str = "target/debug";
 
-// FIXME Implement method of getting correct binary name - Find built binary and blind copy that?
 // FIXME cargo runtime arguments - build should include --release
 
+fn get_executable_filename() -> Result<&'static str, Error> {
+    let mut file = try!(fs::File::open("Cargo.toml"));
+    let mut cargo_file_body = String::new();
+    try!(file.read_to_string(&mut cargo_file_body));
+
+    let cargo_toml: ::toml::Value = cargo_file_body.parse().unwrap();
+
+    match cargo_toml.lookup("bin.0.name") {
+        Some(name) => Ok(name.as_str().unwrap()),
+        // FIXME Unable to infer type information?????
+        None => Err(Error::new(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
+    }
+}
+
 fn copy_binaries(origin: &str, dest: &str) -> Result<(), Error> {
-    // TODO Fail if no files were found?
-    // TODO better way of finding binaries
-    let binary_extensions = vec![".so", ".dylib", ".dll", ".exe"];
+    let library_extensions = vec!["so", "dylib", "dll"];
+    let executable_filename = try!(get_executable_filename());
 
     for path in fs::read_dir(origin).unwrap() {
-        // FIXME doesn't support unix binary extension yet
-        let file_path = path.unwrap().path();
-        if binary_extensions.contains(&file_path.extension().unwrap().to_str().unwrap()) {
-            try!(fs::copy(file_path.as_path(), &Path::new(dest).join(file_path.file_name().unwrap().to_str().unwrap())));
+        if let Ok(path) = path {
+            let file_path = path.path();
+            if !file_path.is_dir() {
+
+                // FIXME cleanup all these unwraps
+                let file_stem = file_path.file_stem().unwrap().to_str().unwrap();
+
+                // FIXME stop blind chain unwrapping extension
+                if file_stem == executable_filename || library_extensions.contains(&file_path.extension().unwrap().to_str().unwrap()) {
+                    let file_name = file_path.file_name().unwrap().to_str().unwrap();
+                    try!(fs::copy(&file_path, &Path::new(dest).join(file_name)));
+                }
+            }
         }
     }
 
@@ -47,13 +68,14 @@ fn setup_deploy_dir() -> Result<(), Error> {
     try!(create_dir(DEPLOY_DIR));
 
     // Clean out any existing files that have been deployed.
-    // TODO change this to walk directories?
     for entry in fs::read_dir(Path::new(DEPLOY_DIR)).unwrap() {
-        let entry = entry.unwrap().path();
-        if entry.is_dir() {
-            try!(fs::remove_dir_all(entry.as_path()));
-        } else {
-            try!(fs::remove_file(entry.as_path()));
+        if let Ok(entry) = entry {
+            let path = entry.path();
+            if path.is_dir() {
+                try!(fs::remove_dir_all(&path));
+            } else {
+                try!(fs::remove_file(&path));
+            }
         }
     }
 
@@ -103,8 +125,7 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
             tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
 
             // Copy compiled binaries - Amethyst system dynamic libraries and executable
-            // FIXME Currently does not work
-            //tryio!(copy_binaries(&Path::new(RELEASE_BUILD_DIR).to_str().unwrap(), &Path::new(DEPLOY_DIR).to_str().unwrap()));
+            tryio!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(), &Path::new(DEPLOY_DIR).to_str().unwrap()));
 
             Ok(a)
         },

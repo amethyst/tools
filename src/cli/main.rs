@@ -8,6 +8,7 @@
 extern crate clap;
 extern crate zip;
 extern crate walkdir;
+extern crate toml;
 
 #[macro_use]
 mod cargo;

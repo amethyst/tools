@@ -18,3 +18,4 @@ path = "src/cli/main.rs"
 clap = "1.5.5"
 zip = { version = "0.1.15", default-features = false }
 walkdir = "0.1"
+toml = "0.1"
