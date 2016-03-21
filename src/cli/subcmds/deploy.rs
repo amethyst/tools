@@ -26,8 +26,12 @@ fn get_executable_filename() -> Result<String, Error> {
 
     match cargo_toml.lookup("bin.0.name") {
         Some(name) => Ok(name.as_str().unwrap().into()),
-        // FIXME Unable to infer type information?????
-        None => Err(Error::new::<String>(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
+        None => {
+            match cargo_toml.lookup("package.name") {
+                Some(name) => Ok(name.as_str().unwrap().into()),
+                None => Err(Error::new::<String>(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
+            }
+        },
     }
 }
 
@@ -39,12 +43,15 @@ fn copy_binaries(origin: &str, dest: &str) -> Result<(), Error> {
         if let Ok(path) = path {
             let file_path = path.path();
             if !file_path.is_dir() {
-
                 // FIXME cleanup all these unwraps
                 let file_stem = file_path.file_stem().unwrap().to_str().unwrap();
+                let extension = match file_path.extension() {
+                    Some(extension) => extension.to_str().unwrap(),
+                    None => "",
+                };
 
-                // FIXME stop blind chain unwrapping extension
-                if file_stem == executable_filename || library_extensions.contains(&file_path.extension().unwrap().to_str().unwrap()) {
+                // FIXME reduce blind chain unwrapping extension
+                if file_stem == executable_filename || library_extensions.contains(&extension) {
                     let file_name = file_path.file_name().unwrap().to_str().unwrap();
                     try!(fs::copy(&file_path, &Path::new(dest).join(file_name)));
                 }
@@ -89,6 +96,7 @@ fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
     let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
     let mut zip = ZipWriter::new(zip_file);
 
+    // Can fail if ./resources doesn't exist or is empty
     for entry in WalkDir::new(dir) {
         if let Ok(file_entry) = entry {
             let path = file_entry.path();
@@ -114,8 +122,6 @@ fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
 
 /// Compresses and deploys the project as a distributable program.
 pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
-    println!("CLI args: {:?}", matches);
-
     try!(::subcmds::test::execute(matches));
     match ::subcmds::build::execute(matches) {
         Ok(a) => {
