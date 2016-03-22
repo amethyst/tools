@@ -1,10 +1,13 @@
 //! The publish command.
 
-use clap::ArgMatches;
-
 use cargo;
 
-/// Compresses and deploys the project as a distributable program.
-pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
-    unimplemented!();
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+pub struct Cmd;
+
+impl AmethystCmd for Cmd {
+    /// Compresses and deploys the project as a distributable program.
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        unimplemented!();
+    }
 }
