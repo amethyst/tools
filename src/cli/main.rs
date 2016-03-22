@@ -10,6 +10,7 @@ extern crate zip;
 
 mod cargo;
 mod subcmds;
+use subcmds::amethyst_args::*;
 
 /// Ask clap if a given command-line argument was used, and if so, perform the
 /// corresponding action.
@@ -32,7 +33,7 @@ mod subcmds;
 macro_rules! execute_if {
     ($matches:expr, $term:ident) => (
         if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
-            match subcmds::$term::execute(matches) {
+            match subcmds::$term::Cmd::execute(matches) {
                 Ok(_) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);

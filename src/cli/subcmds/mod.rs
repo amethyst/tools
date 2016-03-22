@@ -1,3 +1,4 @@
+pub mod amethyst_args;
 pub mod build;
 pub mod clean;
 pub mod deploy;

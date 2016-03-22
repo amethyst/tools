@@ -1,16 +1,19 @@
 //! The run command.
 
-use clap::ArgMatches;
-
 use cargo;
 
-/// Builds and executes the application.
-pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
-    let mut args = vec!["run", "--color=always"];
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+pub struct Cmd;
 
-    if matches.is_present("release") {
-        args.push("--release");
+impl AmethystCmd for Cmd {
+    /// Builds and executes the application.
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        let mut args = vec!["run", "--color=always"];
+
+        if matches.is_present("release") {
+            args.push("--release");
+        }
+
+        cargo::call(args)
     }
-
-    cargo::call(args)
 }
