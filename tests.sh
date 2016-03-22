@@ -121,6 +121,9 @@ function clean_up() {
     rm -r amethyst mygame
 }
 
+clean_up
+cargo build
+
 check_new
 check_build
 check_run
