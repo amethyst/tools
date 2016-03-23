@@ -1,7 +1,5 @@
 //! The publish command.
 
-use clap::ArgMatches;
-
 use cargo;
 
 use std::fs;
@@ -10,12 +8,12 @@ use std::path::Path;
 use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
 
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
 const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
-const BUILD_DIR: &'static str = "target/debug";
-
-// FIXME cargo runtime arguments - build should include --release
+const BUILD_DIR: &'static str = "target/release";
 
 fn get_executable_filename() -> Result<String, Error> {
     let mut file = try!(fs::File::open("Cargo.toml"));
@@ -46,14 +44,15 @@ fn copy_binaries(origin: &str, dest: &str) -> cargo::CmdResult {
         if let Ok(path) = path {
             let file_path = path.path();
             if !file_path.is_dir() {
-                // FIXME cleanup all these unwraps
-                let file_stem = file_path.file_stem().unwrap().to_str().unwrap();
+                let file_stem = match file_path.file_stem() {
+                    Some(stem) => stem.to_str().unwrap(),
+                    None => "",
+                };
                 let extension = match file_path.extension() {
                     Some(extension) => extension.to_str().unwrap(),
                     None => "",
                 };
 
-                // FIXME reduce blind chain unwrapping extension
                 if file_stem == executable_filename || library_extensions.contains(&extension) {
                     let file_name = file_path.file_name().unwrap().to_str().unwrap();
                     try!(fs::copy(&file_path, &Path::new(dest).join(file_name)));
@@ -125,23 +124,29 @@ fn zip_dir(dir: &str, target_file: &str) -> cargo::CmdResult {
     Ok(())
 }
 
-/// Compresses and deploys the project as a distributable program.
-pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
-    try!(::subcmds::test::execute(matches));
-    match ::subcmds::build::execute(matches) {
-        Ok(a) => {
-            try!(setup_deploy_dir());
+pub struct Cmd;
+impl AmethystCmd for Cmd {
+    /// Compresses and deploys the project as a distributable program.
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        try!(super::test::Cmd::execute(matches));
+        match super::build::Cmd::execute(matches) {
+            Ok(a) => {
+                try!(setup_deploy_dir());
 
-            // Compress Resources to zipfile in deploy directory
-            try!(zip_dir(RESOURCES_DIR,
-                         &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
+                // Compress Resources to zipfile in deploy directory
+                try!(zip_dir(RESOURCES_DIR,
+                             &Path::new(DEPLOY_DIR)
+                                  .join(RESOURCES_ZIP_FILENAME)
+                                  .to_str()
+                                  .unwrap()));
 
-            // Copy compiled binaries - Amethyst system dynamic libraries and executable
-            try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
-                               &Path::new(DEPLOY_DIR).to_str().unwrap()));
+                // Copy compiled binaries - Amethyst system dynamic libraries and executable
+                try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
+                                   &Path::new(DEPLOY_DIR).to_str().unwrap()));
 
-            Ok(a)
+                Ok(a)
+            }
+            Err(e) => Err(e),
         }
-        Err(e) => Err(e),
     }
 }

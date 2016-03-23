@@ -13,6 +13,7 @@ extern crate toml;
 #[macro_use]
 mod cargo;
 mod subcmds;
+use subcmds::amethyst_args::*;
 
 /// Ask clap if a given command-line argument was used, and if so, perform the
 /// corresponding action.
@@ -35,7 +36,7 @@ mod subcmds;
 macro_rules! execute_if {
     ($matches:expr, $term:ident) => (
         if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
-            match subcmds::$term::execute(matches) {
+            match subcmds::$term::Cmd::execute(matches) {
                 Ok(_) => std::process::exit(0),
                 Err(e) => {
                     println!("Error: {}", e);
@@ -74,7 +75,8 @@ fn main() {
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
-        ).get_matches();
+        )
+                      .get_matches();
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
@@ -83,4 +85,19 @@ fn main() {
     execute_if!(matches, module);
     execute_if!(matches, new);
     execute_if!(matches, run);
+}
+
+#[cfg(test)]
+#[test]
+fn cli() {
+    use std::process::Command;
+
+    let output = Command::new("./tests.sh")
+                     .output()
+                     .unwrap_or_else(|e| {
+                         panic!("failed to execute test script: {:?}", e);
+                     });
+
+    println!("{:?}", String::from_utf8_lossy(&output.stderr));
+    assert!(output.status.success());
 }
