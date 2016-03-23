@@ -29,13 +29,16 @@ fn get_executable_filename() -> Result<String, Error> {
         None => {
             match cargo_toml.lookup("package.name") {
                 Some(name) => Ok(name.as_str().unwrap().into()),
-                None => Err(Error::new::<String>(ErrorKind::NotFound, "No executable name found in Cargo.toml".into())),
+                None => {
+                    Err(Error::new::<String>(ErrorKind::NotFound,
+                                             "No executable name found in Cargo.toml".into()))
+                }
             }
-        },
+        }
     }
 }
 
-fn copy_binaries(origin: &str, dest: &str) -> Result<(), Error> {
+fn copy_binaries(origin: &str, dest: &str) -> cargo::CmdResult {
     let library_extensions = vec!["so", "dylib", "dll"];
     let executable_filename = try!(get_executable_filename());
 
@@ -64,14 +67,16 @@ fn copy_binaries(origin: &str, dest: &str) -> Result<(), Error> {
 
 fn create_dir(path: &str) -> Result<(), Error> {
     println!("Creating directory at {}", path);
-    fs::create_dir(path).or_else(|e| match e.kind() {
-        ErrorKind::AlreadyExists => Ok(()),
-        _ => Err(e),
+    fs::create_dir(path).or_else(|e| {
+        match e.kind() {
+            ErrorKind::AlreadyExists => Ok(()),
+            _ => Err(e),
+        }
     })
 }
 
 /// Create a deployment directory
-fn setup_deploy_dir() -> Result<(), Error> {
+fn setup_deploy_dir() -> cargo::CmdResult {
     try!(create_dir(DEPLOY_DIR));
 
     // Clean out any existing files that have been deployed.
@@ -90,7 +95,7 @@ fn setup_deploy_dir() -> Result<(), Error> {
 }
 
 /// Compress a directory and all of it's files
-fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
+fn zip_dir(dir: &str, target_file: &str) -> cargo::CmdResult {
     println!("Compressing the resources to: {}", target_file);
 
     let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
@@ -125,16 +130,18 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
     try!(::subcmds::test::execute(matches));
     match ::subcmds::build::execute(matches) {
         Ok(a) => {
-            tryio!(setup_deploy_dir());
+            try!(setup_deploy_dir());
 
             // Compress Resources to zipfile in deploy directory
-            tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
+            try!(zip_dir(RESOURCES_DIR,
+                         &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
 
             // Copy compiled binaries - Amethyst system dynamic libraries and executable
-            tryio!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(), &Path::new(DEPLOY_DIR).to_str().unwrap()));
+            try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
+                               &Path::new(DEPLOY_DIR).to_str().unwrap()));
 
             Ok(a)
-        },
+        }
         Err(e) => Err(e),
     }
 }

@@ -43,7 +43,7 @@ pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
         writeln!(file, "amethyst = \"*\"").unwrap();
         Ok(())
     } else {
-        Err("Failed to open Cargo.toml!")
+        Err(cargo::CmdError::from("Failed to open Cargo.toml!"))
     }
 }
 
