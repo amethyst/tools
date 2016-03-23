@@ -1,9 +1,12 @@
 //! The module command.
 
-use clap::ArgMatches;
-
 use cargo;
 
-pub fn execute(_matches: &ArgMatches) -> cargo::CmdResult {
-    unimplemented!();
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+pub struct Cmd;
+
+impl AmethystCmd for Cmd {
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        unimplemented!();
+    }
 }

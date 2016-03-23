@@ -1,7 +1,5 @@
 //! The publish command.
 
-use clap::ArgMatches;
-
 use cargo;
 
 use std::fs;
@@ -10,12 +8,12 @@ use std::path::Path;
 use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
 
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
 const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
-const BUILD_DIR: &'static str = "target/debug";
-
-// FIXME cargo runtime arguments - build should include --release
+const BUILD_DIR: &'static str = "target/release";
 
 fn get_executable_filename() -> Result<String, Error> {
     let mut file = try!(fs::File::open("Cargo.toml"));
@@ -120,21 +118,25 @@ fn zip_dir(dir: &str, target_file: &str) -> Result<(), Error> {
     Ok(())
 }
 
-/// Compresses and deploys the project as a distributable program.
-pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
-    try!(::subcmds::test::execute(matches));
-    match ::subcmds::build::execute(matches) {
-        Ok(a) => {
-            tryio!(setup_deploy_dir());
+pub struct Cmd;
+impl AmethystCmd for Cmd {
+    /// Compresses and deploys the project as a distributable program.
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        let cargo_args = vec!["--release"];
+        try!(super::test::Cmd::execute(&cargo_args));
+        match super::build::Cmd::execute(&cargo_args) {
+            Ok(a) => {
+                tryio!(setup_deploy_dir());
 
-            // Compress Resources to zipfile in deploy directory
-            tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
+                // Compress Resources to zipfile in deploy directory
+                tryio!(zip_dir(RESOURCES_DIR, &Path::new(DEPLOY_DIR).join(RESOURCES_ZIP_FILENAME).to_str().unwrap()));
 
-            // Copy compiled binaries - Amethyst system dynamic libraries and executable
-            tryio!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(), &Path::new(DEPLOY_DIR).to_str().unwrap()));
+                // Copy compiled binaries - Amethyst system dynamic libraries and executable
+                tryio!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(), &Path::new(DEPLOY_DIR).to_str().unwrap()));
 
-            Ok(a)
-        },
-        Err(e) => Err(e),
+                Ok(a)
+            },
+            Err(e) => Err(e),
+        }
     }
 }

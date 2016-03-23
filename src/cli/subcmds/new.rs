@@ -1,6 +1,5 @@
 //! The new command.
 
-use clap::ArgMatches;
 use std::fs;
 use std::io::{copy, Write};
 use std::path;
@@ -8,45 +7,49 @@ use zip::ZipArchive;
 
 use cargo;
 
-/// Creates a new Amethyst game project.
-pub fn execute(matches: &ArgMatches) -> cargo::CmdResult {
-    let project_path = matches.value_of("path").unwrap();
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+pub struct Cmd;
 
-    // Execute `cargo new -q --bin --vcs git path`.
-    try!(cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]));
+impl AmethystCmd for Cmd {
+    /// Creates a new Amethyst game project.
+    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        let project_path = matches.value_of("path").unwrap();
 
-    let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
+        // Execute `cargo new -q --bin --vcs git path`.
+        try!(cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]));
 
-    let file = fs::File::open(&new_project).unwrap();
-    let mut archive = ZipArchive::new(file).unwrap();
+        let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
 
-    fs::create_dir_all(&project_path).unwrap();
-    let base = path::Path::new(project_path);
+        let file = fs::File::open(&new_project).unwrap();
+        let mut archive = ZipArchive::new(file).unwrap();
 
-    for i in 0..archive.len() {
-        let mut file = archive.by_index(i).unwrap();
-        let outpath = base.join(sanitize_filename(file.name()));
+        fs::create_dir_all(&project_path).unwrap();
+        let base = path::Path::new(project_path);
 
-        if (&*file.name()).ends_with("/") {
-            fs::create_dir_all(&outpath).unwrap();
+        for i in 0..archive.len() {
+            let mut file = archive.by_index(i).unwrap();
+            let outpath = base.join(sanitize_filename(file.name()));
+
+            if (&*file.name()).ends_with('/') {
+                fs::create_dir_all(&outpath).unwrap();
+            } else {
+                let mut outfile = fs::File::create(&outpath).unwrap();
+                copy(&mut file, &mut outfile).unwrap();
+            }
+        }
+
+        // Append amethyst dependency to the project's Cargo.toml.
+        let manifest_path = path::Path::new(project_path).join("Cargo.toml");
+        let manifest = fs::OpenOptions::new().write(true).append(true).open(manifest_path);
+
+        if let Ok(mut file) = manifest {
+            writeln!(file, "amethyst = \"*\"").unwrap();
+            Ok(())
         } else {
-            let mut outfile = fs::File::create(&outpath).unwrap();
-            copy(&mut file, &mut outfile).unwrap();
+            Err("Failed to open Cargo.toml!")
         }
     }
-
-    // Append amethyst dependency to the project's Cargo.toml.
-    let manifest_path = path::Path::new(project_path).join("Cargo.toml");
-    let manifest = fs::OpenOptions::new().write(true).append(true).open(manifest_path);
-
-    if let Ok(mut file) = manifest {
-        writeln!(file, "amethyst = \"*\"").unwrap();
-        Ok(())
-    } else {
-        Err("Failed to open Cargo.toml!")
-    }
 }
-
 fn sanitize_filename(filename: &str) -> path::PathBuf {
     let no_null_filename = match filename.find('\0') {
         Some(index) => &filename[0..index],
