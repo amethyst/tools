@@ -14,6 +14,11 @@ const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
 const RESOURCES_ZIP_FILENAME: &'static str = "resources.zip";
 const BUILD_DIR: &'static str = "target/release";
+const MISSING_RESOURCES_DIR: &'static str = "Resources directory could not be found at ./resources.
+Amethyst projects require a Resources directory for storing config (input, graphics, etc) files and/or prefab/entity data.
+A Resources directory can be generated via the following options:
+1. Creating your own. See the documentation book here: http://www.amethyst.rs/book/getting_started/manual_cargo_setup.html#Resources%20Folder
+2. Generating a default directory. Simply use  amethyst new [project name]  and copy the generated resources directory into your own project.";
 
 fn get_executable_filename() -> Result<String, Error> {
     let mut file = try!(fs::File::open("Cargo.toml"));
@@ -128,17 +133,24 @@ pub struct Cmd;
 impl AmethystCmd for Cmd {
     /// Compresses and deploys the project as a distributable program.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
-        try!(super::test::Cmd::execute(matches));
-        match super::build::Cmd::execute(matches) {
+        let cargo_args = vec!["release"];
+        println!("Running tests...");
+        try!(super::test::Cmd::execute(&cargo_args));
+        println!("Building project...");
+        match super::build::Cmd::execute(&cargo_args) {
             Ok(a) => {
                 try!(setup_deploy_dir());
 
-                // Compress Resources to zipfile in deploy directory
-                try!(zip_dir(RESOURCES_DIR,
-                             &Path::new(DEPLOY_DIR)
-                                  .join(RESOURCES_ZIP_FILENAME)
-                                  .to_str()
-                                  .unwrap()));
+                if Path::new(RESOURCES_DIR).exists() {
+                    // Compress Resources to zipfile in deploy directory
+                    try!(zip_dir(RESOURCES_DIR,
+                                 &Path::new(DEPLOY_DIR)
+                                      .join(RESOURCES_ZIP_FILENAME)
+                                      .to_str()
+                                      .unwrap()));
+                } else {
+                    return Err(MISSING_RESOURCES_DIR.into());
+                }
 
                 // Copy compiled binaries - Amethyst system dynamic libraries and executable
                 try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
