@@ -103,7 +103,7 @@ function check_clean() {
 function check_deploy() {
     echo "--- amethyst deploy"
 
-    ../amethyst deploy
+    ../amethyst deploy --clean
 
     #check that deploy dir, resources.zip, binary exists
     if [ $? -eq 0 ] &&
