@@ -126,7 +126,7 @@ impl AmethystCmd for Cmd {
         let cargo_args = vec!["release"];
         println!("Running tests...");
         try!(super::test::Cmd::execute(&cargo_args));
-        println!("Building project using {}", cargo_args);
+        println!("Building project...");
         match super::build::Cmd::execute(&cargo_args) {
             Ok(a) => {
                 tryio!(setup_deploy_dir());
