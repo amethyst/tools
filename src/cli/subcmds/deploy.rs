@@ -41,14 +41,15 @@ fn copy_binaries(origin: &str, dest: &str) -> Result<(), Error> {
         if let Ok(path) = path {
             let file_path = path.path();
             if !file_path.is_dir() {
-                // FIXME cleanup all these unwraps
-                let file_stem = file_path.file_stem().unwrap().to_str().unwrap();
+                let file_stem = match file_path.file_stem() {
+                    Some(stem) => stem.to_str().unwrap(),
+                    None => "",
+                };
                 let extension = match file_path.extension() {
                     Some(extension) => extension.to_str().unwrap(),
                     None => "",
                 };
 
-                // FIXME reduce blind chain unwrapping extension
                 if file_stem == executable_filename || library_extensions.contains(&extension) {
                     let file_name = file_path.file_name().unwrap().to_str().unwrap();
                     try!(fs::copy(&file_path, &Path::new(dest).join(file_name)));
@@ -122,8 +123,10 @@ pub struct Cmd;
 impl AmethystCmd for Cmd {
     /// Compresses and deploys the project as a distributable program.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
-        let cargo_args = vec!["--release"];
+        let cargo_args = vec!["release"];
+        println!("Running tests...");
         try!(super::test::Cmd::execute(&cargo_args));
+        println!("Building project using {}", cargo_args);
         match super::build::Cmd::execute(&cargo_args) {
             Ok(a) => {
                 tryio!(setup_deploy_dir());
