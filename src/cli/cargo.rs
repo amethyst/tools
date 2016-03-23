@@ -1,11 +1,40 @@
 //! Wrapper module around Cargo.
 
-pub type CmdResult = Result<(), &'static str>;
+pub type CmdResult = Result<(), CmdError>;
 
-/// try! macro that handles functions that return results containing non string containing Errors. Primarily std::io::Error
-// FIXME change println! and stringify! to format! or other way of getting the error string
-macro_rules! tryio {
-     ($e:expr) => (match $e { Ok(_) => (), Err(e) => { println!("{}", e); return Err(&stringify!(e)); }})
+use std::{fmt, io};
+use zip::result::ZipError;
+
+#[derive(Debug)]
+pub enum CmdError {
+    Io(io::Error),
+    Zip(ZipError),
+    Err(String),
+}
+
+impl fmt::Display for CmdError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // TODO: find better way to display error
+        write!(f, "[CmdError] {:?}", self)
+    }
+}
+
+impl<'a> From<&'a str> for CmdError {
+    fn from(err: &str) -> Self {
+        CmdError::Err(err.to_owned())
+    }
+}
+
+impl From<io::Error> for CmdError {
+    fn from(err: io::Error) -> Self {
+        CmdError::Io(err)
+    }
+}
+
+impl From<ZipError> for CmdError {
+    fn from(err: ZipError) -> Self {
+        CmdError::Zip(err)
+    }
 }
 
 /// Executes Cargo with the provided arguments. Returns a failure string if
@@ -27,9 +56,9 @@ pub fn call(args: Vec<&str>) -> CmdResult {
         if output.status.success() {
             Ok(())
         } else {
-            Err("Cargo task failed!")
+            Err(CmdError::from("Cargo task failed!"))
         }
     } else {
-        Err("Failed to run Cargo!")
+        Err(CmdError::from("Failed to run Cargo!"))
     }
 }
