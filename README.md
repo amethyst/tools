@@ -2,22 +2,22 @@
 
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![GPL3 License][s3]][gl] [![Join the chat][s4]][gc]
 
-[s1]: https://api.travis-ci.org/ebkalderon/amethyst_tools.svg
+[s1]: https://travis-ci.org/amethyst/tools.svg?branch=master
 [s2]: https://img.shields.io/badge/crates.io-0.4.0-orange.svg
 [s3]: https://img.shields.io/badge/license-GPL%20v3-blue.svg
-[s4]: https://badges.gitter.im/ebkalderon/amethyst.svg
+[s4]: https://badges.gitter.im/amethyst/tools.svg
 
-[tc]: https://travis-ci.org/ebkalderon/amethyst_tools/
+[tc]: https://travis-ci.org/amethyst/tools/
 [ci]: https://crates.io/crates/amethyst_tools/
-[gl]: https://github.com/ebkalderon/amethyst_tools/blob/master/COPYING
-[gc]: https://gitter.im/ebkalderon/amethyst?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gl]: https://github.com/amethyst/tools/blob/master/COPYING
+[gc]: https://gitter.im/amethyst/tools?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 A suite of game development tools written in [Rust][rl], intended for use with
 the [Amethyst][am] engine. This project is a *work in progress* and is very
 incomplete; pardon the dust!
 
 [rl]: https://www.rust-lang.org/
-[am]: https://github.com/ebkalderon/amethyst
+[am]: https://github.com/amethyst/amethyst
 
 ## Vision
 
@@ -42,12 +42,12 @@ like:
 At the moment, there is only one tool available in this distribution. Please
 suggest ideas for more tools on [our issue tracker][it].
 
-[it]: https://github.com/ebkalderon/amethyst_tools/issues
+[it]: https://github.com/amethyst/tools/issues
 
 * [Amethyst CLI][ac] - Command-line interface for creating and deploying game
   projects, intentionally very similar to [Cargo][ca].
 
-[ac]: https://github.com/ebkalderon/amethyst_tools/tree/master/src/cli
+[ac]: https://github.com/amethyst/tools/tree/master/src/cli
 [ca]: https://github.com/rust-lang/cargo
 
 ## Contributing
@@ -57,5 +57,5 @@ interested in helping out, please read the [CONTRIBUTING.md][cm] file before
 getting started. Don't know what to hack on? See the [Development Roadmap][dr]
 on our wiki, or search though [our issue tracker][it].
 
-[cm]: https://github.com/ebkalderon/amethyst/blob/master/CONTRIBUTING.md
-[dr]: https://github.com/ebkalderon/amethyst/wiki/Roadmap
+[cm]: https://github.com/amethyst/amethyst/blob/master/CONTRIBUTING.md
+[dr]: https://github.com/amethyst/amethyst/wiki/Roadmap
