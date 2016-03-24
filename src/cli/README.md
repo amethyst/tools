@@ -2,7 +2,7 @@
 
 Command-line interface for creating and deploying [Amethyst][am] game projects.
 
-[am]: https://github.com/ebkalderon/amethyst
+[am]: https://github.com/amethyst/amethyst
 
 ## Usage
 
