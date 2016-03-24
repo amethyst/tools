@@ -44,6 +44,22 @@ macro_rules! execute_if {
     );
 }
 
+macro_rules! execute_subcmd_if {
+    ($matches:expr, $term:ident, $subcmd:ident) => (
+        if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
+            if let Some(matches) = matches.subcommand_matches(stringify!($subcmd)){
+                match subcmds::$term::$subcmd::Cmd::execute(matches) {
+                    Ok(_) => std::process::exit(0),
+                    Err(e) => {
+                        println!("Error: {}", e);
+                        std::process::exit(1);
+                    },
+                }
+            }
+        }
+    );
+}
+
 /// The main function.
 fn main() {
     let matches = clap_app!(amethyst_cli =>
@@ -62,7 +78,13 @@ fn main() {
         (@subcommand deploy =>
             (about: "Compresses and deploys the project as a distributable program"))
         (@subcommand module =>
-            (about: "Adds or removes engine subsystems"))
+            (about: "Adds or removes engine subsystems")
+            (@subcommand add =>
+                (about: "Adds a module to the Amethyst game project")
+                (@arg module: +required "A name of amethyst module"))
+            (@subcommand remove =>
+                (about: "Removes a module to the Amethyst game project")
+                (@arg module: +required "A name of amethyst module")))
         (@subcommand new =>
             (about: "Creates a new Amethyst game project")
             (@arg path: +required "Relative path to the project folder"))
@@ -75,9 +97,10 @@ fn main() {
     execute_if!(matches, build);
     execute_if!(matches, clean);
     execute_if!(matches, deploy);
-    execute_if!(matches, module);
     execute_if!(matches, new);
     execute_if!(matches, run);
+    execute_subcmd_if!(matches, module, add);
+    execute_subcmd_if!(matches, module, remove);
 }
 
 #[cfg(test)]
