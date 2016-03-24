@@ -18,22 +18,26 @@ impl AmethystModules {
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| "Cargo.toml is not a TOML file."));
 
-        let value = Parser::new(&s).parse().unwrap();
+        let value = Parser::new(&s).parse().expect("Cargo.toml is invalid.");
 
         let dependencies = match value.get("dependencies") {
-            Some(deps) => deps.as_table().unwrap().clone(),
+            Some(deps) => deps.as_table().expect("Cargo.toml is invalid.").clone(),
             None => BTreeMap::new()
         };
         let amethyst_dep = match dependencies.get("amethyst") {
             Some(a) => inspect_amethyst_dependency(a),
-            None => unimplemented!()
+            None => {
+                let mut map = BTreeMap::new();
+                map.insert("version".into(), Value::String("*".into()));
+                map
+            }
         };
         Ok(AmethystModules{ root: value, dependencies: dependencies, amethyst_dep: amethyst_dep})
     }
 
     fn get_features(&self) -> Array {
         match self.amethyst_dep.get("features") {
-            Some(f) => f.as_slice().unwrap().to_vec(),
+            Some(f) => f.as_slice().expect("Cargo.toml is invalid.").to_vec(),
             None => vec![]
         }
     }
@@ -59,7 +63,7 @@ fn inspect_amethyst_dependency(a: &Value) -> BTreeMap<String, Value> {
             map
         },
         Value::Table(table) => table,
-        _ => unimplemented!()
+        _ => panic!("Cargo.toml is invalid.")
     }
 }
 
@@ -73,12 +77,12 @@ pub mod add {
 
     impl AmethystCmd for Cmd {
         fn execute<I: AmethystArgs>(matches: &I) -> CmdResult {
-            let module_name = matches.value_of("module").unwrap();
+            let module_name = matches.value_of("module").expect("There is no module specified");
 
             let mut mds = try!(AmethystModules::new());
             let mut features = mds.get_features();
 
-            if features.iter().any(|s| s.as_str().unwrap() == module_name){
+            if features.iter().any(|s| s.as_str().expect("Cargo.toml is invalid.") == module_name){
                 println!("The project already has module '{}'.", module_name);
                 Err("The project already has this module.")
             } else {
@@ -108,17 +112,10 @@ pub mod remove {
             let mut mds = try!(AmethystModules::new());
             let mut features = mds.get_features();
 
-            if features.iter().any(|s| s.as_str().unwrap() == module_name){
-                features.retain(|s| s.as_str().unwrap() != module_name);
-
-                mds.update(features);
-                try!(mds.save());
-                Ok(())
-            } else {
-                println!("The project already has no module '{}'.", module_name);
-                Err("The project already hasn't this module.")
-            }
-
+            features.retain(|s| s.as_str().expect("Cargo.toml is invalid.") != module_name);
+            mds.update(features);
+            try!(mds.save());
+            Ok(())
         }
     }
 }
