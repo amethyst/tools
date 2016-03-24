@@ -15,5 +15,5 @@ name = "amethyst"
 path = "src/cli/main.rs"
 
 [dependencies]
-clap = "1.5.5"
+clap = { version = "2", features = ["unstable"] }
 zip = { version = "0.1.16", default-features = false }
