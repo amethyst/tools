@@ -20,7 +20,8 @@ pub fn is_amethyst_project() -> cargo::CmdResult {
         let mut f = try!(File::open(config_path).map_err(|_| "Couldn't open config.yml"));
         let mut s = String::new();
         try!(f.read_to_string(&mut s).map_err(|_| "config.yml is not a YAML file."));
-        let _ = try!(YamlLoader::load_from_str(&s).map_err(|_| "config.yml is not a valid YAML file."));
+        let _ = try!(YamlLoader::load_from_str(&s)
+                         .map_err(|_| "config.yml is not a valid YAML file."));
 
         // No docs for what should be inside config.yml yet
         Ok(())
