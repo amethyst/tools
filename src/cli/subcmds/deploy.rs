@@ -93,33 +93,61 @@ fn setup_deploy_dir() -> cargo::CmdResult {
     Ok(())
 }
 
-/// Compress a directory and all of it's files
-fn zip_dir(dir: &str, target_file: &str) -> cargo::CmdResult {
-    println!("Compressing the resources to: {}", target_file);
+/// Extracts the resource path from the full path
+fn resource_file_name(path: &Path, resources_dir: &str) -> String {
+    let file_os_string = path.to_path_buf().into_os_string();
+    let mut file_name: String = match file_os_string.to_str() {
+        Some(string) => string.into(),
+        None => "".into(),
+    };
+    // Rust doesn't append a / character to the path of a directory by default
+    if path.is_dir() {
+        file_name.push_str("/");
+    }
+    file_name.trim_left_matches(resources_dir).trim_left_matches("/").into()
+}
+
+/// Add resource file/folder to current zip file
+fn zip_resource(writer: &mut ZipWriter<fs::File>, path: &Path) -> Result<(), Error> {
+    let file_name = resource_file_name(&path, RESOURCES_DIR);
+    println!("Compressing file: {}", &file_name);
+    try!(writer.start_file(file_name, CompressionMethod::Deflated));
+
+    if !path.is_dir() {
+        let mut file = fs::File::open(&path).unwrap();
+        let mut file_body = String::new();
+        try!(file.read_to_string(&mut file_body));
+        try!(writer.write_all(file_body.as_bytes()));
+    }
+
+    Ok(())
+}
+
+/// Compress a resources directory and all of it's files
+fn zip_resources(dir: &str, target_file: &str) -> cargo::CmdResult {
+    println!("Compressing resources to: {}", target_file);
 
     let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
-    let mut zip = ZipWriter::new(zip_file);
+    let mut writer = ZipWriter::new(zip_file);
 
-    // Can fail if ./resources doesn't exist or is empty
-    for entry in WalkDir::new(dir) {
+    for entry in try!(fs::read_dir(dir)) {
         if let Ok(file_entry) = entry {
             let path = file_entry.path();
 
-            let file_os_string = path.to_path_buf().into_os_string();
-            let file_name = file_os_string.to_str().unwrap();
-            println!("Compressing file: {}", &file_name);
-            try!(zip.start_file(file_name, CompressionMethod::Deflated));
-
-            if !path.is_dir() {
-                let mut file = fs::File::open(&path).unwrap();
-                let mut file_body = String::new();
-                try!(file.read_to_string(&mut file_body));
-                try!(zip.write_all(file_body.as_bytes()));
+            // Walk any directories, otherwise compress file
+            if path.is_dir() {
+                for entry in WalkDir::new(&path) {
+                    if let Ok(file_entry) = entry {
+                        try!(zip_resource(&mut writer, &file_entry.path()));
+                    }
+                }
+            } else {
+                try!(zip_resource(&mut writer, &path));
             }
         }
     }
 
-    try!(zip.finish());
+    try!(writer.finish());
 
     Ok(())
 }
@@ -142,7 +170,7 @@ impl AmethystCmd for Cmd {
 
                 if Path::new(RESOURCES_DIR).exists() {
                     // Compress Resources to zipfile in deploy directory
-                    try!(zip_dir(RESOURCES_DIR,
+                    try!(zip_resources(RESOURCES_DIR,
                                  &Path::new(DEPLOY_DIR)
                                       .join(RESOURCES_ZIP_FILENAME)
                                       .to_str()
