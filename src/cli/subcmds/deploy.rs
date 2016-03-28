@@ -9,6 +9,7 @@ use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
 
 use super::amethyst_args::{AmethystCmd, AmethystArgs};
+use super::is_amethyst_project;
 
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
