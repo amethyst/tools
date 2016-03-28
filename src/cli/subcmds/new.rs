@@ -46,7 +46,7 @@ impl AmethystCmd for Cmd {
             writeln!(file, "amethyst = \"*\"").unwrap();
             Ok(())
         } else {
-            Err("Failed to open Cargo.toml!")
+            Err(cargo::CmdError::from("Failed to open Cargo.toml!"))
         }
     }
 }

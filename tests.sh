@@ -100,10 +100,31 @@ function check_clean() {
     exit 1
 }
 
+function check_deploy() {
+    echo "--- amethyst deploy"
+
+    ../amethyst deploy --clean
+
+    #check that deploy dir, resources.zip, binary exists
+    if [ $? -eq 0 ] &&
+       [ -d deploy ] &&
+       [ -f deploy/mygame ] &&
+       [ -f deploy/resources.zip ]; then
+        echo "--- Passed!"
+        echo "--- Cleaning compiled and deployed files"
+        ../amethyst clean
+        rm -rf mygame/deployed
+  	    echo
+  	    return
+    fi
+
+    ls -l mygame/deployed
+    exit 1
+}
+
 function check_corrupt_build() {
     echo "--- amethyst build (corrupt)"
 
-    cd mygame
     rm -rf src
     ../amethyst build
 
@@ -128,6 +149,7 @@ check_new
 check_build
 check_run
 check_clean
+check_deploy
 check_corrupt_build
 
 echo
