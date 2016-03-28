@@ -18,3 +18,5 @@ path = "src/cli/main.rs"
 clap = "1.5.5"
 zip = { version = "0.1.16", default-features = false }
 yaml-rust = "0.3.2"
+walkdir = "0.1"
+toml = "0.1"

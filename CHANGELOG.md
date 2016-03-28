@@ -15,8 +15,8 @@ adheres to [Semantic Versioning][sv].
 * Amethyst CLI
   * Fix for bad file descriptor error for new command (pull request [#18])
 
-[#18]: https://github.com/ebkalderon/amethyst_tools/issues/18
-[#19]: https://github.com/ebkalderon/amethyst_tools/issues/19
+[#18]: https://github.com/amethyst/tools/issues/18
+[#19]: https://github.com/amethyst/tools/issues/19
 
 ## 0.3.0 (2016-02-23)
 
@@ -29,8 +29,8 @@ adheres to [Semantic Versioning][sv].
   * `check_new` integration test checks for exit status (pull request [#14])
   * Reduce verbosity with `try!` (pull request [#16])
 
-[#14]: https://github.com/ebkalderon/amethyst_tools/issues/14
-[#16]: https://github.com/ebkalderon/amethyst_tools/issues/16
+[#14]: https://github.com/amethyst/tools/issues/14
+[#16]: https://github.com/amethyst/tools/issues/16
 
 ### Fixed
 * General
@@ -39,8 +39,8 @@ adheres to [Semantic Versioning][sv].
 * Amethyst CLI
   * Expose Cargo exit status if non-zero (issue [#13])
 
-[#13]: https://github.com/ebkalderon/amethyst_tools/issues/13
-[#17]: https://github.com/ebkalderon/amethyst_tools/issues/17
+[#13]: https://github.com/amethyst/tools/issues/13
+[#17]: https://github.com/amethyst/tools/issues/17
 
 ## 0.2.4 (2016-02-11)
 
@@ -49,10 +49,10 @@ adheres to [Semantic Versioning][sv].
   * Properly print errors and warnings from Cargo (issue [#7])
   * Overhaul `new` command and stomp out bugs (issue [#8], [#9], [#10])
 
-[#7]: https://github.com/ebkalderon/amethyst_tools/issues/7
-[#8]: https://github.com/ebkalderon/amethyst_tools/issues/8
-[#9]: https://github.com/ebkalderon/amethyst_tools/issues/9
-[#10]: https://github.com/ebkalderon/amethyst_tools/issues/10
+[#7]: https://github.com/amethyst/tools/issues/7
+[#8]: https://github.com/amethyst/tools/issues/8
+[#9]: https://github.com/amethyst/tools/issues/9
+[#10]: https://github.com/amethyst/tools/issues/10
 
 ## 0.2.0 (2016-01-27)
 
@@ -66,8 +66,8 @@ adheres to [Semantic Versioning][sv].
 * Renamed repository to `amethyst_tools`, general restructuring (issue [#4])
 * New change log format (issue [#5])
 
-[#4]: https://github.com/ebkalderon/amethyst_tools/issues/4
-[#5]: https://github.com/ebkalderon/amethyst_tools/issues/5
+[#4]: https://github.com/amethyst/tools/issues/4
+[#5]: https://github.com/amethyst/tools/issues/5
 
 ## 0.1.4 (2016-01-13)
 
@@ -75,7 +75,7 @@ adheres to [Semantic Versioning][sv].
 * Amethyst CLI
   * Display Cargo stdout in real-time, not when the process exits (issue [#1])
 
-[#1]: https://github.com/ebkalderon/amethyst_tools/issues/1
+[#1]: https://github.com/amethyst/tools/issues/1
 
 ## 0.1.3 (2016-01-12)
 
