@@ -156,6 +156,7 @@ pub struct Cmd;
 impl AmethystCmd for Cmd {
     /// Compresses and deploys the project as a distributable program.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        try!(is_amethyst_project());
         let cargo_args = vec!["release"];
         if matches.is_present("clean") {
             println!("Cleaning release build directory...");
