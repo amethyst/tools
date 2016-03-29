@@ -87,7 +87,7 @@ fn main() {
     execute_if!(matches, run);
 }
 
-#[cfg(all(test, unix))]
+#[cfg(all(test, not(windows)))]
 #[test]
 fn cli() {
     use std::process::Command;
