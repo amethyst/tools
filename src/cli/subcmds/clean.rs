@@ -2,17 +2,18 @@
 
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
 use super::is_amethyst_project;
-pub struct Cmd;
 
-impl AmethystCmd for Cmd {
+pub struct Clean;
+
+impl Clean {
     /// Removes the target directory.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+    pub fn exec(release: bool) -> cargo::CmdResult {
         try!(is_amethyst_project());
+
         let mut args = "clean --color=always".to_owned();
 
-        if matches.is_present("release") {
+        if release {
             args = args + " --release";
         }
 

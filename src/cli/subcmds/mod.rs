@@ -1,11 +1,14 @@
 pub mod amethyst_args;
-pub mod build;
-pub mod clean;
+mod build;
+mod clean;
 pub mod test;
 pub mod deploy;
 pub mod module;
 pub mod new;
 pub mod run;
+
+pub use self::build::Build;
+pub use self::clean::Clean;
 
 extern crate yaml_rust;
 

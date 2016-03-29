@@ -158,15 +158,15 @@ impl AmethystCmd for Cmd {
     /// Compresses and deploys the project as a distributable program.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
         try!(is_amethyst_project());
-        let cargo_args = vec!["release"];
+
         if matches.is_present("clean") {
             println!("Cleaning release build directory...");
-            try!(super::clean::Cmd::execute(&cargo_args));
+            try!(super::Clean::exec(true));
         }
         println!("Running tests...");
-        try!(super::test::Cmd::execute(&cargo_args));
+        try!(super::test::Cmd::execute(matches));
         println!("Building project...");
-        match super::build::Cmd::execute(&cargo_args) {
+        match super::Build::exec(true) {
             Ok(a) => {
                 try!(setup_deploy_dir());
 

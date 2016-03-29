@@ -46,8 +46,8 @@ fn main() {
         ).get_matches();
 
     let result = match matches.subcommand_name() {
-        Some("build") => subcmds::build::Cmd::execute(&matches),
-        Some("clean") => subcmds::clean::Cmd::execute(&matches),
+        Some("build") => subcmds::Build::exec(matches.is_present("release")),
+        Some("clean") => subcmds::Clean::exec(matches.is_present("release")),
         Some("deploy") => subcmds::deploy::Cmd::execute(&matches),
         Some("module") => subcmds::module::Cmd::execute(&matches),
         Some("new") => subcmds::new::Cmd::execute(&matches),

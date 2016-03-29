@@ -1,18 +1,19 @@
 //! The build command.
 
+use super::is_amethyst_project;
+
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-use super::is_amethyst_project;
-pub struct Cmd;
+pub struct Build;
 
-impl AmethystCmd for Cmd {
+impl Build {
     /// Compiles the current Amethyst project.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+    pub fn exec(release: bool) -> cargo::CmdResult {
         try!(is_amethyst_project());
+
         let mut args = "build --color=always".to_owned();
 
-        if matches.is_present("release") {
+        if release {
             args = args + " --release";
         }
 
