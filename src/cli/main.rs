@@ -10,10 +10,9 @@ extern crate zip;
 extern crate walkdir;
 extern crate toml;
 
-#[macro_use]
 mod cargo;
 mod subcmds;
-use subcmds::amethyst_args::*;
+
 use subcmds::Subcommand;
 
 /// The main function.
@@ -44,30 +43,34 @@ fn main() {
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
-        ).get_matches();
+    ).get_matches();
 
-    let result = match matches.subcommand_name() {
-        Some("build") => {
-            let release = matches.is_present("release");
+    let result = match matches.subcommand() {
+        ("build", Some(m)) => {
+            let release = m.is_present("release");
             subcmds::Build::new(release).run()
-        },
-        Some("clean") => {
-            let release = matches.is_present("release");
+        }
+        ("clean", Some(m)) => {
+            let release = m.is_present("release");
             subcmds::Clean::new(release).run()
-        },
-        Some("deploy") => subcmds::deploy::Cmd::execute(&matches),
-        Some("module") => {
-            subcmds::Module::new().run()
-        },
-        Some("new") => subcmds::new::Cmd::execute(&matches),
-        Some("run") => {
-            let release = matches.is_present("release");
+        }
+        ("deploy", Some(m)) => {
+            let clean = m.is_present("clean");
+            subcmds::Deploy::new(clean).run()
+        }
+        ("module", Some(_)) => subcmds::Module::new().run(),
+        ("new", Some(m)) => {
+            let project = m.value_of("path").unwrap().to_string();
+            subcmds::New::new(project).run()
+        }
+        ("run", Some(m)) => {
+            let release = m.is_present("release");
             subcmds::Run::new(release).run()
-        },
-        Some("test") => {
-            let release = matches.is_present("release");
+        }
+        ("test", Some(m)) => {
+            let release = m.is_present("release");
             subcmds::Test::new(release).run()
-        },
+        }
         _ => Ok(()),
     };
 

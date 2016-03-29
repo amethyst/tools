@@ -2,13 +2,12 @@
 
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
+use super::{Build, Clean, Subcommand, Test};
 use super::is_amethyst_project;
-use super::Subcommand;
 
 use std::fs;
 use std::io::{Read, Write, Error, ErrorKind};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
 
@@ -59,35 +58,6 @@ fn copy_binaries(origin: &str, dest: &str) -> cargo::CmdResult {
                     let file_name = file_path.file_name().unwrap().to_str().unwrap();
                     try!(fs::copy(&file_path, &Path::new(dest).join(file_name)));
                 }
-            }
-        }
-    }
-
-    Ok(())
-}
-
-fn create_dir(path: &str) -> Result<(), Error> {
-    println!("Creating directory at {}", path);
-    fs::create_dir(path).or_else(|e| {
-        match e.kind() {
-            ErrorKind::AlreadyExists => Ok(()),
-            _ => Err(e),
-        }
-    })
-}
-
-/// Create a deployment directory
-fn setup_deploy_dir() -> cargo::CmdResult {
-    try!(create_dir(DEPLOY_DIR));
-
-    // Clean out any existing files that have been deployed.
-    for entry in fs::read_dir(Path::new(DEPLOY_DIR)).unwrap() {
-        if let Ok(entry) = entry {
-            let path = entry.path();
-            if path.is_dir() {
-                try!(fs::remove_dir_all(&path));
-            } else {
-                try!(fs::remove_file(&path));
             }
         }
     }
@@ -154,59 +124,107 @@ fn zip_resources(dir: &str, target_file: &str) -> cargo::CmdResult {
     Ok(())
 }
 
-pub struct Cmd;
-impl AmethystCmd for Cmd {
-    /// Compresses and deploys the project as a distributable program.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+/// Compresses and deploys the project as a distributable program.
+pub struct Deploy {
+    clean: bool,
+    deploy: PathBuf,
+    resources: PathBuf,
+}
+
+impl Deploy {
+    pub fn new(clean: bool) -> Deploy {
+        Deploy {
+            clean: clean,
+            deploy: PathBuf::from(DEPLOY_DIR),
+            resources: PathBuf::from(RESOURCES_DIR),
+        }
+    }
+
+    pub fn prep_deploy_dir(&mut self) -> cargo::CmdResult {
+        if self.deploy.exists() {
+            try!(fs::remove_dir_all(&self.deploy));
+        }
+
+        try!(fs::create_dir(&self.deploy));
+        Ok(())
+    }
+
+    pub fn zip_resources(&mut self) -> cargo::CmdResult {
+        let path = self.deploy.join(RESOURCES_ZIP_FILENAME);
+        let zip = try!(fs::File::create(path));
+
+        let mut writer = ZipWriter::new(zip);
+
+        for entry in try!(fs::read_dir(&self.resources)) {
+            if let Ok(e) = entry {
+                let path = e.path();
+
+                // Walk any directories, otherwise compress file
+                if path.is_dir() {
+                    for entry in WalkDir::new(&path) {
+                        if let Ok(e) = entry {
+                            try!(zip_resource(&mut writer, &e.path()));
+                        }
+                    }
+                } else {
+                    try!(zip_resource(&mut writer, &path));
+                }
+            }
+        }
+
+        try!(writer.finish());
+
+        Ok(())
+    }
+}
+
+impl Subcommand for Deploy {
+    fn run(&mut self) -> cargo::CmdResult {
         try!(is_amethyst_project());
 
-        if matches.is_present("clean") {
+        if self.clean {
             println!("Cleaning release build directory...");
-            try!(super::Clean::new(true).run());
+            try!(Clean::new(true).run());
         }
-        println!("Running tests...");
-        try!(super::Test::new(true).run());
+
         println!("Building project...");
-        match super::Build::new(true).run() {
-            Ok(a) => {
-                try!(setup_deploy_dir());
+        try!(Build::new(true).run());
 
-                if Path::new(RESOURCES_DIR).exists() {
-                    // Compress Resources to zipfile in deploy directory
-                    try!(zip_resources(RESOURCES_DIR,
-                                       &Path::new(DEPLOY_DIR)
-                                            .join(RESOURCES_ZIP_FILENAME)
-                                            .to_str()
-                                            .unwrap()));
-                } else {
-                    return Err(cargo::CmdError::from("Resources directory could not be found at \
-                                                      ./resources.
+        println!("Running tests...");
+        try!(Test::new(true).run());
+        
+        try!(self.prep_deploy_dir());
+
+        if self.resources.exists() {
+            // Compress Resources to zipfile in deploy directory
+            try!(self.zip_resources());
+        } else {
+            return Err(cargo::CmdError::from("Resources directory could not be found at \
+                                              ./resources.
 Amethyst projects require a \
-                                                      Resources directory for storing config \
-                                                      (input, graphics, etc) files and/or \
-                                                      prefab/entity data.
+                                              Resources directory for storing config \
+                                              (input, graphics, etc) files and/or \
+                                              prefab/entity data.
 A Resources directory \
-                                                      can be generated via the following \
-                                                      options:
+                                              can be generated via the following \
+                                              options:
 1. Creating your own. See the \
-                                                      documentation book here: \
-                                                      http://www.amethyst.\
-                                                      rs/book/getting_started/manual_cargo_setup\
-                                                      .html#Resources%20Folder
+                                              documentation book here: \
+                                              http://www.amethyst.\
+                                              rs/book/getting_started/manual_cargo_setup\
+                                              .html#Resources%20Folder
 2. Generating a \
-                                                      default directory. Simply use  amethyst \
-                                                      new [project name]  and copy the \
-                                                      generated resources directory into your \
-                                                      own project."));
-                }
-
-                // Copy compiled binaries - Amethyst system dynamic libraries and executable
-                try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
-                                   &Path::new(DEPLOY_DIR).to_str().unwrap()));
-
-                Ok(a)
-            }
-            Err(e) => Err(e),
+                                              default directory. Simply use  amethyst \
+                                              new [project name]  and copy the \
+                                              generated resources directory into your \
+                                              own project."));
         }
+
+
+        // Copy compiled binaries - Amethyst system dynamic libraries and executable
+        try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
+                           &Path::new(DEPLOY_DIR).to_str().unwrap()));
+
+        Ok(())
     }
 }

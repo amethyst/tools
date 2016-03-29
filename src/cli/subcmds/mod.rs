@@ -1,24 +1,23 @@
-pub mod amethyst_args;
-
 mod build;
 mod clean;
+mod deploy;
 mod module;
-mod test;
+mod new;
 mod run;
-
-pub mod deploy;
-pub mod new;
+mod test;
 
 pub use self::build::Build;
 pub use self::clean::Clean;
+pub use self::deploy::Deploy;
 pub use self::module::Module;
+pub use self::new::New;
 pub use self::run::Run;
 pub use self::test::Test;
 
-use cargo;
+use cargo::*;
 
 pub trait Subcommand {
-    fn run(&mut self) -> cargo::CmdResult;
+    fn run(&mut self) -> CmdResult;
 }
 
 extern crate yaml_rust;
@@ -27,7 +26,6 @@ use std::path::Path;
 use self::yaml_rust::YamlLoader;
 use std::io::prelude::*;
 use std::fs::File;
-use cargo::*;
 
 pub fn is_amethyst_project() -> CmdResult {
     let config_path = Path::new(&".").join("resources").join("config.yml");
