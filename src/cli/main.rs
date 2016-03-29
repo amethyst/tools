@@ -2,7 +2,7 @@
 //! game engine. This project is a *work in progress* and very incomplete;
 //! pardon the dust!
 //!
-//! [am]: https://github.com/ebkalderon/amethyst
+//! [am]: https://github.com/amethyst/amethyst
 
 #[macro_use]
 extern crate clap;
@@ -14,10 +14,10 @@ mod cargo;
 mod project;
 mod subcmds;
 
-use subcmds::Subcommand;
-
 /// The main function.
 fn main() {
+    use subcmds::Subcommand;
+
     let matches = clap_app!(amethyst_cli =>
         (version: &crate_version!()[..])
         (about: "Command-line interface for working with Amethyst")
