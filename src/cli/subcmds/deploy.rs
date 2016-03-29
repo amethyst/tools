@@ -9,6 +9,7 @@ use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
 
 use super::amethyst_args::{AmethystCmd, AmethystArgs};
+use super::is_amethyst_project;
 
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
@@ -156,6 +157,7 @@ pub struct Cmd;
 impl AmethystCmd for Cmd {
     /// Compresses and deploys the project as a distributable program.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+        try!(is_amethyst_project());
         let cargo_args = vec!["release"];
         if matches.is_present("clean") {
             println!("Cleaning release build directory...");
