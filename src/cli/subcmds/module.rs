@@ -77,6 +77,7 @@ pub mod add {
 
     impl AmethystCmd for Cmd {
         fn execute<I: AmethystArgs>(matches: &I) -> CmdResult {
+            try!(is_amethyst_project());
             let module_name = matches.value_of("module").expect("There is no module specified");
 
             let mut mds = try!(AmethystModules::new());
@@ -107,6 +108,7 @@ pub mod remove {
 
     impl AmethystCmd for Cmd {
         fn execute<I: AmethystArgs>(matches: &I) -> CmdResult {
+            try!(is_amethyst_project());
             let module_name = matches.value_of("module").unwrap();
 
             let mut mds = try!(AmethystModules::new());

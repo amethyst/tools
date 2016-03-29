@@ -7,7 +7,10 @@
 #[macro_use]
 extern crate clap;
 extern crate zip;
+extern crate walkdir;
+extern crate toml;
 
+#[macro_use]
 mod cargo;
 mod subcmds;
 use subcmds::amethyst_args::*;
@@ -73,8 +76,11 @@ fn main() {
         (@subcommand clean =>
             (about: "Removes the target directory")
             (@arg release: --release "Whether or not to clean release artifacts"))
+        (@subcommand test =>
+            (about: "Executes all unit and integration tests for the current project"))
         (@subcommand deploy =>
-            (about: "Compresses and deploys the project as a distributable program"))
+            (about: "Compresses and deploys the project as a distributable program")
+            (@arg clean: --clean "Whether or not to clean before building"))
         (@subcommand add =>
             (about: "Adds a shard to the Amethyst game project")
             (@arg module: +required "A name of amethyst shard"))
@@ -92,6 +98,7 @@ fn main() {
 
     execute_if!(matches, build);
     execute_if!(matches, clean);
+    execute_if!(matches, test);
     execute_if!(matches, deploy);
     execute_if!(matches, new);
     execute_if!(matches, run);

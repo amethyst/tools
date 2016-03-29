@@ -2,10 +2,13 @@
 
 # Perform basic integration testing on amethyst_cli.
 
+function prepare() {
+    ln -s ./target/debug/amethyst .
+}
+
 function check_new() {
     echo "--- amethyst new"
 
-    ln -s ./target/debug/amethyst .
     ./amethyst new mygame
 
     if [ $? -eq 0 ] &&
@@ -29,7 +32,6 @@ function check_new() {
 function check_build() {
     echo "--- amethyst build"
 
-    cd mygame
     ../amethyst build
 
     if [ $? -eq 0 ]; then
@@ -100,11 +102,48 @@ function check_clean() {
     exit 1
 }
 
+function check_deploy() {
+    echo "--- amethyst deploy"
+
+    ../amethyst deploy --clean
+
+    #check that deploy dir, resources.zip, binary exists
+    if [ $? -eq 0 ] &&
+       [ -d deploy ] &&
+       [ -f deploy/mygame ] &&
+       [ -f deploy/resources.zip ]; then
+        echo "--- Passed!"
+        echo "--- Cleaning compiled and deployed files"
+        ../amethyst clean
+        rm -rf mygame/deployed
+  	    echo
+  	    return
+    fi
+
+    ls -l mygame/deployed
+    exit 1
+}
+
 function check_corrupt_build() {
     echo "--- amethyst build (corrupt)"
 
-    cd mygame
     rm -rf src
+    ../amethyst build
+
+    if [ $? -ne 0 ]; then
+        echo "--- Passed!"
+        echo
+        return
+    fi
+
+    ls -l
+    exit 1
+}
+
+function check_noconfig_build() {
+    echo "--- amethyst build (no config)"
+
+    rm resources/config.yml
     ../amethyst build
 
     if [ $? -ne 0 ]; then
@@ -123,12 +162,26 @@ function clean_up() {
 
 clean_up
 cargo build
+prepare
 
 check_new
+cd mygame
 check_build
 check_run
 check_clean
+check_deploy
+
+check_noconfig_build
+cd ..
+
+clean_up
+cargo build
+prepare
+
+./amethyst new mygame
+cd mygame
 check_corrupt_build
+
 
 echo
 echo "All tests pass!"
