@@ -10,10 +10,10 @@ impl AmethystCmd for Cmd {
     /// Removes the target directory.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
         try!(is_amethyst_project());
-        let mut args = vec!["clean", "--color=always"];
+        let mut args = "clean --color=always".to_owned();
 
         if matches.is_present("release") {
-            args.push("--release");
+            args = args + " --release";
         }
 
         cargo::call(args)

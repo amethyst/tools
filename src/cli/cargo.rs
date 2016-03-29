@@ -42,12 +42,12 @@ impl From<ZipError> for CmdError {
 
 /// Executes Cargo with the provided arguments. Returns a failure string if
 /// Cargo couldn't be run.
-pub fn call(args: Vec<&str>) -> CmdResult {
+pub fn call(args: String) -> CmdResult {
     use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");
 
-    for arg in args {
+    for arg in args.split(' ') {
         command.arg(arg);
     }
 

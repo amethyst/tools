@@ -16,7 +16,7 @@ impl AmethystCmd for Cmd {
         let project_path = matches.value_of("path").unwrap();
 
         // Execute `cargo new -q --bin --vcs git path`.
-        try!(cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]));
+        try!(cargo::call("new -q --bin --vcs git".to_owned() + project_path.clone()));
 
         let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
 

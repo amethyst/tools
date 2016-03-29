@@ -10,10 +10,10 @@ impl AmethystCmd for Cmd {
     /// Builds and executes the application.
     fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
         try!(is_amethyst_project());
-        let mut args = vec!["run", "--color=always"];
+        let mut args = "run --color=always".to_owned();
 
         if matches.is_present("release") {
-            args.push("--release");
+            args = args + "--release";
         }
 
         cargo::call(args)

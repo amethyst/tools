@@ -15,38 +15,6 @@ mod cargo;
 mod subcmds;
 use subcmds::amethyst_args::*;
 
-/// Ask clap if a given command-line argument was used, and if so, perform the
-/// corresponding action.
-///
-/// ```
-/// execute_if!(matches, say-blah);
-/// ```
-/// is the same as:
-/// ```
-/// if let Some(matches) = matches.subcommand_matches("say-blah") {
-///     match subcmds::say-blah::execute(matches) {
-///         Ok(_v) => std::process::exit(0),
-///         Err(e) => {
-///             println!("Error: {}", e);
-///             std::process::exit(1);
-///         },
-///     }
-/// }
-/// ```
-macro_rules! execute_if {
-    ($matches:expr, $term:ident) => (
-        if let Some(matches) = $matches.subcommand_matches(stringify!($term)) {
-            match subcmds::$term::Cmd::execute(matches) {
-                Ok(_) => std::process::exit(0),
-                Err(e) => {
-                    println!("Error: {}", e);
-                    std::process::exit(1);
-                },
-            }
-        }
-    );
-}
-
 /// The main function.
 fn main() {
     let matches = clap_app!(amethyst_cli =>
@@ -75,16 +43,23 @@ fn main() {
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
-        )
-                      .get_matches();
+        ).get_matches();
 
-    execute_if!(matches, build);
-    execute_if!(matches, clean);
-    execute_if!(matches, test);
-    execute_if!(matches, deploy);
-    execute_if!(matches, module);
-    execute_if!(matches, new);
-    execute_if!(matches, run);
+    let result = match matches.subcommand_name() {
+        Some("build") => subcmds::build::Cmd::execute(&matches),
+        Some("clean") => subcmds::clean::Cmd::execute(&matches),
+        Some("deploy") => subcmds::deploy::Cmd::execute(&matches),
+        Some("module") => subcmds::module::Cmd::execute(&matches),
+        Some("new") => subcmds::new::Cmd::execute(&matches),
+        Some("run") => subcmds::run::Cmd::execute(&matches),
+        Some("test") => subcmds::test::Cmd::execute(&matches),
+        _ => Ok(()),
+    };
+
+    if let Err(e) = result {
+        println!("Error: {}", e);
+        std::process::exit(1);
+    }
 }
 
 #[cfg(test)]

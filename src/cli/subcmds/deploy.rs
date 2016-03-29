@@ -173,16 +173,30 @@ impl AmethystCmd for Cmd {
                 if Path::new(RESOURCES_DIR).exists() {
                     // Compress Resources to zipfile in deploy directory
                     try!(zip_resources(RESOURCES_DIR,
-                                 &Path::new(DEPLOY_DIR)
-                                      .join(RESOURCES_ZIP_FILENAME)
-                                      .to_str()
-                                      .unwrap()));
+                                       &Path::new(DEPLOY_DIR)
+                                            .join(RESOURCES_ZIP_FILENAME)
+                                            .to_str()
+                                            .unwrap()));
                 } else {
-                    return Err(cargo::CmdError::from("Resources directory could not be found at ./resources.
-Amethyst projects require a Resources directory for storing config (input, graphics, etc) files and/or prefab/entity data.
-A Resources directory can be generated via the following options:
-1. Creating your own. See the documentation book here: http://www.amethyst.rs/book/getting_started/manual_cargo_setup.html#Resources%20Folder
-2. Generating a default directory. Simply use  amethyst new [project name]  and copy the generated resources directory into your own project."));
+                    return Err(cargo::CmdError::from("Resources directory could not be found at \
+                                                      ./resources.
+Amethyst projects require a \
+                                                      Resources directory for storing config \
+                                                      (input, graphics, etc) files and/or \
+                                                      prefab/entity data.
+A Resources directory \
+                                                      can be generated via the following \
+                                                      options:
+1. Creating your own. See the \
+                                                      documentation book here: \
+                                                      http://www.amethyst.\
+                                                      rs/book/getting_started/manual_cargo_setup\
+                                                      .html#Resources%20Folder
+2. Generating a \
+                                                      default directory. Simply use  amethyst \
+                                                      new [project name]  and copy the \
+                                                      generated resources directory into your \
+                                                      own project."));
                 }
 
                 // Copy compiled binaries - Amethyst system dynamic libraries and executable
