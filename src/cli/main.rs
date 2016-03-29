@@ -87,7 +87,7 @@ fn main() {
     execute_if!(matches, run);
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(windows)))]
 #[test]
 fn cli() {
     use std::process::Command;
@@ -100,4 +100,10 @@ fn cli() {
 
     println!("{:?}", String::from_utf8_lossy(&output.stderr));
     assert!(output.status.success());
+}
+
+#[cfg(all(test, windows))]
+#[test]
+fn cli(){
+    panic!("Tests can only be run under Linux!")
 }
