@@ -102,8 +102,8 @@ fn main() {
     execute_if!(matches, deploy);
     execute_if!(matches, new);
     execute_if!(matches, run);
-    execute_placed_if!(matches, module, add);
-    execute_placed_if!(matches, module, remove);
+    execute_placed_if!(matches, shard, add);
+    execute_placed_if!(matches, shard, remove);
 }
 
 #[cfg(test)]

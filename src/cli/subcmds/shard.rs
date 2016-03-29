@@ -9,7 +9,7 @@ use cargo::CmdResult;
 struct AmethystModules {
     root: Table,
     dependencies: Table,
-    amethyst_dep: Table
+    amethyst_dep: Table,
 }
 
 impl AmethystModules {
@@ -22,7 +22,7 @@ impl AmethystModules {
 
         let dependencies = match value.get("dependencies") {
             Some(deps) => deps.as_table().expect("Cargo.toml is invalid.").clone(),
-            None => BTreeMap::new()
+            None => BTreeMap::new(),
         };
         let amethyst_dep = match dependencies.get("amethyst") {
             Some(a) => inspect_amethyst_dependency(a),
@@ -32,25 +32,31 @@ impl AmethystModules {
                 map
             }
         };
-        Ok(AmethystModules{ root: value, dependencies: dependencies, amethyst_dep: amethyst_dep})
+        Ok(AmethystModules {
+            root: value,
+            dependencies: dependencies,
+            amethyst_dep: amethyst_dep,
+        })
     }
 
     fn get_features(&self) -> Array {
         match self.amethyst_dep.get("features") {
             Some(f) => f.as_slice().expect("Cargo.toml is invalid.").to_vec(),
-            None => vec![]
+            None => vec![],
         }
     }
 
     fn update(&mut self, features: Array) {
         self.amethyst_dep.insert("features".into(), Value::Array(features));
         self.dependencies.insert("amethyst".into(), Value::Table(self.amethyst_dep.clone()));
-        self.root.insert("dependencies".into(), Value::Table(self.dependencies.clone()));
+        self.root.insert("dependencies".into(),
+                         Value::Table(self.dependencies.clone()));
     }
 
-    fn save(&self) -> CmdResult{
+    fn save(&self) -> CmdResult {
         let mut f = try!(File::create("Cargo.toml").map_err(|_| "Couldn't recreate Cargo.toml"));
-        try!(f.write_all(encode_str(&self.root).as_bytes()).map_err(|_| "Cannot write to Cargo.toml."));
+        try!(f.write_all(encode_str(&self.root).as_bytes())
+              .map_err(|_| "Cannot write to Cargo.toml."));
         Ok(())
     }
 }
@@ -61,17 +67,18 @@ fn inspect_amethyst_dependency(a: &Value) -> BTreeMap<String, Value> {
             let mut map = BTreeMap::new();
             map.insert("version".into(), Value::String(s));
             map
-        },
+        }
         Value::Table(table) => table,
-        _ => panic!("Cargo.toml is invalid.")
+        _ => panic!("Cargo.toml is invalid."),
     }
 }
 
 pub mod add {
     use super::super::amethyst_args::{AmethystCmd, AmethystArgs};
-    use cargo::CmdResult;
+    use cargo::*;
     use super::toml::Value;
     use super::AmethystModules;
+    use super::super::is_amethyst_project;
 
     pub struct Cmd;
 
@@ -83,9 +90,9 @@ pub mod add {
             let mut mds = try!(AmethystModules::new());
             let mut features = mds.get_features();
 
-            if features.iter().any(|s| s.as_str().expect("Cargo.toml is invalid.") == module_name){
+            if features.iter().any(|s| s.as_str().expect("Cargo.toml is invalid.") == module_name) {
                 println!("The project already has module '{}'.", module_name);
-                Err("The project already has this module.")
+                Err(CmdError::Err("The project already has this module.".into()))
             } else {
                 features.push(Value::String(module_name.into()));
 
@@ -101,8 +108,9 @@ pub mod add {
 
 pub mod remove {
     use super::super::amethyst_args::{AmethystCmd, AmethystArgs};
-    use cargo::CmdResult;
+    use cargo::*;
     use super::AmethystModules;
+    use super::super::is_amethyst_project;
 
     pub struct Cmd;
 
