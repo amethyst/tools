@@ -2,12 +2,19 @@
 
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
 use super::is_amethyst_project;
-pub struct Cmd;
+use super::Subcommand;
 
-impl AmethystCmd for Cmd {
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+pub struct Module;
+
+impl Module {
+    pub fn new() -> Module {
+        Module
+    }
+}
+
+impl Subcommand for Module {
+    fn run(&mut self) -> cargo::CmdResult {
         try!(is_amethyst_project());
         unimplemented!();
     }

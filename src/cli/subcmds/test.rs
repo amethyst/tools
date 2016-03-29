@@ -2,15 +2,24 @@
 
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-pub struct Cmd;
+use super::Subcommand;
 
-impl AmethystCmd for Cmd {
-    /// Runs tests for the current Amethyst project.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+/// Runs tests for the current Amethyst project.
+pub struct Test {
+    release: bool,
+}
+
+impl Test {
+    pub fn new(release: bool) -> Test {
+        Test { release: release }
+    }
+}
+
+impl Subcommand for Test {
+    fn run(&mut self) -> cargo::CmdResult {
         let mut args = "test --color=always".to_owned();
 
-        if matches.is_present("release") {
+        if self.release {
             args = args + " --release";
         }
 

@@ -14,6 +14,7 @@ extern crate toml;
 mod cargo;
 mod subcmds;
 use subcmds::amethyst_args::*;
+use subcmds::Subcommand;
 
 /// The main function.
 fn main() {
@@ -46,13 +47,27 @@ fn main() {
         ).get_matches();
 
     let result = match matches.subcommand_name() {
-        Some("build") => subcmds::Build::exec(matches.is_present("release")),
-        Some("clean") => subcmds::Clean::exec(matches.is_present("release")),
+        Some("build") => {
+            let release = matches.is_present("release");
+            subcmds::Build::new(release).run()
+        },
+        Some("clean") => {
+            let release = matches.is_present("release");
+            subcmds::Clean::new(release).run()
+        },
         Some("deploy") => subcmds::deploy::Cmd::execute(&matches),
-        Some("module") => subcmds::module::Cmd::execute(&matches),
+        Some("module") => {
+            subcmds::Module::new().run()
+        },
         Some("new") => subcmds::new::Cmd::execute(&matches),
-        Some("run") => subcmds::run::Cmd::execute(&matches),
-        Some("test") => subcmds::test::Cmd::execute(&matches),
+        Some("run") => {
+            let release = matches.is_present("release");
+            subcmds::Run::new(release).run()
+        },
+        Some("test") => {
+            let release = matches.is_present("release");
+            subcmds::Test::new(release).run()
+        },
         _ => Ok(()),
     };
 

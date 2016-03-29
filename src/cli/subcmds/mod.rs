@@ -1,14 +1,25 @@
 pub mod amethyst_args;
+
 mod build;
 mod clean;
-pub mod test;
+mod module;
+mod test;
+mod run;
+
 pub mod deploy;
-pub mod module;
 pub mod new;
-pub mod run;
 
 pub use self::build::Build;
 pub use self::clean::Clean;
+pub use self::module::Module;
+pub use self::run::Run;
+pub use self::test::Test;
+
+use cargo;
+
+pub trait Subcommand {
+    fn run(&mut self) -> cargo::CmdResult;
+}
 
 extern crate yaml_rust;
 

@@ -2,17 +2,27 @@
 
 use cargo;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
 use super::is_amethyst_project;
-pub struct Cmd;
+use super::Subcommand;
 
-impl AmethystCmd for Cmd {
-    /// Builds and executes the application.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
+/// Builds and executes the application.
+pub struct Run {
+    release: bool,
+}
+
+impl Run {
+    pub fn new(release: bool) -> Run {
+        Run { release: release }
+    }
+}
+
+impl Subcommand for Run {
+    fn run(&mut self) -> cargo::CmdResult {
         try!(is_amethyst_project());
+
         let mut args = "run --color=always".to_owned();
 
-        if matches.is_present("release") {
+        if self.release {
             args = args + "--release";
         }
 

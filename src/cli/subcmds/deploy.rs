@@ -2,14 +2,15 @@
 
 use cargo;
 
+use super::amethyst_args::{AmethystCmd, AmethystArgs};
+use super::is_amethyst_project;
+use super::Subcommand;
+
 use std::fs;
 use std::io::{Read, Write, Error, ErrorKind};
 use std::path::Path;
 use zip::{ZipWriter, CompressionMethod};
 use walkdir::WalkDir;
-
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-use super::is_amethyst_project;
 
 const DEPLOY_DIR: &'static str = "deploy";
 const RESOURCES_DIR: &'static str = "resources";
@@ -161,12 +162,12 @@ impl AmethystCmd for Cmd {
 
         if matches.is_present("clean") {
             println!("Cleaning release build directory...");
-            try!(super::Clean::exec(true));
+            try!(super::Clean::new(true).run());
         }
         println!("Running tests...");
-        try!(super::test::Cmd::execute(matches));
+        try!(super::Test::new(true).run());
         println!("Building project...");
-        match super::Build::exec(true) {
+        match super::Build::new(true).run() {
             Ok(a) => {
                 try!(setup_deploy_dir());
 
