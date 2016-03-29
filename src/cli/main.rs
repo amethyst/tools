@@ -11,6 +11,7 @@ extern crate walkdir;
 extern crate toml;
 
 mod cargo;
+mod project;
 mod subcmds;
 
 use subcmds::Subcommand;
@@ -85,11 +86,9 @@ fn main() {
 fn cli() {
     use std::process::Command;
 
-    let output = Command::new("./tests.sh")
-                     .output()
-                     .unwrap_or_else(|e| {
-                         panic!("failed to execute test script: {:?}", e);
-                     });
+    let output = Command::new("./tests.sh").output().unwrap_or_else(|e| {
+        panic!("failed to execute test script: {:?}", e);
+    });
 
     println!("{:?}", String::from_utf8_lossy(&output.stderr));
     assert!(output.status.success());

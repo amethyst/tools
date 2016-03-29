@@ -95,35 +95,6 @@ fn zip_resource(writer: &mut ZipWriter<fs::File>, path: &Path) -> Result<(), Err
     Ok(())
 }
 
-/// Compress a resources directory and all of it's files
-fn zip_resources(dir: &str, target_file: &str) -> cargo::CmdResult {
-    println!("Compressing resources to: {}", target_file);
-
-    let zip_file = fs::File::create(&Path::new(target_file)).unwrap();
-    let mut writer = ZipWriter::new(zip_file);
-
-    for entry in try!(fs::read_dir(dir)) {
-        if let Ok(file_entry) = entry {
-            let path = file_entry.path();
-
-            // Walk any directories, otherwise compress file
-            if path.is_dir() {
-                for entry in WalkDir::new(&path) {
-                    if let Ok(file_entry) = entry {
-                        try!(zip_resource(&mut writer, &file_entry.path()));
-                    }
-                }
-            } else {
-                try!(zip_resource(&mut writer, &path));
-            }
-        }
-    }
-
-    try!(writer.finish());
-
-    Ok(())
-}
-
 /// Compresses and deploys the project as a distributable program.
 pub struct Deploy {
     clean: bool,
@@ -140,15 +111,18 @@ impl Deploy {
         }
     }
 
+    /// Prepare a clean `deploy` directory for the finished build.
     pub fn prep_deploy_dir(&mut self) -> cargo::CmdResult {
         if self.deploy.exists() {
             try!(fs::remove_dir_all(&self.deploy));
         }
 
         try!(fs::create_dir(&self.deploy));
+
         Ok(())
     }
 
+    /// Compresses the `resources` directory and all of its files.
     pub fn zip_resources(&mut self) -> cargo::CmdResult {
         let path = self.deploy.join(RESOURCES_ZIP_FILENAME);
         let zip = try!(fs::File::create(path));
@@ -159,15 +133,10 @@ impl Deploy {
             if let Ok(e) = entry {
                 let path = e.path();
 
-                // Walk any directories, otherwise compress file
-                if path.is_dir() {
-                    for entry in WalkDir::new(&path) {
-                        if let Ok(e) = entry {
-                            try!(zip_resource(&mut writer, &e.path()));
-                        }
+                for entry in WalkDir::new(&path) {
+                    if let Ok(e) = entry {
+                        try!(zip_resource(&mut writer, &e.path()));
                     }
-                } else {
-                    try!(zip_resource(&mut writer, &path));
                 }
             }
         }
@@ -193,11 +162,14 @@ impl Subcommand for Deploy {
         println!("Running tests...");
         try!(Test::new(true).run());
         
+        println!("Preparing `deploy' directory...");
         try!(self.prep_deploy_dir());
+
+        println!("Compressing resources...");
+        try!(self.zip_resources());
 
         if self.resources.exists() {
             // Compress Resources to zipfile in deploy directory
-            try!(self.zip_resources());
         } else {
             return Err(cargo::CmdError::from("Resources directory could not be found at \
                                               ./resources.
@@ -221,7 +193,7 @@ A Resources directory \
         }
 
 
-        // Copy compiled binaries - Amethyst system dynamic libraries and executable
+        println!("Copying binaries...");
         try!(copy_binaries(&Path::new(BUILD_DIR).to_str().unwrap(),
                            &Path::new(DEPLOY_DIR).to_str().unwrap()));
 
