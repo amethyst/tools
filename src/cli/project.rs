@@ -1,5 +1,3 @@
-extern crate toml;
-
 use std::path::{Path, PathBuf};
 
 /// Error type that indicates whether a Project is valid or not.
