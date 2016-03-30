@@ -8,6 +8,7 @@
 extern crate clap;
 extern crate toml;
 extern crate walkdir;
+extern crate yaml_rust;
 extern crate zip;
 
 mod cargo;

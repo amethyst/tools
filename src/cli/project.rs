@@ -18,6 +18,8 @@ pub type ProjectError = Result<(), &'static str>;
 /// [ya]: http://www.yaml.org/
 pub struct Project {
     root: Option<PathBuf>,
+    ents: Vec<PathBuf>,
+    prefabs: Vec<PathBuf>
 }
 
 impl Project {
@@ -29,14 +31,20 @@ impl Project {
 
         Project {
             root: locate_root(&current_dir().unwrap()),
+            ents: Vec::new(),
+            prefabs: Vec::new(),
         }
     }
 
     /// Returns `Ok(())` if the current directory contains a valid Amethyst
     /// project, returns `Err(String)` otherwise.
     pub fn is_valid(&self) -> ProjectError {
-        if let None =  self.root {
-            return Err("This is not a valid Amethyst project.");
+        if let None = self.root {
+            return Err("This is not an Amethyst project.");
+        }
+
+        if !is_cfg_valid(&self.root.clone().unwrap()) {
+            return Err("The `config.yml` file is either missing or malformed.");
         }
 
         Ok(())
@@ -71,4 +79,25 @@ fn locate_root(working_dir: &Path) -> Option<PathBuf> {
     }
 
     None
+}
+
+/// Checks the validity of a `config.yml` file, given a project root directory.
+fn is_cfg_valid(root_dir: &Path) -> bool {
+    use std::fs::File;
+    use std::io::Read;
+    use yaml_rust::YamlLoader;
+
+    let config = root_dir.join("resources").join("config.yml");
+
+    if let Ok(mut f) = File::open(config) {
+        let mut yaml = String::new();
+        if let Ok(_) = f.read_to_string(&mut yaml) {
+            if let Ok(_) = YamlLoader::load_from_str(&yaml) {
+                // No docs for what should be inside config.yml yet
+                return true;
+            }
+        }
+    }
+
+    false
 }
