@@ -6,9 +6,9 @@
 
 #[macro_use]
 extern crate clap;
-extern crate zip;
-extern crate walkdir;
 extern crate toml;
+extern crate walkdir;
+extern crate zip;
 
 mod cargo;
 mod project;
@@ -16,6 +16,7 @@ mod subcmds;
 
 /// The main function.
 fn main() {
+    use project::Project;
     use subcmds::Subcommand;
 
     let matches = clap_app!(amethyst_cli =>
@@ -31,46 +32,46 @@ fn main() {
         (@subcommand clean =>
             (about: "Removes the target directory")
             (@arg release: --release "Whether or not to clean release artifacts"))
-        (@subcommand test =>
-            (about: "Executes all unit and integration tests for the current project"))
         (@subcommand deploy =>
             (about: "Compresses and deploys the project as a distributable program")
             (@arg clean: --clean "Whether or not to clean before building"))
-        (@subcommand module =>
-            (about: "Adds or removes engine subsystems"))
         (@subcommand new =>
             (about: "Creates a new Amethyst game project")
             (@arg path: +required "Relative path to the project folder"))
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
+        (@subcommand test =>
+            (about: "Executes all unit and integration tests for the current project")
+            (@arg release: --release "Build artifacts in release mode, with optimizations"))
     ).get_matches();
+
+    let proj = Project::new();
 
     let result = match matches.subcommand() {
         ("build", Some(m)) => {
             let release = m.is_present("release");
-            subcmds::Build::new(release).run()
+            subcmds::Build::new(release).run(&proj)
         }
         ("clean", Some(m)) => {
             let release = m.is_present("release");
-            subcmds::Clean::new(release).run()
+            subcmds::Clean::new(release).run(&proj)
         }
         ("deploy", Some(m)) => {
             let clean = m.is_present("clean");
-            subcmds::Deploy::new(clean).run()
+            subcmds::Deploy::new(clean).run(&proj)
         }
-        ("module", Some(_)) => subcmds::Module::new().run(),
         ("new", Some(m)) => {
             let project = m.value_of("path").unwrap().to_string();
-            subcmds::New::new(project).run()
+            subcmds::New::new(project).run(&proj)
         }
         ("run", Some(m)) => {
             let release = m.is_present("release");
-            subcmds::Run::new(release).run()
+            subcmds::Run::new(release).run(&proj)
         }
         ("test", Some(m)) => {
             let release = m.is_present("release");
-            subcmds::Test::new(release).run()
+            subcmds::Test::new(release).run(&proj)
         }
         _ => Ok(()),
     };

@@ -1,8 +1,7 @@
 //! The build command.
 
 use cargo;
-
-use super::is_amethyst_project;
+use project::Project;
 use super::Subcommand;
 
 /// Compiles the current Amethyst project.
@@ -17,8 +16,8 @@ impl Build {
 }
 
 impl Subcommand for Build {
-    fn run(&mut self) -> cargo::CmdResult {
-        try!(is_amethyst_project());
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        try!(proj.is_valid());
 
         let mut args = "build --color=always".to_owned();
 

@@ -1,8 +1,7 @@
 //! The clean command.
 
 use cargo;
-
-use super::is_amethyst_project;
+use project::Project;
 use super::Subcommand;
 
 /// Removes the target directory.
@@ -17,8 +16,8 @@ impl Clean {
 }
 
 impl Subcommand for Clean {
-    fn run(&mut self) -> cargo::CmdResult {
-        try!(is_amethyst_project());
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        try!(proj.is_valid());
 
         let mut args = "clean --color=always".to_owned();
 
