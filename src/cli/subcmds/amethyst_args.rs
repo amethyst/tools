@@ -14,7 +14,7 @@ pub trait AmethystArgs {
     fn value_of(&self, name: &str) -> Option<&str>;
 }
 
-impl<'a, 'b> AmethystArgs for ArgMatches<'a, 'b> {
+impl<'a> AmethystArgs for ArgMatches<'a> {
     fn is_present(&self, name: &str) -> bool {
         self.is_present(name)
     }
