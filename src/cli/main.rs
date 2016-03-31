@@ -17,6 +17,7 @@ mod subcmds;
 
 /// The main function.
 fn main() {
+    use std::io::{stderr, Write};
     use project::Project;
     use subcmds::Subcommand;
 
@@ -78,7 +79,7 @@ fn main() {
     };
 
     if let Err(e) = result {
-        println!("Error: {}", e);
+        stderr().write_fmt(format_args!("Error: {}\n", e)).unwrap();
         std::process::exit(1);
     }
 }
