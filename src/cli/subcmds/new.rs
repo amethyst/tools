@@ -1,9 +1,8 @@
 //! The new command.
 
 use std::fs;
-use std::io::{copy, Write};
-use std::path;
-use zip::ZipArchive;
+use std::io::{self, copy, Write};
+use std::path::Path;
 
 use cargo;
 
@@ -18,28 +17,12 @@ impl AmethystCmd for Cmd {
         // Execute `cargo new -q --bin --vcs git path`.
         try!(cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]));
 
-        let new_project = path::Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
-
-        let file = fs::File::open(&new_project).unwrap();
-        let mut archive = ZipArchive::new(file).unwrap();
-
-        fs::create_dir_all(&project_path).unwrap();
-        let base = path::Path::new(project_path);
-
-        for i in 0..archive.len() {
-            let mut file = archive.by_index(i).unwrap();
-            let outpath = base.join(sanitize_filename(file.name()));
-
-            if (&*file.name()).ends_with('/') {
-                fs::create_dir_all(&outpath).unwrap();
-            } else {
-                let mut outfile = fs::File::create(&outpath).unwrap();
-                copy(&mut file, &mut outfile).unwrap();
-            }
-        }
+        // Copy template
+        let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("project_template");
+        copy_dir(template.as_path(), Path::new(project_path)).unwrap();
 
         // Append amethyst dependency to the project's Cargo.toml.
-        let manifest_path = path::Path::new(project_path).join("Cargo.toml");
+        let manifest_path = Path::new(project_path).join("Cargo.toml");
         let manifest = fs::OpenOptions::new().write(true).append(true).open(manifest_path);
 
         if let Ok(mut file) = manifest {
@@ -50,17 +33,30 @@ impl AmethystCmd for Cmd {
         }
     }
 }
-fn sanitize_filename(filename: &str) -> path::PathBuf {
-    let no_null_filename = match filename.find('\0') {
-        Some(index) => &filename[0..index],
-        None => filename,
-    };
 
-    path::Path::new(no_null_filename)
-        .components()
-        .filter(|component| *component != path::Component::ParentDir)
-        .fold(path::PathBuf::new(), |mut path, ref cur| {
-            path.push(cur.as_os_str());
-            path
-        })
+/// Recursive copy a directory.
+pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> io::Result<()> {
+    let dir = try!(fs::read_dir(input_dir));
+    for file in dir {
+        let file = try!(file);
+
+        let file_name = file.file_name();
+        let file_name = match file_name.to_str() {
+            Some(file_name) => file_name,
+            None => continue,
+        };
+
+        if !file_name.starts_with(".") {
+            let input_path = input_dir.join(file_name);
+            let output_path = output_dir.join(file_name);
+
+            if try!(file.file_type()).is_dir() {
+                try!(fs::create_dir_all(output_path.as_path()));
+                try!(copy_dir(input_path.as_path(), output_path.as_path()));
+            } else {
+                try!(fs::copy(input_path.as_path(), output_path.as_path()));
+            }
+        }
+    }
+    Ok(())
 }
