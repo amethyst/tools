@@ -1,0 +1,3 @@
+[submodule "project_template"]
+	path = project_template
+	url = https://github.com/amethyst/project_template.git
