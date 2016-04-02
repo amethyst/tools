@@ -17,8 +17,11 @@ pub type ProjectError = Result<(), &'static str>;
 /// [ca]: https://crates.io/
 /// [ya]: http://www.yaml.org/
 pub struct Project {
+    /// Absolute path to the root directory of this project.
     root: Option<PathBuf>,
+    /// Relative paths to YAML files containing entities.
     ents: Vec<PathBuf>,
+    /// Relative paths to YAML files containing entities.
     prefabs: Vec<PathBuf>
 }
 
