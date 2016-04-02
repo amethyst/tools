@@ -37,6 +37,12 @@ fn main() {
         (@subcommand deploy =>
             (about: "Compresses and deploys the project as a distributable program")
             (@arg clean: --clean "Whether or not to clean before building"))
+        (@subcommand add =>
+            (about: "Adds a shard to the Amethyst game project")
+            (@arg module: +required "A name of amethyst shard"))
+        (@subcommand remove =>
+            (about: "Removes a shard to the Amethyst game project")
+            (@arg module: +required "A name of amethyst shard"))
         (@subcommand new =>
             (about: "Creates a new Amethyst game project")
             (@arg path: +required "Relative path to the project folder"))
@@ -84,7 +90,7 @@ fn main() {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(windows)))]
 #[test]
 fn cli() {
     use std::process::Command;
@@ -95,4 +101,10 @@ fn cli() {
 
     println!("{:?}", String::from_utf8_lossy(&output.stderr));
     assert!(output.status.success());
+}
+
+#[cfg(all(test, windows))]
+#[test]
+fn cli(){
+    panic!("Tests can only be run under Linux!")
 }
