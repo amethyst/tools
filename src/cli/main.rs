@@ -123,6 +123,6 @@ fn cli() {
 
 #[cfg(all(test, windows))]
 #[test]
-fn cli() {
+fn cli(){
     panic!("Tests can only be run under Linux!")
 }
