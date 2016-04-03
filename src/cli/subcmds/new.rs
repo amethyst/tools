@@ -1,9 +1,8 @@
 //! The new command.
 
-use std::fs::{create_dir_all, File, OpenOptions};
-use std::io::{copy, Write};
-use std::path::{Path, PathBuf};
-use zip::ZipArchive;
+use std::fs::OpenOptions;
+use std::io::Write;
+use std::path::Path;
 
 use cargo;
 use project::Project;
@@ -24,24 +23,8 @@ impl Subcommand for New {
     fn run(&mut self, _: &Project) -> cargo::CmdResult {
         try!(cargo::call("new -q --bin --vcs git ".to_owned() + self.project_path.as_str()));
 
-        let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("new_project.zip");
-        let file = File::open(&template).unwrap();
-        let mut archive = ZipArchive::new(file).unwrap();
-
-        create_dir_all(&self.project_path).unwrap();
-        let base = Path::new(&self.project_path);
-
-        for i in 0..archive.len() {
-            let mut file = archive.by_index(i).unwrap();
-            let outpath = base.join(sanitize_filename(file.name()));
-
-            if (&*file.name()).ends_with('/') {
-                create_dir_all(&outpath).unwrap();
-            } else {
-                let mut outfile = File::create(&outpath).unwrap();
-                copy(&mut file, &mut outfile).unwrap();
-            }
-        }
+        let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("project_template");
+        try!(copy_dir(&template, &Path::new(&self.project_path)));
 
         // Append amethyst dependency to the project's Cargo.toml.
         let manifest_path = Path::new(&self.project_path).join("Cargo.toml");
@@ -56,19 +39,32 @@ impl Subcommand for New {
     }
 }
 
-fn sanitize_filename(filename: &str) -> PathBuf {
-    use std::path::Component;
+/// Recursively copies a directory from one location to another.
+pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> cargo::CmdResult {
+    use std::fs::{copy, create_dir_all, read_dir};
 
-    let no_null_filename = match filename.find('\0') {
-        Some(index) => &filename[0..index],
-        None => filename,
-    };
+    let dir = try!(read_dir(input_dir));
+    for file in dir {
+        let file = try!(file);
 
-    Path::new(no_null_filename)
-        .components()
-        .filter(|component| *component != Component::ParentDir)
-        .fold(PathBuf::new(), |mut path, ref cur| {
-            path.push(cur.as_os_str());
-            path
-        })
+        let file_name = file.file_name();
+        let file_name = match file_name.to_str() {
+            Some(file_name) => file_name,
+            None => continue,
+        };
+
+        if !file_name.starts_with(".") {
+            let input_path = input_dir.join(file_name);
+            let output_path = output_dir.join(file_name);
+
+            if try!(file.file_type()).is_dir() {
+                try!(create_dir_all(output_path.as_path()));
+                try!(copy_dir(input_path.as_path(), output_path.as_path()));
+            } else {
+                try!(copy(input_path.as_path(), output_path.as_path()));
+            }
+        }
+    }
+
+    Ok(())
 }
