@@ -1,4 +1,13 @@
+//! Game project processing and validation.
+
 use std::path::{Path, PathBuf};
+
+const INVALID_PROJ: &'static str = "This is not a valid game project. Either \
+                                    you should:\n\n\
+                                    1. Make sure your project matches the \
+                                       format in book chapter 2.2:\n   \
+                                       https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html\n\
+                                    2. Generate a fresh game project with `amethyst new [name]`.";
 
 /// Error type that indicates whether a Project is valid or not.
 pub type ProjectError<'a> = Result<(), &'a str>;
@@ -20,7 +29,7 @@ pub struct Project {
     /// Absolute path to the root directory of this project.
     root: Option<PathBuf>,
     /// Relative paths to YAML files containing entities.
-    ents: Vec<PathBuf>,
+    entities: Vec<PathBuf>,
     /// Relative paths to YAML files containing entities.
     prefabs: Vec<PathBuf>
 }
@@ -34,7 +43,7 @@ impl Project {
 
         Project {
             root: locate_root(&current_dir().unwrap()),
-            ents: Vec::new(),
+            entities: Vec::new(),
             prefabs: Vec::new(),
         }
     }
@@ -43,7 +52,7 @@ impl Project {
     /// project, returns `Err(String)` otherwise.
     pub fn is_valid(&self) -> ProjectError {
         if let None = self.root {
-            return Err("This is not an Amethyst project.");
+            return Err(INVALID_PROJ);
         }
 
         if !is_cfg_valid(&self.root.clone().unwrap()) {

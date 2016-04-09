@@ -15,9 +15,9 @@ pub enum CmdError {
 impl fmt::Display for CmdError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let &CmdError::Err(ref err) = self {
-            write!(f, "[CmdError] {}", err)
+            write!(f, "{}", err)
         } else {
-            write!(f, "[CmdError] {:?}", self)
+            write!(f, "{:?}", self)
         }
     }
 }
