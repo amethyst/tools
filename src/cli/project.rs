@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 /// Error type that indicates whether a Project is valid or not.
-pub type ProjectError = Result<(), &'static str>;
+pub type ProjectError<'a> = Result<(), &'a str>;
 
 /// A logical representation of an Amethyst project.
 ///
