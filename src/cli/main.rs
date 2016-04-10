@@ -12,6 +12,7 @@ extern crate yaml_rust;
 extern crate zip;
 
 mod cargo;
+mod features;
 mod project;
 mod subcmds;
 
