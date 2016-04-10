@@ -51,7 +51,7 @@ fn main() {
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
         (@subcommand test =>
-            (about: "Executes all unit and integration tests for the current project")
+            (@about: "Run the tests")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
     ).get_matches();
 
