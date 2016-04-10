@@ -2,12 +2,11 @@
 
 use std::path::{Path, PathBuf};
 
-const INVALID_PROJ: &'static str = "This is not a valid game project. Either \
-                                    you should:\n\n\
-                                    1. Make sure your project matches the \
-                                       format in book chapter 2.2:\n   \
-                                       https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html\n\
-                                    2. Generate a fresh game project with `amethyst new [name]`.";
+const INVALID_PROJ: &'static str = r#"This is not a valid game project. Either you should:
+
+1. Make sure your project matches the format in book chapter 2.2:
+   https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html
+2. Generate a fresh game project with `amethyst new [name]`."#;
 
 /// Error type that indicates whether a Project is valid or not.
 pub type ProjectError<'a> = Result<(), &'a str>;
@@ -31,7 +30,7 @@ pub struct Project {
     /// Relative paths to YAML files containing entities.
     entities: Vec<PathBuf>,
     /// Relative paths to YAML files containing entities.
-    prefabs: Vec<PathBuf>
+    prefabs: Vec<PathBuf>,
 }
 
 impl Project {
@@ -83,7 +82,7 @@ fn locate_root(working_dir: &Path) -> Option<PathBuf> {
     let has_src_dir = working_dir.join("src").exists();
 
     if has_manifest && has_ent_dir && has_prf_dir && has_src_dir {
-       return Some(working_dir.to_owned());
+        return Some(working_dir.to_owned());
     }
 
     if let Some(p) = working_dir.parent() {

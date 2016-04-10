@@ -84,7 +84,7 @@ impl Subcommand for Deploy {
 
         println!("Running tests...");
         try!(Test::new(true).run(&proj));
-        
+
         println!("Preparing `deploy` directory...");
         try!(self.prep_deploy_dir());
 
