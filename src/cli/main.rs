@@ -29,26 +29,26 @@ fn main() {
         (@arg verbose: -v --verbose +global "Use verbose output")
         (@arg quiet: -q --quiet +global "No output printed to stdout")
         (@subcommand add =>
-            (about: "Adds a shard to the Amethyst game project")
+            (about: "Add a shard to the Amethyst game project")
             (@arg feature: +required "Name of Amethyst shard"))
         (@subcommand build =>
-            (about: "Compiles the current project and all of its dependencies")
+            (about: "Compile the current project and all of its dependencies")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
         (@subcommand clean =>
-            (about: "Removes the target directory")
+            (about: "Remove the target directory")
             (@arg release: --release "Whether or not to clean release artifacts"))
         (@subcommand deploy =>
-            (about: "Compresses and deploys the project as a distributable program")
+            (about: "Compress and deploy the project as a distributable program")
             (@arg clean: --clean "Whether or not to clean before building"))
         (@subcommand new =>
-            (about: "Creates a new Amethyst game project")
+            (about: "Create a new Amethyst game project")
             (@arg path: +required "Relative path to the project folder"))
         (@subcommand remove =>
-            (about: "Removes a shard from the Amethyst game project")
+            (about: "Remove a shard from the Amethyst game project")
             (@arg feature: +required "Name of Amethyst shard")
-            (@arg purge: --purge "Whether or not to delete files/folders of that shard"))
+            (@arg purge: --purge "Delete any files/folders associated with that shard"))
         (@subcommand run =>
-            (about: "Runs the main binary of the game")
+            (about: "Run the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
         (@subcommand test =>
             (@about: "Run the tests")
