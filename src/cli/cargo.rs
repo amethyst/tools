@@ -49,7 +49,7 @@ pub fn call_str(args: String) -> CmdResult {
 
 /// Executes Cargo with a vector of argument strings. Returns a failure string
 /// if Cargo couldn't be run.
-pub fn call_vec(args: Vec<String>) -> CmdResult {
+pub fn call_vec(args: Vec<&str>) -> CmdResult {
     use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");

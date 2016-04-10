@@ -20,8 +20,11 @@ impl New {
 }
 
 impl Subcommand for New {
-    fn run(&mut self, _: &Project) -> cargo::CmdResult {
-        try!(cargo::call("new -q --bin --vcs git ".to_owned() + self.project_path.as_str()));
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        try!(proj.is_valid());
+
+        let args = "new -q --bin --vcs git ".to_owned() + self.project_path.as_str();
+        try!(cargo::call_str(args));
 
         let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("project_template");
         try!(copy_dir(&template, &Path::new(&self.project_path)));

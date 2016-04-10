@@ -20,12 +20,12 @@ impl Subcommand for Run {
     fn run(&mut self, proj: &Project) -> cargo::CmdResult {
         try!(proj.is_valid());
 
-        let mut args = "run --color=always".to_owned();
+        let mut args = vec!["run", "--color=always"];
 
         if self.release {
-            args = args + " --release";
+            args.push("--release");
         }
 
-        cargo::call(args)
+        cargo::call_vec(args)
     }
 }

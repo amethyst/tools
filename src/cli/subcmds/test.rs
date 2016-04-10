@@ -19,12 +19,12 @@ impl Subcommand for Test {
     fn run(&mut self, proj: &Project) -> cargo::CmdResult {
         try!(proj.is_valid());
 
-        let mut args = "test --color=always".to_owned();
+        let mut args = vec!["test", "--color=always"];
 
         if self.release {
-            args = args + " --release";
+            args.push("--release");
         }
 
-        cargo::call(args)
+        cargo::call_vec(args)
     }
 }
