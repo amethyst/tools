@@ -1,21 +1,30 @@
 //! The clean command.
 
 use cargo;
+use project::Project;
+use super::Subcommand;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-use super::is_amethyst_project;
-pub struct Cmd;
+/// Removes the target directory.
+pub struct Clean {
+    release: bool,
+}
 
-impl AmethystCmd for Cmd {
-    /// Removes the target directory.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
-        try!(is_amethyst_project());
+impl Clean {
+    pub fn new(release: bool) -> Clean {
+        Clean { release: release }
+    }
+}
+
+impl Subcommand for Clean {
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        try!(proj.is_valid());
+
         let mut args = vec!["clean", "--color=always"];
 
-        if matches.is_present("release") {
+        if self.release {
             args.push("--release");
         }
 
-        cargo::call(args)
+        cargo::call_vec(args)
     }
 }

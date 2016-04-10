@@ -15,9 +15,9 @@ pub enum CmdError {
 impl fmt::Display for CmdError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if let &CmdError::Err(ref err) = self {
-            write!(f, "[CmdError] {}", err)
+            write!(f, "{}", err)
         } else {
-            write!(f, "[CmdError] {:?}", self)
+            write!(f, "{:?}", self)
         }
     }
 }
@@ -40,9 +40,16 @@ impl From<ZipError> for CmdError {
     }
 }
 
-/// Executes Cargo with the provided arguments. Returns a failure string if
-/// Cargo couldn't be run.
-pub fn call(args: Vec<&str>) -> CmdResult {
+/// Executes Cargo with the provided argument string. Returns a failure string
+/// if Cargo couldn't be run.
+pub fn call_str(args: String) -> CmdResult {
+    let arg_list = args.split(' ').collect();
+    call_vec(arg_list)
+}
+
+/// Executes Cargo with a vector of argument strings. Returns a failure string
+/// if Cargo couldn't be run.
+pub fn call_vec(args: Vec<&str>) -> CmdResult {
     use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");

@@ -1,21 +1,31 @@
 //! The run command.
 
 use cargo;
+use project::Project;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-use super::is_amethyst_project;
-pub struct Cmd;
+use super::Subcommand;
 
-impl AmethystCmd for Cmd {
-    /// Builds and executes the application.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
-        try!(is_amethyst_project());
+/// Builds and executes the application.
+pub struct Run {
+    release: bool,
+}
+
+impl Run {
+    pub fn new(release: bool) -> Run {
+        Run { release: release }
+    }
+}
+
+impl Subcommand for Run {
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        try!(proj.is_valid());
+
         let mut args = vec!["run", "--color=always"];
 
-        if matches.is_present("release") {
+        if self.release {
             args.push("--release");
         }
 
-        cargo::call(args)
+        cargo::call_vec(args)
     }
 }

@@ -1,29 +1,35 @@
 //! The new command.
 
-use std::fs;
-use std::io::{self, copy, Write};
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::path::Path;
 
 use cargo;
+use project::Project;
+use super::Subcommand;
 
-use super::amethyst_args::{AmethystCmd, AmethystArgs};
-pub struct Cmd;
+/// Creates a new Amethyst game project.
+pub struct New {
+    project_path: String,
+}
 
-impl AmethystCmd for Cmd {
-    /// Creates a new Amethyst game project.
-    fn execute<I: AmethystArgs>(matches: &I) -> cargo::CmdResult {
-        let project_path = matches.value_of("path").unwrap();
+impl New {
+    pub fn new(path: String) -> New {
+        New { project_path: path }
+    }
+}
 
-        // Execute `cargo new -q --bin --vcs git path`.
-        try!(cargo::call(vec!["new", "-q", "--bin", "--vcs", "git", project_path.clone()]));
+impl Subcommand for New {
+    fn run(&mut self, proj: &Project) -> cargo::CmdResult {
+        let args = "new -q --bin --vcs git ".to_owned() + self.project_path.as_str();
+        try!(cargo::call_str(args));
 
-        // Copy template
         let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("project_template");
-        copy_dir(template.as_path(), Path::new(project_path)).unwrap();
+        try!(copy_dir(&template, &Path::new(&self.project_path)));
 
         // Append amethyst dependency to the project's Cargo.toml.
-        let manifest_path = Path::new(project_path).join("Cargo.toml");
-        let manifest = fs::OpenOptions::new().write(true).append(true).open(manifest_path);
+        let manifest_path = Path::new(&self.project_path).join("Cargo.toml");
+        let manifest = OpenOptions::new().write(true).append(true).open(manifest_path);
 
         if let Ok(mut file) = manifest {
             writeln!(file, "amethyst = \"*\"").unwrap();
@@ -34,9 +40,11 @@ impl AmethystCmd for Cmd {
     }
 }
 
-/// Recursive copy a directory.
-pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> io::Result<()> {
-    let dir = try!(fs::read_dir(input_dir));
+/// Recursively copies a directory from one location to another.
+pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> cargo::CmdResult {
+    use std::fs::{copy, create_dir_all, read_dir};
+
+    let dir = try!(read_dir(input_dir));
     for file in dir {
         let file = try!(file);
 
@@ -51,12 +59,13 @@ pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> io::Result<()> {
             let output_path = output_dir.join(file_name);
 
             if try!(file.file_type()).is_dir() {
-                try!(fs::create_dir_all(output_path.as_path()));
+                try!(create_dir_all(output_path.as_path()));
                 try!(copy_dir(input_path.as_path(), output_path.as_path()));
-            } else {
-                try!(fs::copy(input_path.as_path(), output_path.as_path()));
+            } else if (file_name != "LICENSE") {
+                try!(copy(input_path.as_path(), output_path.as_path()));
             }
         }
     }
+
     Ok(())
 }
