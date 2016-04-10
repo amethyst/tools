@@ -3,7 +3,8 @@
 use cargo;
 
 use std::collections::BTreeMap;
-use toml::{Array, Parser, Table, Value};
+use std::fs::File;
+use toml::{Array, encode_str, Parser, Table, Value};
 
 /// Switches engine features on and off through the `Cargo.toml` manifest and
 /// modifies the `resources` file structure accordingly.
@@ -33,7 +34,6 @@ impl Features {
     /// error handling can be removed and pushed to `Project` instead, and it
     /// would be safe to use `unwrap()` for most cases here.
     pub fn new() -> Result<Features, &'static str> {
-        use std::fs::File;
         use std::io::Read;
 
         let mut file = try!(File::open("Cargo.toml").map_err(|_| "Couldn't open Cargo.toml"));
@@ -64,7 +64,7 @@ impl Features {
     }
 
     /// Returns a list of enabled Amethyst engine features.
-    pub fn get_features(&mut self) -> Array {
+    pub fn features(&self) -> Array {
         match self.amethyst.get("features") {
             Some(f) => f.as_slice().expect("Cargo.toml is invalid.").to_vec(),
             None => Vec::new(),
@@ -72,18 +72,45 @@ impl Features {
     }
 
     /// Turn an engine feature on in the Cargo manifest.
-    pub fn enable(&mut self, feature: &str) {
-        unimplemented!();
+    pub fn enable(&mut self, feature: &str) -> cargo::CmdResult {
+        let mut f = self.features();
+
+        if f.iter().any(|s| s.as_str().expect("Cargo.toml is invalid.") == feature) {
+            let err = "Feature '".to_string() + feature + "' is already enabled.";
+            Err(cargo::CmdError::Err(err))
+        } else {
+            f.push(Value::String(feature.into()));
+            self.update(f);
+            Ok(())
+        }
     }
 
     /// Turn an engine feature off in the Cargo manifest.
-    pub fn disable(&mut self, feature: &str) {
-        unimplemented!();
+    pub fn disable(&mut self, feature: &str) -> cargo::CmdResult {
+        let mut f = self.features();
+
+        f.retain(|s| s.as_str().expect("Cargo.toml is invalid.") != feature);
+        self.update(f);
+
+        Ok(())
+    }
+
+    /// Applies the given feature set to the in-memory TOML data.
+    fn update(&mut self, features: Array) {
+        self.amethyst.insert("features".into(), Value::Array(features));
+        self.dep_list.insert("amethyst".into(), Value::Table(self.amethyst.clone()));
+        self.manifest.insert("dependencies".into(), Value::Table(self.dep_list.clone()));
     }
 
     /// Writes the current feature set out to the Cargo manifest.
     pub fn apply(&mut self) -> cargo::CmdResult {
-        unimplemented!();
+        use std::io::Write;
+
+        let mut file = try!(File::open("Cargo.toml").map_err(|_| "Couldn't open Cargo.toml"));
+        try!(file.write_all(encode_str(&self.manifest).as_bytes())
+                 .map_err(|_| "Cannot write to Cargo.toml."));
+
+        Ok(())
     }
 }
 
