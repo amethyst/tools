@@ -21,8 +21,6 @@ impl New {
 
 impl Subcommand for New {
     fn run(&mut self, proj: &Project) -> cargo::CmdResult {
-        try!(proj.is_valid());
-
         let args = "new -q --bin --vcs git ".to_owned() + self.project_path.as_str();
         try!(cargo::call_str(args));
 

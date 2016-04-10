@@ -3,7 +3,6 @@
 use cargo;
 
 use std::collections::BTreeMap;
-use std::fs::File;
 use toml::{Array, encode_str, Parser, Table, Value};
 
 /// Switches engine features on and off through the `Cargo.toml` manifest and
@@ -34,6 +33,7 @@ impl Features {
     /// error handling can be removed and pushed to `Project` instead, and it
     /// would be safe to use `unwrap()` for most cases here.
     pub fn new() -> Result<Features, &'static str> {
+        use std::fs::File;
         use std::io::Read;
 
         let mut file = try!(File::open("Cargo.toml").map_err(|_| "Couldn't open Cargo.toml"));
@@ -104,9 +104,14 @@ impl Features {
 
     /// Writes the current feature set out to the Cargo manifest.
     pub fn apply(&mut self) -> cargo::CmdResult {
+        use std::fs::OpenOptions;
         use std::io::Write;
 
-        let mut file = try!(File::open("Cargo.toml").map_err(|_| "Couldn't open Cargo.toml"));
+        let mut file = try!(OpenOptions::new()
+                                .write(true)
+                                .open("Cargo.toml")
+                                .map_err(|_| "Couldn't open Cargo.toml"));
+
         try!(file.write_all(encode_str(&self.manifest).as_bytes())
                  .map_err(|_| "Cannot write to Cargo.toml."));
 

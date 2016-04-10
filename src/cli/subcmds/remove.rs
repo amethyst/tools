@@ -1,6 +1,7 @@
 //! The remove command.
 
 use cargo;
+use features::Features;
 use project::Project;
 use super::Subcommand;
 
@@ -24,6 +25,10 @@ impl Subcommand for Remove {
     fn run(&mut self, proj: &Project) -> cargo::CmdResult {
         try!(proj.is_valid());
 
-        unimplemented!();
+        let mut feat = try!(Features::new());
+        try!(feat.disable(self.feature.as_str()));
+        try!(feat.apply());
+
+        Ok(())
     }
 }
