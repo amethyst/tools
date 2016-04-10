@@ -102,7 +102,8 @@ fn is_cfg_valid(root_dir: &Path) -> bool {
 
     if let Ok(mut f) = File::open(config) {
         let mut yaml = String::new();
-        if let Ok(_) = f.read_to_string(&mut yaml) {
+
+        if f.read_to_string(&mut yaml).is_ok() {
             if let Ok(_) = YamlLoader::load_from_str(&yaml) {
                 // No docs for what should be inside config.yml yet
                 return true;
