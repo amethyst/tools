@@ -40,14 +40,21 @@ impl From<ZipError> for CmdError {
     }
 }
 
-/// Executes Cargo with the provided arguments. Returns a failure string if
-/// Cargo couldn't be run.
-pub fn call(args: String) -> CmdResult {
+/// Executes Cargo with the provided argument string. Returns a failure string
+/// if Cargo couldn't be run.
+pub fn call_str(args: String) -> CmdResult {
+    let arg_list = args.split(' ').collect();
+    call_vec(arg_list)
+}
+
+/// Executes Cargo with a vector of argument strings. Returns a failure string
+/// if Cargo couldn't be run.
+pub fn call_vec(args: Vec<String>) -> CmdResult {
     use std::process::{Command, Stdio};
 
     let mut command = Command::new("cargo");
 
-    for arg in args.split(' ') {
+    for arg in args {
         command.arg(arg);
     }
 

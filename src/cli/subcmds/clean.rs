@@ -19,12 +19,12 @@ impl Subcommand for Clean {
     fn run(&mut self, proj: &Project) -> cargo::CmdResult {
         try!(proj.is_valid());
 
-        let mut args = "clean --color=always".to_owned();
+        let mut args = vec!["clean", "--color=always"];
 
         if self.release {
-            args = args + " --release";
+            args.push("--release");
         }
 
-        cargo::call(args)
+        cargo::call_vec(args)
     }
 }
