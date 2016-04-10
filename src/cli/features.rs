@@ -10,6 +10,9 @@ use toml::{Array, Parser, Table, Value};
 ///
 /// TODO: Should this structure handle file structure modification for features
 /// or should the `Project` structure do it instead?
+///
+/// TODO: Should `Features` or `Project` handle file/folder creation at all?
+/// Perhaps the `Add` and `Remove` subcommands should handle it instead?
 pub struct Features {
     /// Entire contents of the `Cargo.toml` manifest.
     manifest: Table,
