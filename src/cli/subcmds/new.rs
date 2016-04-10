@@ -1,7 +1,7 @@
 //! The new command.
 
 use std::fs;
-use std::io::{self, copy, Write};
+use std::io::{self, Write};
 use std::path::Path;
 
 use cargo;
@@ -19,7 +19,7 @@ impl AmethystCmd for Cmd {
 
         // Copy template
         let template = Path::new(env!("CARGO_MANIFEST_DIR")).join("project_template");
-        copy_dir(template.as_path(), Path::new(project_path)).unwrap();
+        copy_dir(template.as_path(), Path::new(project_path), &vec!["LICENSE"]).unwrap();
 
         // Append amethyst dependency to the project's Cargo.toml.
         let manifest_path = Path::new(project_path).join("Cargo.toml");
@@ -35,7 +35,7 @@ impl AmethystCmd for Cmd {
 }
 
 /// Recursive copy a directory.
-pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> io::Result<()> {
+pub fn copy_dir(input_dir: &Path, output_dir: &Path, exclude: &Vec<&str>) -> io::Result<()> {
     let dir = try!(fs::read_dir(input_dir));
     for file in dir {
         let file = try!(file);
@@ -46,13 +46,13 @@ pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> io::Result<()> {
             None => continue,
         };
 
-        if !file_name.starts_with(".") {
+        if !file_name.starts_with(".") && !exclude.contains(&file_name) {
             let input_path = input_dir.join(file_name);
             let output_path = output_dir.join(file_name);
 
             if try!(file.file_type()).is_dir() {
                 try!(fs::create_dir_all(output_path.as_path()));
-                try!(copy_dir(input_path.as_path(), output_path.as_path()));
+                try!(copy_dir(input_path.as_path(), output_path.as_path(), exclude));
             } else {
                 try!(fs::copy(input_path.as_path(), output_path.as_path()));
             }
