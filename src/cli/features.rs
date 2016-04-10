@@ -84,6 +84,8 @@ impl Features {
     }
 }
 
+/// Check for the existence the `amethyst = "*"` dependency, and add it to the
+/// manifest if nonexistent.
 fn inspect_amethyst_dep(a: &Value) -> BTreeMap<String, Value> {
     match a.clone() {
         Value::String(s) => {
