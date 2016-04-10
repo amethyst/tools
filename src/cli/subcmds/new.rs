@@ -61,7 +61,7 @@ pub fn copy_dir(input_dir: &Path, output_dir: &Path) -> cargo::CmdResult {
             if try!(file.file_type()).is_dir() {
                 try!(create_dir_all(output_path.as_path()));
                 try!(copy_dir(input_path.as_path(), output_path.as_path()));
-            } else {
+            } else if (file_name != "LICENSE") {
                 try!(copy(input_path.as_path(), output_path.as_path()));
             }
         }
