@@ -28,6 +28,9 @@ fn main() {
         (@setting GlobalVersion)
         (@arg verbose: -v --verbose +global "Use verbose output")
         (@arg quiet: -q --quiet +global "No output printed to stdout")
+        (@subcommand add =>
+            (about: "Adds a shard to the Amethyst game project")
+            (@arg feature: +required "Name of Amethyst shard"))
         (@subcommand build =>
             (about: "Compiles the current project and all of its dependencies")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
@@ -37,15 +40,13 @@ fn main() {
         (@subcommand deploy =>
             (about: "Compresses and deploys the project as a distributable program")
             (@arg clean: --clean "Whether or not to clean before building"))
-        (@subcommand add =>
-            (about: "Adds a shard to the Amethyst game project")
-            (@arg module: +required "A name of amethyst shard"))
-        (@subcommand remove =>
-            (about: "Removes a shard to the Amethyst game project")
-            (@arg module: +required "A name of amethyst shard"))
         (@subcommand new =>
             (about: "Creates a new Amethyst game project")
             (@arg path: +required "Relative path to the project folder"))
+        (@subcommand remove =>
+            (about: "Removes a shard from the Amethyst game project")
+            (@arg feature: +required "Name of Amethyst shard")
+            (@arg purge: --purge "Whether or not to delete files/folders of that shard"))
         (@subcommand run =>
             (about: "Runs the main binary of the game")
             (@arg release: --release "Build artifacts in release mode, with optimizations"))
@@ -57,6 +58,10 @@ fn main() {
     let proj = Project::new();
 
     let result = match matches.subcommand() {
+        ("add", Some(m)) => {
+            let feature = m.value_of("feature").unwrap().to_string();
+            subcmds::Add::new(feature).run(&proj)
+        }
         ("build", Some(m)) => {
             let release = m.is_present("release");
             subcmds::Build::new(release).run(&proj)
@@ -72,6 +77,11 @@ fn main() {
         ("new", Some(m)) => {
             let project = m.value_of("path").unwrap().to_string();
             subcmds::New::new(project).run(&proj)
+        }
+        ("remove", Some(m)) => {
+            let feature = m.value_of("feature").unwrap().to_string();
+            let purge = m.is_present("purge");
+            subcmds::Remove::new(feature, purge).run(&proj)
         }
         ("run", Some(m)) => {
             let release = m.is_present("release");
