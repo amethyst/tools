@@ -2,12 +2,6 @@
 
 use std::path::{Path, PathBuf};
 
-const INVALID_PROJ: &'static str = r#"This is not a valid game project. Either you should:
-
-1. Make sure your project matches the format in book chapter 2.2:
-   https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html
-2. Generate a fresh game project with `amethyst new [name]`."#;
-
 /// The error type indicating a malformed project.
 pub enum ProjectError {
     InvalidConfig,
@@ -58,7 +52,6 @@ impl Project {
         }
 
         if !is_cfg_valid(&self.root.clone().unwrap()) {
-            //return Err("The `config.yml` file is either missing or malformed.");
             return Err(ProjectError::InvalidConfig);
         }
 
