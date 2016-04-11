@@ -8,8 +8,11 @@ const INVALID_PROJ: &'static str = r#"This is not a valid game project. Either y
    https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html
 2. Generate a fresh game project with `amethyst new [name]`."#;
 
-/// Error type that indicates whether a Project is valid or not.
-pub type ProjectError<'a> = Result<(), &'a str>;
+/// The error type indicating a malformed project.
+pub enum ProjectError {
+    InvalidConfig,
+    InvalidStructure,
+}
 
 /// A logical representation of an Amethyst project.
 ///
@@ -49,13 +52,14 @@ impl Project {
 
     /// Returns `Ok(())` if the current directory contains a valid Amethyst
     /// project, returns `Err(String)` otherwise.
-    pub fn is_valid(&self) -> ProjectError {
+    pub fn is_valid(&self) -> Result<(), ProjectError> {
         if let None = self.root {
-            return Err(INVALID_PROJ);
+            return Err(ProjectError::InvalidStructure);
         }
 
         if !is_cfg_valid(&self.root.clone().unwrap()) {
-            return Err("The `config.yml` file is either missing or malformed.");
+            //return Err("The `config.yml` file is either missing or malformed.");
+            return Err(ProjectError::InvalidConfig);
         }
 
         Ok(())

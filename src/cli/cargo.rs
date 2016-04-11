@@ -1,9 +1,16 @@
 //! Wrapper module around Cargo.
 
-pub type CmdResult = Result<(), CmdError>;
-
 use std::{fmt, io};
 use zip::result::ZipError;
+use project::ProjectError;
+
+const INVALID_PROJ: &'static str = r#"This is not a valid game project. Either you should:
+                                                                                
+1. Make sure your project matches the format in book chapter 2.2:               
+   https://www.amethyst.rs/book/getting_started/manual_cargo_setup.html         
+2. Generate a fresh game project with `amethyst new [name]`."#;
+
+pub type CmdResult = Result<(), CmdError>;
 
 #[derive(Debug)]
 pub enum CmdError {
@@ -37,6 +44,19 @@ impl From<io::Error> for CmdError {
 impl From<ZipError> for CmdError {
     fn from(err: ZipError) -> Self {
         CmdError::Zip(err)
+    }
+}
+
+impl From<ProjectError> for CmdError {
+    fn from(err: ProjectError) -> Self {
+        match err {
+            ProjectError::InvalidConfig => {
+                CmdError::Err("The `config.yml` file is missing or invalid.".into())
+            }
+            ProjectError::InvalidStructure => {
+                CmdError::Err(INVALID_PROJ.into())
+            }
+        }
     }
 }
 
