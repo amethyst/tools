@@ -44,10 +44,10 @@ suggest ideas for more tools on [our issue tracker][it].
 
 [it]: https://github.com/amethyst/tools/issues
 
-* [Amethyst CLI][ac] - Command-line interface for creating and deploying game
-  projects, intentionally very similar to [Cargo][ca].
+* [Amethyst Build Tool][ab] - Command-line tool for managing Amethyst projects,
+  intentionally very similar to [Cargo][ca].
 
-[ac]: https://github.com/amethyst/tools/tree/master/src/cli
+[ab]: https://github.com/amethyst/tools/tree/master/src/bin/amethyst.rs
 [ca]: https://github.com/rust-lang/cargo
 
 ## Contributing

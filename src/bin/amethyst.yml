@@ -1,0 +1,106 @@
+name: Amethyst Build Tool
+about: Command-line interface for working with Amethyst
+
+settings:
+    - ArgRequiredElseHelp
+    - GlobalVersion
+
+args:
+    - verbose:
+        short: -v
+        long: --verbose
+        help: Use verbose output
+        global: true
+        multiple: true
+        conflicts_with:
+            - quiet
+    - quiet:
+        short: -q
+        long: --quiet
+        help: No output printed to stdout
+        global: true
+        conflicts_with:
+            - verbose
+    - color:
+        long: --color
+        help: "Output coloring mode"
+        value_name: WHEN
+        takes_value: true
+        possible_values:
+            - auto
+            - always
+            - never
+
+subcommands:
+    - add:
+        about: Add a shard to the Amethyst game project
+        args:
+            - feature:
+                help: Name of Amethyst shard
+                required: true
+    - build:
+        about: Compile the current project and all of its dependencies
+        args:
+            - release:
+                long: --release
+                help: Build artifacts in release mode, with optimizations
+    - clean:
+        about: Remove the target directory
+        args:
+            - release:
+                long: --release
+                help: Whether or not to clean release artifacts
+    - deploy:
+        about: Compress and deploy the project as a distributable program
+        args:
+            - clean:
+                long: --clean
+                help: Whether or not to clean before building
+    - new:
+        about: Create a new Amethyst game project
+        args:
+            - PATH:
+                help: Relative path to the project folder
+                required: true
+            - name:
+                long: --name
+                value_name: NAME
+                help: Set the resulting package name
+                takes_value: true
+    - remove:
+        about: Remove a shard from the Amethyst game project
+        args:
+            - FEATURE:
+                help: Name of Amethyst shard
+                required: true
+            - purge:
+                long: --purge
+                help: Delete any files/folders associated with that shard
+    - run:
+        about: Run the main binary of the game
+        args:
+            - release:
+                long: --release
+                help: Build artifacts in release mode, with optimizations
+    - test:
+        about: Execute all unit and integration tests of a local package
+        args:
+            - test:
+                long: --test
+                value_name: NAME
+                help: Test only the specified integration test target
+                takes_value: true
+            - jobs:
+                long: --jobs
+                short: -j
+                value_name: N
+                help: "Number of parallel jobs, defaults to # of CPUs"
+                takes_value: true
+            - release:
+                long: --release
+                help: Execute all unit and integration tests  of a local package
+            - target:
+                long: --target
+                value_name: TRIPLE
+                help: Build for the target triple
+                takes_value: true
