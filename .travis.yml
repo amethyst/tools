@@ -1,5 +1,16 @@
+sudo: false
 language: rust
 cache: cargo
+branches:
+  only:
+    - staging
+    - trying
+    - develop
+    - master
+addons:
+  apt:
+    packages:
+      - libasound2-dev
 rust:
     - stable
     - beta
