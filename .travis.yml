@@ -1,5 +1,9 @@
 language: rust
+cache: cargo
 rust:
     - stable
     - beta
     - nightly
+script:
+    - cargo test --verbose
+    - cargo build --manifest-path template/Cargo.toml --verbose
