@@ -18,6 +18,7 @@ impl New {
         let files: Vec<(&'static str, &'static str)> = external::template_files();
 
         for (path, content) in files {
+            let content = content.replace("__project_name__", &self.project_name);
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
             File::create(&path)?.write_all(content.as_bytes())?;
