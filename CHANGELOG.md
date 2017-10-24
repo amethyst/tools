@@ -5,6 +5,10 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## [Unreleased]
+
+* Complete rewrite of the tool
+
 ## 0.4.0 (2016-03-XX)
 
 ### Added

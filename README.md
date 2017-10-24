@@ -57,5 +57,7 @@ interested in helping out, please read the [CONTRIBUTING.md][cm] file before
 getting started. Don't know what to hack on? See the [Development Roadmap][dr]
 on our wiki, or search though [our issue tracker][it].
 
+All contributions are assumed do be dual-licensed under MIT/Apache-2.0.
+
 [cm]: https://github.com/amethyst/amethyst/blob/master/CONTRIBUTING.md
 [dr]: https://github.com/amethyst/amethyst/wiki/Roadmap

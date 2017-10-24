@@ -8,15 +8,19 @@ keywords = ["game", "engine", "tool", "editor", "amethyst"]
 repository = "https://github.com/ebkalderon/amethyst_tools"
 
 readme = "README.md"
-license = "GPL-3.0"
+license = "MIT/Apache-2.0"
+build = "build.rs"
+
+[lib]
+name = "amethyst_cli"
+path = "src/lib.rs"
 
 [[bin]]
 name = "amethyst"
-path = "src/cli/main.rs"
+path = "src/main.rs"
 
 [dependencies]
-clap = { version = "2", features = ["unstable"] }
-zip = { version = "0.1.16", default-features = false }
-yaml-rust = "0.3.2"
-walkdir = "0.1"
-toml = "0.1"
+clap = "2"
+
+[build-dependencies]
+ron = "0.1.3"

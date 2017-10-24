@@ -1,13 +1,20 @@
+sudo: false
 language: rust
-
+cache: cargo
+branches:
+  only:
+    - staging
+    - trying
+    - develop
+    - master
+addons:
+  apt:
+    packages:
+      - libasound2-dev
 rust:
+    - stable
     - beta
     - nightly
-
-sudo: true
-
 script:
-    - cargo build -v
-
-after_success:
-    ./tests.sh
+    - cargo test --verbose
+    - cargo build --manifest-path template/Cargo.toml --verbose

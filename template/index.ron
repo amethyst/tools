@@ -1,0 +1,6 @@
+[
+    "Cargo.toml",
+    "src/main.rs",
+    "resources/config.ron",
+]
+
