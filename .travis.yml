@@ -1,13 +1,5 @@
 language: rust
-
 rust:
+    - stable
     - beta
     - nightly
-
-sudo: true
-
-script:
-    - cargo build -v
-
-after_success:
-    ./tests.sh
