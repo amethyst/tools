@@ -1,3 +1,6 @@
+//! Reads `template/index.ron` and includes the files listed their into the source code.
+//! See `src/new.rs` for how it is used.
+
 extern crate ron;
 
 use std::env;
