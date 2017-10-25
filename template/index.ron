@@ -1,6 +1,5 @@
 [
     "__Cargo__.toml",
     "src/main.rs",
-    "resources/config.ron",
+    "resources/display_config.ron",
 ]
-
