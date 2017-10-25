@@ -55,7 +55,7 @@ suggest ideas for more tools on [our issue tracker][it].
 By executing
 
 ```sh
-cargo install amethyst-tools
+cargo install amethyst_tools
 ```
 
 a binary called `amethyst` will be placed in your `~/cargo/bin` folder.
