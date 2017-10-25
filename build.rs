@@ -10,8 +10,13 @@ use std::path::PathBuf;
 
 use ron::de::from_reader;
 
+fn path(env: &str, s: &str) -> PathBuf {
+    PathBuf::from(env::var(env).unwrap()).join(s)
+}
+
 fn read_template_index() -> Vec<String> {
-    from_reader(File::open("template/index.ron").expect("Failed to open `template/index.ron`"))
+    let path = path("CARGO_MANIFEST_DIR", "template/index.ron");
+    from_reader(File::open(&path).expect("Failed to open `template/index.ron`"))
         .expect("Failed to parse template index")
 }
 
@@ -34,9 +39,8 @@ fn main() {
     );
     source_code += "    map\n}\n";
 
-    let dest_file = PathBuf::from(env::var("OUT_DIR").unwrap()).join("_template_files.rs");
-    let mut dest_file = File::create(&dest_file).expect("Failed to create destination file");
-    dest_file
+    File::create(&path("OUT_DIR", "_template_files.rs"))
+        .expect("Failed to create destination file")
         .write_all(source_code.as_bytes())
         .expect("Failed to write to destination");
 }
