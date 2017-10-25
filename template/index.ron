@@ -1,5 +1,5 @@
 [
-    "Cargo.toml",
+    "__Cargo__.toml",
     "src/main.rs",
     "resources/config.ron",
 ]

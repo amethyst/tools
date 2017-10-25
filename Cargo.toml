@@ -9,6 +9,8 @@ repository = "https://github.com/ebkalderon/amethyst_tools"
 
 readme = "README.md"
 license = "MIT/Apache-2.0"
+
+include = ["src/**", "template/**", "Cargo.toml", "build.rs", "LICENSE-*", "README.md"]
 build = "build.rs"
 
 [lib]

@@ -17,4 +17,4 @@ rust:
     - nightly
 script:
     - cargo test --verbose
-    - cargo build --manifest-path template/Cargo.toml --verbose
+
