@@ -50,6 +50,24 @@ suggest ideas for more tools on [our issue tracker][it].
 [ac]: https://github.com/amethyst/tools/tree/master/src/cli
 [ca]: https://github.com/rust-lang/cargo
 
+## Installing
+
+By executing
+
+```sh
+cargo install amethyst-tools
+```
+
+a binary called `amethyst` will be placed in your `~/cargo/bin` folder.
+
+## Usage
+
+### Creating a new project
+
+```sh
+amethyst new <project_name>
+```
+
 ## Contributing
 
 We are a community project that welcomes contribution from anyone. If you're
