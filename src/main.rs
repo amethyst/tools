@@ -35,7 +35,7 @@ fn exec_new(args: &ArgMatches) {
     };
 
     if let Err(e) = n.execute() {
-        eprintln!("Error: {}", e);
+        eprintln!("Failed to create new project: {}", e);
         exit(1);
     }
 }
