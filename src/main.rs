@@ -2,6 +2,7 @@
 //!
 
 extern crate amethyst_cli;
+extern crate ansi_term;
 extern crate clap;
 
 use std::process::exit;
@@ -14,7 +15,15 @@ fn main() {
         .author("Created by Amethyst developers")
         .version("1.0.2")
         .about("Allows managing Amethyst game projects")
-        .subcommand(SubCommand::with_name("new").arg(Arg::with_name("project_name").required(true)))
+        .subcommand(
+            SubCommand::with_name("new")
+                .about("Creates a new Amethyst project")
+                .arg(
+                    Arg::with_name("project_name")
+                        .help("The directory name for the new project")
+                        .required(true),
+                ),
+        )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
@@ -35,7 +44,24 @@ fn exec_new(args: &ArgMatches) {
     };
 
     if let Err(e) = n.execute() {
-        eprintln!("Failed to create new project: {}", e);
-        exit(1);
+        handle_error(e);
     }
+}
+
+fn handle_error(e: cli::error::Error) {
+    use ansi_term::Color;
+
+    eprintln!("{}: {}", Color::Red.paint("error"), e);
+
+    e.iter()
+        .skip(1)
+        .for_each(|e| eprintln!("{}: {}", Color::Red.paint("caused by"), e));
+
+    // Only shown if `RUST_BACKTRACE=1`.
+    if let Some(backtrace) = e.backtrace() {
+        eprintln!();
+        eprintln!("backtrace: {:?}", backtrace);
+    }
+
+    exit(1);
 }

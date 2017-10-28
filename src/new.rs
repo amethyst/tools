@@ -1,32 +1,12 @@
-use std::fmt;
 use std::fs::{create_dir_all, File};
-use std::io::{Error as IoError, Write};
+use std::io::Write;
 use std::path::{Path, PathBuf};
+
+use error::{ErrorKind, Result, ResultExt};
 
 mod external {
     // This file defines `fn template_files() -> Vec<(&'static str, &'static str)>`.
     include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
-}
-
-#[derive(Debug)]
-pub enum Error {
-    AlreadyExists(String),
-    Io(IoError),
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Error::AlreadyExists(ref s) => write!(f, "Project directory `{}` already exists", s),
-            Error::Io(ref e) => write!(f, "IO error: {}", e),
-        }
-    }
-}
-
-impl From<IoError> for Error {
-    fn from(e: IoError) -> Self {
-        Error::Io(e)
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -35,10 +15,15 @@ pub struct New {
 }
 
 impl New {
-    // TODO: include file names in errors
-    pub fn execute(&self) -> Result<(), Error> {
-        if Path::new(&self.project_name).exists() {
-            return Err(Error::AlreadyExists(self.project_name.clone()));
+    pub fn execute(&self) -> Result<()> {
+        self.execute_inner()
+            .chain_err(|| ErrorKind::New(self.project_name.clone()))
+    }
+
+    fn execute_inner(&self) -> Result<()> {
+        let path = Path::new(&self.project_name);
+        if path.exists() {
+            bail!("project directory {:?} already exists", path);
         }
 
         let files: Vec<(&'static str, &'static str)> = external::template_files();
@@ -51,7 +36,10 @@ impl New {
             let content = content.replace("__project_name__", &self.project_name);
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
-            File::create(&path)?.write_all(content.as_bytes())?;
+            File::create(&path)
+                .chain_err(|| format!("failed to create file {:?}", &path))?
+                .write_all(content.as_bytes())
+                .chain_err(|| format!("could not write contents to file {:?}", &path))?;
         }
 
         Ok(())
