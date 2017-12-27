@@ -3,6 +3,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use error::{ErrorKind, Result, ResultExt};
+use fetch::get_latest_amethyst;
 
 mod external {
     // This file defines `fn template_files() -> Vec<(&'static str, &'static str)>`.
@@ -34,6 +35,7 @@ impl New {
                 path => path,
             };
             let content = content.replace("__project_name__", &self.project_name);
+            let content = content.replace("__amethyst_version__", &get_latest_amethyst()?);
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
             File::create(&path)
