@@ -4,5 +4,4 @@ version = "0.1.0"
 authors = []
 
 [dependencies]
-# TODO: replace version with released version
-amethyst = { git = "https://github.com/amethyst/amethyst", rev = "e2f3c70cf81984eae6769cd8c5bec84499eecb43" }
+amethyst = "0.6"
