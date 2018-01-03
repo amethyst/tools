@@ -23,7 +23,7 @@ struct CrateVersion {
 }
 
 pub fn get_latest_amethyst() -> Result<String> {
-    let crate_versions = fetch_cratesio(&format!("/crates/amethyst"))?;
+    let crate_versions = fetch_cratesio(&format!("/crates/amethyst-tools"))?;
     let dep = crate_versions.versions.iter().find(|&v| !v.yanked).ok_or(ErrorKind::FetchVersionFailure)?.version.to_string();
 
     Ok(dep)
@@ -53,5 +53,5 @@ fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Re
 #[test]
 fn test_fetch()
 {
-    assert_eq!(get_latest_amethyst().unwrap(), "0.1.0");
+    assert_eq!(get_latest_amethyst().unwrap(), "0.6.1");
 }
