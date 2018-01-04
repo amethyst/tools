@@ -3,16 +3,14 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use error::{ErrorKind, Result, ResultExt};
-use fetch::get_latest_amethyst;
+use templates::get_template;
 
-mod external {
-    // This file defines `fn template_files() -> Vec<(&'static str, &'static str)>`.
-    include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
-}
-
+/// Options for the New subcommand. If `version` is None, then it uses
+/// the latest version available
 #[derive(Clone, Debug)]
 pub struct New {
     pub project_name: String,
+    pub version: Option<String>,
 }
 
 impl New {
@@ -26,16 +24,14 @@ impl New {
         if path.exists() {
             bail!("project directory {:?} already exists", path);
         }
-
-        let files: Vec<(&'static str, &'static str)> = external::template_files();
-
-        for (path, content) in files {
+        let (version, files) = get_template(&self.version)?;
+        for &(path, content) in files.iter() {
             let path = match path {
                 "__Cargo__.toml" => "Cargo.toml",
                 path => path,
             };
             let content = content.replace("__project_name__", &self.project_name);
-            let content = content.replace("__amethyst_version__", &get_latest_amethyst()?);
+            let content = content.replace("__amethyst_version__", &version);
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
             File::create(&path)
@@ -43,7 +39,6 @@ impl New {
                 .write_all(content.as_bytes())
                 .chain_err(|| format!("could not write contents to file {:?}", &path))?;
         }
-
         Ok(())
     }
 }
@@ -52,6 +47,7 @@ impl Default for New {
     fn default() -> Self {
         New {
             project_name: "game".to_owned(),
+            version: None,
         }
     }
 }

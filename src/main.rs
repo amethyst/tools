@@ -22,6 +22,14 @@ fn main() {
                     Arg::with_name("project_name")
                         .help("The directory name for the new project")
                         .required(true),
+                )
+                .arg(
+                    Arg::with_name("amethyst_version")
+                        .short("a")
+                        .long("amethyst")
+                        .value_name("AMETHYST_VERSION")
+                        .takes_value(true)
+                        .help("The requested version of amethyst"),
                 ),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
@@ -37,9 +45,15 @@ fn exec_new(args: &ArgMatches) {
     let project_name = args.value_of("project_name")
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
+    let version = args.value_of("amethyst_version");
+    let version = match version {
+        Some(x) => Some(x.to_owned()),
+        None => None,
+    };
 
     let n = cli::New {
         project_name,
+        version,
         ..Default::default()
     };
 

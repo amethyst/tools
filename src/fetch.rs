@@ -25,8 +25,7 @@ struct CrateVersion {
 pub fn get_latest_amethyst() -> Result<String> {
     let crate_versions = fetch_cratesio(&format!("/crates/amethyst-tools"))?;
     let dep = crate_versions.versions.iter().find(|&v| !v.yanked).ok_or(ErrorKind::FetchVersionFailure)?.version.to_string();
-
-    Ok(dep)
+    Ok(dep.get(..dep.len()-2).unwrap().to_owned())
 }
 
 fn fetch_cratesio(path: &str) -> Result<Versions> {

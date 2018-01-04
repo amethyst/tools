@@ -7,6 +7,7 @@ extern crate error_chain;
 extern crate reqwest;
 extern crate semver;
 extern crate serde;
+// This gives a warning until we add some uses for the fetch.rs code
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
@@ -14,7 +15,6 @@ extern crate serde_json;
 pub use new::New;
 
 pub mod error;
-mod fetch;
 mod templates;
 
 mod new;
