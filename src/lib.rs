@@ -15,5 +15,6 @@ pub use new::New;
 
 pub mod error;
 mod fetch;
+mod templates;
 
 mod new;
