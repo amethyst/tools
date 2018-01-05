@@ -1,6 +1,5 @@
 /// Fetches the latest version of Amethyst by pulling from crates.io
 /// Most of this code is based off of cargo-edit's fetch code
-
 use std::fs;
 
 use semver;
