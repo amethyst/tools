@@ -24,14 +24,13 @@ impl New {
         if path.exists() {
             bail!("project directory {:?} already exists", path);
         }
-        let (version, files) = get_template(&self.version)?;
+        let (_version, files) = get_template(&self.version)?;
         for &(path, content) in files.iter() {
             let path = match path {
                 "__Cargo__.toml" => "Cargo.toml",
                 path => path,
             };
             let content = content.replace("__project_name__", &self.project_name);
-            let content = content.replace("__amethyst_version__", &version);
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
             File::create(&path)

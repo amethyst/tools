@@ -4,6 +4,7 @@
 extern crate amethyst_cli;
 extern crate ansi_term;
 extern crate clap;
+extern crate semver;
 
 use std::process::exit;
 
@@ -11,6 +12,11 @@ use amethyst_cli as cli;
 use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
 
 fn main() {
+    // Add this here because we could have some errors when retrieving versions
+    if let Err(e) = check_version() {
+        handle_error(e);
+    }
+
     let matches = App::new("Amethyst CLI")
         .author("Created by Amethyst developers")
         .version("1.0.2")
@@ -29,7 +35,7 @@ fn main() {
                         .long("amethyst")
                         .value_name("AMETHYST_VERSION")
                         .takes_value(true)
-                        .help("The requested version of amethyst"),
+                        .help("The requested version of `amethyst`"),
                 ),
         )
         .setting(AppSettings::SubcommandRequiredElseHelp)
@@ -45,11 +51,8 @@ fn exec_new(args: &ArgMatches) {
     let project_name = args.value_of("project_name")
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
-    let version = args.value_of("amethyst_version");
-    let version = match version {
-        Some(x) => Some(x.to_owned()),
-        None => None,
-    };
+    let version = args.value_of("amethyst_version")
+        .map(|v| v.to_owned());
 
     let n = cli::New {
         project_name,
@@ -78,4 +81,23 @@ fn handle_error(e: cli::error::Error) {
     }
 
     exit(1);
+}
+
+// Prints a warning/info message if this version of amethyst_cli is out of date
+fn check_version() -> cli::error::Result<()>{
+    use cli::get_latest_version;
+    use ansi_term::Color;
+
+    let local_version = semver::Version::parse(env!("CARGO_PKG_VERSION"))?;
+    let remote_version_str = get_latest_version()?;
+    let remote_version = semver::Version::parse(&remote_version_str)?;
+ 
+    if local_version < remote_version {
+        eprintln!("{}: Local version of `amethyst_tools` ({}) is out of date. Latest version is {}",
+                  Color::Yellow.paint("warning"),
+                  env!("CARGO_PKG_VERSION"),
+                  remote_version_str
+                  );
+    }
+    Ok(())
 }

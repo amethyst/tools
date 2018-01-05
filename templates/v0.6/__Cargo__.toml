@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = []
 
 [dependencies]
-amethyst = "__amethyst_version__"
+amethyst = "0.6"

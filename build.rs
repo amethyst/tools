@@ -1,6 +1,7 @@
+//! Reads the `templates/` directory and includes all versions' templates as 
+//! part of the binary to reduce installation footprint
 extern crate ron;
 
-use std::collections::HashMap;
 use std::env;
 use std::fs::{read_dir, File};
 use std::io::Write;
@@ -22,17 +23,17 @@ fn read_template_index<P: AsRef<Path>>(p: P) -> Vec<String> {
 
 fn main() {
     let f = PathBuf::from(path("CARGO_MANIFEST_DIR", "templates"));
-    let mut indices = HashMap::new();
-    for version in read_dir(&f).unwrap() {
-        let v = version.unwrap();
-        let version_str = v.file_name().into_string().unwrap();
-        let index = read_template_index(v.path());
-        indices.insert(version_str, index);
-    }
+    let indices = read_dir(&f)
+        .unwrap()
+        .map(Result::unwrap)
+        .map(|v| (v.file_name().into_string().unwrap(), read_template_index(v.path())));
 
-    let mut source_code = String::from("use std::collections::HashMap;\n\npub fn template_files() -> HashMap<&'static str, Vec<(&'static str, &'static str)>> {
-    let mut map = HashMap::new();\n");
-    for (version, index) in indices.iter() {
+    let mut source_code = String::from("use std::collections::HashMap;
+    
+pub fn template_files() -> HashMap<&'static str, Vec<(&'static str, &'static str)>> {
+    let mut map = HashMap::new();
+");
+    for (version, index) in indices {
         source_code.push_str(&format!("    map.insert({:?}, ", version));
         source_code.push_str(&index.iter().fold("vec![".to_owned(), |s, file| {
             format!(

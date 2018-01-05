@@ -1,7 +1,8 @@
 error_chain! {
     foreign_links {
         Io(::std::io::Error) #[doc = "IO error"];
-        Version(::semver::ReqParseError) #[doc = "Could not parse version"];
+        VersionReq(::semver::ReqParseError) #[doc = "Could not parse version requirements"];
+        SemVer(::semver::SemVerError) #[doc = "Could not parse version"];
     }
 
     errors {
@@ -10,7 +11,13 @@ error_chain! {
             display("project creation for project {:?} failed", name)
         }
 
-        /// Failed to fetch amethyst crate version from crates.io
+        /// Don't have a template matching this version of the `amethyst` crate
+        UnsupportedVersion(version: String) {
+            description("unsupported version of Amethyst requested")
+            display("This version of amethyst_tools does not support the requested version {:?}", version)
+        }
+
+        /// Failed to fetch `amethyst` crate version from crates.io
         FetchVersionFailure {
             description("Failed to fetch latest version of amethyst")
         }
@@ -19,12 +26,5 @@ error_chain! {
         InvalidCratesIoJson {
             description("The JSON fetched from crates.io is invalid")
         }
-
-        /// Don't have a template matching this version
-        UnsupportedVersion(version: String) {
-            description("Unsupported version of Amethyst requested")
-            display("This version of amethyst_tools does not support the requested version {:?}", version)
-        }
-
     }
 }
