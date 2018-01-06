@@ -44,7 +44,7 @@ fn fetch_cratesio(path: &str) -> Result<Versions> {
 }
 
 fn get_default_timeout() -> Duration {
-    Duration::from_secs(10)
+    Duration::from_secs(5)
 }
 
 fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Response> {

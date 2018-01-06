@@ -67,6 +67,12 @@ fn exec_new(args: &ArgMatches) {
 
     if let Err(e) = n.execute() {
         handle_error(e);
+    } else {
+        println!("Project ready!");
+        println!("Checking for updates...");
+        if let Err(e) = check_version() {
+            handle_error(e);
+        }
     }
 }
 
