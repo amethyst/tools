@@ -1,6 +1,6 @@
 [package]
 name = "amethyst_tools"
-version = "0.6.1"
+version = "0.6.2"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
@@ -10,7 +10,7 @@ repository = "https://github.com/ebkalderon/amethyst_tools"
 readme = "README.md"
 license = "MIT/Apache-2.0"
 
-include = ["src/**", "template/**", "Cargo.toml", "build.rs", "LICENSE-*", "README.md"]
+include = ["src/**", "templates/**", "Cargo.toml", "build.rs", "LICENSE-*", "README.md"]
 build = "build.rs"
 
 [lib]

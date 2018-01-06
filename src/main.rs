@@ -14,7 +14,7 @@ use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
 fn main() {
     let matches = App::new("Amethyst CLI")
         .author("Created by Amethyst developers")
-        .version("1.0.2")
+        .version(env!("CARGO_PKG_VERSION"))
         .about("Allows managing Amethyst game projects")
         .subcommand(
             SubCommand::with_name("new")
@@ -101,6 +101,8 @@ fn check_version() -> cli::error::Result<()> {
             env!("CARGO_PKG_VERSION"),
             remote_version_str
         );
+    } else {
+        println!("No new versions found.");
     }
     Ok(())
 }
