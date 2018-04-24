@@ -30,7 +30,17 @@ impl New {
                 "__Cargo__.toml" => "Cargo.toml",
                 path => path,
             };
-            let content = content.replace("__project_name__", &self.project_name);
+            let mut content = content.replace("__project_name__", &self.project_name);
+            #[cfg(target_os = "windows")]
+            {
+                use regex::Regex;
+
+                content = Regex::new("[^\r]\n").unwrap().replace_all(&content, "\r\n").to_string();
+            }
+            #[cfg(not(target_os = "windows"))]
+            {
+                content = content.replace("\r\n", "\n");
+            }
             let path: PathBuf = [&self.project_name, path].iter().collect();
             create_dir_all(path.parent().expect("Path has no parent"))?;
             File::create(&path)

@@ -4,6 +4,7 @@
 extern crate env_proxy;
 #[macro_use]
 extern crate error_chain;
+extern crate regex;
 extern crate reqwest;
 extern crate semver;
 extern crate serde;
