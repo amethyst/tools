@@ -35,7 +35,7 @@ impl New {
             {
                 use regex::Regex;
 
-                content = Regex::new("[^\r]\n").unwrap().replace_all(&content, "\r\n").to_string();
+                content = Regex::new("(?<last>[^\r])\n").unwrap().replace_all(&content, "$last\r\n").to_string();
             }
             #[cfg(not(target_os = "windows"))]
             {
