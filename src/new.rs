@@ -1,9 +1,9 @@
-use std::fs::{create_dir_all, File};
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::Path;
+use std::collections::HashMap;
+use std::fs::{create_dir, remove_dir_all};
 
 use error::{ErrorKind, Result, ResultExt};
-use templates::get_template;
+use templates;
 
 /// Options for the New subcommand. If `version` is None, then it uses
 /// the latest version available
@@ -24,31 +24,17 @@ impl New {
         if path.exists() {
             bail!("project directory {:?} already exists", path);
         }
-        let (_version, files) = get_template(&self.version)?;
-        for &(path, content) in files.iter() {
-            let path = match path {
-                "__Cargo__.toml" => "Cargo.toml",
-                path => path,
-            };
-            let mut content = content.replace("__project_name__", &self.project_name);
-            #[cfg(target_os = "windows")]
-            {
-                use regex::Regex;
+        create_dir(path).chain_err(|| "could not create project folder")?;
 
-                content = Regex::new("(?<last>[^\r])\n").unwrap().replace_all(&content, "$last\r\n").to_string();
-            }
-            #[cfg(not(target_os = "windows"))]
-            {
-                content = content.replace("\r\n", "\n");
-            }
-            let path: PathBuf = [&self.project_name, path].iter().collect();
-            create_dir_all(path.parent().expect("Path has no parent"))?;
-            File::create(&path)
-                .chain_err(|| format!("failed to create file {:?}", &path))?
-                .write_all(content.as_bytes())
-                .chain_err(|| format!("could not write contents to file {:?}", &path))?;
+        let mut params = templates::Parameters::new();
+        params.insert("project_name".to_owned(), templates::Value::scalar(&self.project_name));
+
+        if let Err(err) = templates::deploy("main", &self.version, &path, &params, &HashMap::new()) {
+            remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
+            Err(err)
+        } else {
+            Ok(())
         }
-        Ok(())
     }
 }
 

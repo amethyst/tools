@@ -1,5 +1,5 @@
 (
-  title: "__project_name__",
+  title: "{{ project_name }}",
   dimensions: None,
   max_dimensions: None,
   min_dimensions: None,

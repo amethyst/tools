@@ -10,8 +10,7 @@ repository = "https://github.com/ebkalderon/amethyst_tools"
 readme = "README.md"
 license = "MIT/Apache-2.0"
 
-include = ["src/**", "templates/**", "Cargo.toml", "build.rs", "LICENSE-*", "README.md"]
-build = "build.rs"
+include = ["src/**", "templates/**", "Cargo.toml", "LICENSE-*", "README.md"]
 
 [lib]
 name = "amethyst_cli"
@@ -26,11 +25,14 @@ ansi_term = "0.9"
 clap = "2"
 env_proxy = "0.2"
 error-chain = "0.11"
+lazy_static = "1.0.0"
+liquid = "0.14.3"
 regex = "0.2.10"
 reqwest = "0.7.1"
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
+walkdir = "2.1.4"
 
 [dependencies.semver]
 features = ["serde"]
