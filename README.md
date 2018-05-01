@@ -52,6 +52,9 @@ suggest ideas for more tools on [our issue tracker][it].
 
 ## Installing
 
+### Requirements
+* Ensure that you have the OpenSSL development headers installed (check for openssl-devel or something similar)
+
 By executing
 
 ```sh
