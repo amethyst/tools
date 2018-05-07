@@ -1,7 +1,0 @@
-[package]
-name = "__project_name__"
-version = "0.1.0"
-authors = []
-
-[dependencies]
-amethyst = "0.6"
