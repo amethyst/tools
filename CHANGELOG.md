@@ -5,7 +5,7 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
-## [Unreleased]
+## 0.7.0
 
 * Complete rewrite of the tool
 

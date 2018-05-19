@@ -1,6 +1,6 @@
 [package]
 name = "amethyst_tools"
-version = "0.6.2"
+version = "0.7.0"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
