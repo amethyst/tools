@@ -116,7 +116,7 @@ pub fn deploy(
                 {
                     use regex::Regex;
 
-                    out = Regex::new("(?<last>[^\r])\n")
+                    out = Regex::new("(?P<last>[^\r])\n")
                         .unwrap()
                         .replace_all(&out, "$last\r\n")
                         .to_string();
