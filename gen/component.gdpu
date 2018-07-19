@@ -1,0 +1,11 @@
+use amethyst::ecs::{Component, VecStorage};
+use serde::{Serialize, Deserialize};
+//use amethyst::ecs::{NullStorage, DenseVecStorage, Tracked}
+
+#[derive(Clone, Default, Serialize, Deserialize)]
+pub struct {{ name }}{
+}
+impl Component for {{ name }}{
+    type Storage = VecStorage<Self>;
+}
+

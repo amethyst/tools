@@ -38,6 +38,6 @@ pub use new::New;
 pub mod error;
 pub use fetch::get_latest_version;
 mod templates;
-
+mod gen;
 mod new;
 mod fetch;

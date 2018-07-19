@@ -43,12 +43,36 @@ fn main() {
                         .takes_value(true),
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("gen")
+                .about("Generates a file from a given template")
+                .arg(
+                    Arg::with_name("template")
+                        .help("The template to use")
+                        .required(true),
+                )
+                .arg(
+                    Arg::with_name("name")
+                        .required(true)
+                        .help("The name that should appear in the generated code."),
+                )
+                .arg(
+                    Arg::with_name("output")
+                        .short("o")
+                        .long("output")
+                        .value_name("output-file")
+                        .takes_value(true)
+                        .help("The output file where the generated code will be placed.")
+                        .long_help("The output file where the generated code will be placed. (Replaces any existing file). If this is not specified, the generated code will be placed in stdout.")
+                )
+        )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {
         ("new", Some(args)) => exec_new(args),
         ("update", Some(args)) => exec_update(args),
+        ("gen", Some(args)) => exec_gen(args),
         _ => eprintln!("WARNING: subcommand not tested. This is a bug."),
     }
 }
@@ -84,6 +108,15 @@ fn exec_update(args: &ArgMatches) {
     }
     exit(0);
 }
+
+fn exec_gen(args: &ArgMatches) {
+    let template_name = args.value_of("template").unwrap();
+    let gen_name = args.value_of("name").unwrap();
+    let output_file_name = args.value_of("output");
+    
+    exit(0);
+}
+
 
 // Prints a warning/info message if this version of amethyst_cli is out of date
 fn check_version() -> cli::error::Result<()> {
