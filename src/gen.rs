@@ -117,19 +117,9 @@ pub fn write(path: &str, data: String) -> Result<()> {
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    pub fn test_list_templates() {
-        for (k, v) in name_to_path() {
-            println!("{} -> {}", k, v);
-            assert!(!k.contains("/"));
-            assert!(v.ends_with(".gdpu"));
-            assert!(v.contains("/"));
-        }
-    }
-
+    
     #[test]
     pub fn partial_template_name() {
-        assert!(path_from_name("comp").is_some());
+        assert!(path_from_name("comp").is_ok());
     }
 }
