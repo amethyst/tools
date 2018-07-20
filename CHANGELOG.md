@@ -5,6 +5,10 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.8.0
+
+* Code generation for Component,State and System (#)
+
 ## 0.7.0
 
 * Complete rewrite of the tool

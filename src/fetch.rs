@@ -17,8 +17,10 @@ struct Versions {
 
 #[derive(Deserialize)]
 struct CrateVersion {
-    #[serde(rename = "crate")] _name: String,
-    #[serde(rename = "num")] version: semver::Version,
+    #[serde(rename = "crate")]
+    _name: String,
+    #[serde(rename = "num")]
+    version: semver::Version,
     yanked: bool,
 }
 

@@ -118,11 +118,11 @@ fn exec_gen(args: &ArgMatches) {
     let template_name = args.value_of("template").unwrap();
     let gen_name = args.value_of("name").unwrap();
     let output_file_name = args.value_of("output");
-    
-    if let Err(e) = cli::do_generate(template_name,gen_name,output_file_name) {
+
+    if let Err(e) = cli::do_generate(template_name, gen_name, output_file_name) {
         handle_error(e);
     }
-    
+
     exit(0);
 }
 
@@ -133,7 +133,6 @@ fn exec_gen_list(_args: &ArgMatches) {
 
     exit(0);
 }
-
 
 // Prints a warning/info message if this version of amethyst_cli is out of date
 fn check_version() -> cli::error::Result<()> {
