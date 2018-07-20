@@ -34,6 +34,7 @@ lazy_static! {
 }
 
 pub use new::New;
+pub use gen::{do_generate, list_templates};
 
 pub mod error;
 pub use fetch::get_latest_version;

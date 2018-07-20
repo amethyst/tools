@@ -1,0 +1,31 @@
+use amethyst::ecs::{Join, Read, ReadExpect, ReadStorage, Resources, System, SystemData, Write, WriteExpect, WriteStorage};
+//use amethyst::core::{Transform, GlobalTransform};
+//use amethyst::core::timing::Time;
+
+#[derive(Default)]
+/// The {{ name }} `System`.
+pub struct {{ name }}{
+    
+}
+
+impl {{ name }} {
+    
+    /// The {{ name }} `System`
+    pub fn new() -> Self {
+        {{ name }} {
+            
+        }
+    }
+}
+
+impl<'a> System<'a> for {{ name }}{
+    // Don't forgot to add a trailing , in both parenthesis
+    type SystemData = ();
+    
+    fn run(&mut self,(): Self::SystemData) {
+        
+    }
+    fn setup(&mut self, res: &mut Resources) {
+        Self::SystemData::setup(res);
+    }
+}

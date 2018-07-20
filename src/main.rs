@@ -66,6 +66,10 @@ fn main() {
                         .long_help("The output file where the generated code will be placed. (Replaces any existing file). If this is not specified, the generated code will be placed in stdout.")
                 )
         )
+        .subcommand(
+            SubCommand::with_name("gen-list")
+                .about("Prints all templates available for code generation.")
+        )
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
@@ -73,6 +77,7 @@ fn main() {
         ("new", Some(args)) => exec_new(args),
         ("update", Some(args)) => exec_update(args),
         ("gen", Some(args)) => exec_gen(args),
+        ("gen-list", Some(args)) => exec_gen_list(args),
         _ => eprintln!("WARNING: subcommand not tested. This is a bug."),
     }
 }
@@ -114,6 +119,18 @@ fn exec_gen(args: &ArgMatches) {
     let gen_name = args.value_of("name").unwrap();
     let output_file_name = args.value_of("output");
     
+    if let Err(e) = cli::do_generate(template_name,gen_name,output_file_name) {
+        handle_error(e);
+    }
+    
+    exit(0);
+}
+
+fn exec_gen_list(_args: &ArgMatches) {
+    if let Err(e) = cli::list_templates() {
+        handle_error(e);
+    }
+
     exit(0);
 }
 
