@@ -7,7 +7,8 @@ adheres to [Semantic Versioning][sv].
 
 ## 0.8.0
 
-* Code generation for Component,State and System (#)
+* Code generation for Component,State and System (#58)
+[#58]: https://github.com/amethyst/tools/pull/58
 
 ## 0.7.0
 
