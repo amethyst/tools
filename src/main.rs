@@ -62,16 +62,15 @@ fn exec_new(args: &ArgMatches) {
     let n = cli::New {
         project_name,
         version,
-        ..Default::default()
     };
 
     if let Err(e) = n.execute() {
-        handle_error(e);
+        handle_error(&e);
     } else {
         println!("Project ready!");
         println!("Checking for updates...");
         if let Err(e) = check_version() {
-            handle_error(e);
+            handle_error(&e);
         }
     }
 }
@@ -80,7 +79,7 @@ fn exec_update(args: &ArgMatches) {
     // We don't currently support checking anything other than the version of amethyst tools
     let _component_name = args.value_of("component_name").map(|c| c.to_owned());
     if let Err(e) = check_version() {
-        handle_error(e);
+        handle_error(&e);
     }
     exit(0);
 }
@@ -106,7 +105,7 @@ fn check_version() -> cli::error::Result<()> {
     }
     Ok(())
 }
-fn handle_error(e: cli::error::Error) {
+fn handle_error(e: &cli::error::Error) {
     use ansi_term::Color;
 
     eprintln!("{}: {}", Color::Red.paint("error"), e);

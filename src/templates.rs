@@ -15,7 +15,7 @@ pub use liquid::{Object as Parameters, Value};
 
 use TEMPLATED_VERSIONS;
 
-const LIQUID_TEMPLATE_EXTENSION: &'static str = ".gdpu";
+const LIQUID_TEMPLATE_EXTENSION: &str = ".gdpu";
 
 pub fn deploy(
     template: &str,
@@ -26,10 +26,10 @@ pub fn deploy(
 ) -> Result<()> {
     let parser = ParserBuilder::with_liquid().build();
     let version = match version {
-        &Some(ref ver) => {
+        Some(ref ver) => {
             semver::Version::parse(ver).chain_err(|| format!("Could not parse version {}", ver))?
         }
-        &None => TEMPLATED_VERSIONS
+        None => TEMPLATED_VERSIONS
             .iter()
             .max()
             .ok_or("No template available")?
@@ -72,7 +72,7 @@ pub fn deploy(
 
         let mut output_name = renaming_rules
             .get(&file_name)
-            .map(|x| x.clone())
+            .cloned()
             .unwrap_or(file_name);
         let is_parsed = output_name.ends_with(LIQUID_TEMPLATE_EXTENSION);
         if is_parsed {
@@ -83,7 +83,7 @@ pub fn deploy(
         let parent_path = entry
             .path()
             .parent()
-            .ok_or(format!("Could not get the parent of {:?}", entry.path()))?
+            .ok_or_else(|| format!("Could not get the parent of {:?}", entry.path()))?
             .strip_prefix(&template_path)
             .chain_err(|| format!("Could not remove root of path {:?}", entry.path()))?;
 

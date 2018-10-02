@@ -23,7 +23,7 @@ struct CrateVersion {
 }
 
 pub fn get_latest_version() -> Result<String> {
-    let crate_versions = fetch_cratesio(&format!("/crates/amethyst_tools"))?;
+    let crate_versions = fetch_cratesio("/crates/amethyst_tools")?;
     let dep = crate_versions
         .versions
         .iter()
