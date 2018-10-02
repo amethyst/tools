@@ -23,8 +23,7 @@ fn main() {
                     Arg::with_name("project_name")
                         .help("The directory name for the new project")
                         .required(true),
-                )
-                .arg(
+                ).arg(
                     Arg::with_name("amethyst_version")
                         .short("a")
                         .long("amethyst")
@@ -32,8 +31,7 @@ fn main() {
                         .takes_value(true)
                         .help("The requested version of Amethyst"),
                 ),
-        )
-        .subcommand(
+        ).subcommand(
             SubCommand::with_name("update")
                 .about("Checks if you can update Amethyst component")
                 .arg(
@@ -42,8 +40,7 @@ fn main() {
                         .value_name("COMPONENT_NAME")
                         .takes_value(true),
                 ),
-        )
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+        ).setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {
@@ -54,7 +51,8 @@ fn main() {
 }
 
 fn exec_new(args: &ArgMatches) {
-    let project_name = args.value_of("project_name")
+    let project_name = args
+        .value_of("project_name")
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
     let version = args.value_of("amethyst_version").map(|v| v.to_owned());

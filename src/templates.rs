@@ -70,10 +70,7 @@ pub fn deploy(
             .into_string()
             .map_err(|_| format!("Failed to get the file name from {:?}", entry.path()))?;
 
-        let mut output_name = renaming_rules
-            .get(&file_name)
-            .cloned()
-            .unwrap_or(file_name);
+        let mut output_name = renaming_rules.get(&file_name).cloned().unwrap_or(file_name);
         let is_parsed = output_name.ends_with(LIQUID_TEMPLATE_EXTENSION);
         if is_parsed {
             let len = output_name.len();
