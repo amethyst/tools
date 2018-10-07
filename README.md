@@ -1,16 +1,16 @@
 # Amethyst Tools
 
-[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li] [![Join the chat][s4]][gc]
+[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li] [![Join us on Discord][s4]][di]
 
 [s1]: https://travis-ci.org/amethyst/tools.svg?branch=master
 [s2]: https://img.shields.io/crates/v/amethyst_tools.svg
 [s3]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
-[s4]: https://badges.gitter.im/amethyst/tools.svg
+[s4]: https://img.shields.io/discord/425678876929163284.svg?logo=discord
 
 [tc]: https://travis-ci.org/amethyst/tools/
 [ci]: https://crates.io/crates/amethyst_tools/
 [li]: https://github.com/amethyst/tools/blob/master/COPYING
-[gc]: https://gitter.im/amethyst/tools?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[di]: https://discord.gg/GnP5Whs
 
 A suite of game development tools written in [Rust][rl], intended for use with
 the [Amethyst][am] engine. This project is a *work in progress* and is very
