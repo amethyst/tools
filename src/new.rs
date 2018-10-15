@@ -1,6 +1,6 @@
-use std::path::Path;
 use std::collections::HashMap;
 use std::fs::{create_dir, remove_dir_all};
+use std::path::Path;
 
 use error::{ErrorKind, Result, ResultExt};
 use templates;
@@ -27,9 +27,13 @@ impl New {
         create_dir(path).chain_err(|| "could not create project folder")?;
 
         let mut params = templates::Parameters::new();
-        params.insert("project_name".to_owned(), templates::Value::scalar(&self.project_name));
+        params.insert(
+            "project_name".to_owned(),
+            templates::Value::scalar(&self.project_name),
+        );
 
-        if let Err(err) = templates::deploy("main", &self.version, &path, &params, &HashMap::new()) {
+        if let Err(err) = templates::deploy("main", &self.version, &path, &params, &HashMap::new())
+        {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)
         } else {

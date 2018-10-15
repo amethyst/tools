@@ -23,8 +23,7 @@ fn main() {
                     Arg::with_name("project_name")
                         .help("The directory name for the new project")
                         .required(true),
-                )
-                .arg(
+                ).arg(
                     Arg::with_name("amethyst_version")
                         .short("a")
                         .long("amethyst")
@@ -32,8 +31,7 @@ fn main() {
                         .takes_value(true)
                         .help("The requested version of Amethyst"),
                 ),
-        )
-        .subcommand(
+        ).subcommand(
             SubCommand::with_name("update")
                 .about("Checks if you can update Amethyst component")
                 .arg(
@@ -42,8 +40,7 @@ fn main() {
                         .value_name("COMPONENT_NAME")
                         .takes_value(true),
                 ),
-        )
-        .setting(AppSettings::SubcommandRequiredElseHelp)
+        ).setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {
@@ -54,7 +51,8 @@ fn main() {
 }
 
 fn exec_new(args: &ArgMatches) {
-    let project_name = args.value_of("project_name")
+    let project_name = args
+        .value_of("project_name")
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
     let version = args.value_of("amethyst_version").map(|v| v.to_owned());
@@ -62,16 +60,15 @@ fn exec_new(args: &ArgMatches) {
     let n = cli::New {
         project_name,
         version,
-        ..Default::default()
     };
 
     if let Err(e) = n.execute() {
-        handle_error(e);
+        handle_error(&e);
     } else {
         println!("Project ready!");
         println!("Checking for updates...");
         if let Err(e) = check_version() {
-            handle_error(e);
+            handle_error(&e);
         }
     }
 }
@@ -80,7 +77,7 @@ fn exec_update(args: &ArgMatches) {
     // We don't currently support checking anything other than the version of amethyst tools
     let _component_name = args.value_of("component_name").map(|c| c.to_owned());
     if let Err(e) = check_version() {
-        handle_error(e);
+        handle_error(&e);
     }
     exit(0);
 }
@@ -106,7 +103,7 @@ fn check_version() -> cli::error::Result<()> {
     }
     Ok(())
 }
-fn handle_error(e: cli::error::Error) {
+fn handle_error(e: &cli::error::Error) {
     use ansi_term::Color;
 
     eprintln!("{}: {}", Color::Red.paint("error"), e);

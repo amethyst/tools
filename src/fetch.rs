@@ -17,13 +17,15 @@ struct Versions {
 
 #[derive(Deserialize)]
 struct CrateVersion {
-    #[serde(rename = "crate")] _name: String,
-    #[serde(rename = "num")] version: semver::Version,
+    #[serde(rename = "crate")]
+    _name: String,
+    #[serde(rename = "num")]
+    version: semver::Version,
     yanked: bool,
 }
 
 pub fn get_latest_version() -> Result<String> {
-    let crate_versions = fetch_cratesio(&format!("/crates/amethyst_tools"))?;
+    let crate_versions = fetch_cratesio("/crates/amethyst_tools")?;
     let dep = crate_versions
         .versions
         .iter()
@@ -36,8 +38,8 @@ pub fn get_latest_version() -> Result<String> {
 
 fn fetch_cratesio(path: &str) -> Result<Versions> {
     let url = format!("{host}/api/v1{path}", host = REGISTRY_HOST, path = path);
-    let response =
-        get_with_timeout(&url, get_default_timeout()).chain_err(|| ErrorKind::FetchVersionFailure)?;
+    let response = get_with_timeout(&url, get_default_timeout())
+        .chain_err(|| ErrorKind::FetchVersionFailure)?;
     let version: Versions =
         json::from_reader(response).chain_err(|| ErrorKind::InvalidCratesIoJson)?;
     Ok(version)
@@ -48,11 +50,10 @@ fn get_default_timeout() -> Duration {
 }
 
 fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Response> {
-    let client = reqwest::ClientBuilder::new()?
+    let client = reqwest::ClientBuilder::new()
         .timeout(timeout)
         .proxy(reqwest::Proxy::custom(|url| {
             env_proxy::for_url(url).to_url()
-        }))
-        .build()?;
-    client.get(url)?.send()
+        })).build()?;
+    client.get(url).send()
 }
