@@ -8,7 +8,7 @@ use amethyst::{
 
 struct Example;
 
-impl<'a, 'b> SimpleState<'a, 'b> for Example {}
+impl SimpleState for Example {}
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
