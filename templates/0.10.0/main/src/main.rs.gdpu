@@ -1,5 +1,3 @@
-extern crate amethyst;
-
 use amethyst::{
     prelude::*,
     renderer::{DisplayConfig, DrawFlat, Pipeline, PosNormTex, RenderBundle, Stage},
