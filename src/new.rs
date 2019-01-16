@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fs::{create_dir, remove_dir_all};
 use std::path::Path;
+use std::process::Command;
 
 use error::{ErrorKind, Result, ResultExt};
 use templates;
@@ -37,6 +38,7 @@ impl New {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)
         } else {
+            Command::new("git").arg("init").current_dir(path).spawn()?.try_wait()?;
             Ok(())
         }
     }
