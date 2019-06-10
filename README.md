@@ -1,6 +1,7 @@
 # Amethyst Tools
 
-[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li] [![Join us on Discord][s4]][di]
+[![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li]
+[![Join us on Discord][s4]][di]
 
 [s1]: https://travis-ci.org/amethyst/tools.svg?branch=master
 [s2]: https://img.shields.io/crates/v/amethyst_tools.svg
@@ -12,11 +13,10 @@
 [li]: https://github.com/amethyst/tools/blob/master/COPYING
 [di]: https://discord.gg/GnP5Whs
 
-A suite of game development tools written in [Rust][rl], intended for use with
-the [Amethyst][am] engine. This project is a *work in progress* and is very
-incomplete; pardon the dust!
+Command-line interface for the [Amethyst][am] engine to create and deploy game
+projects. This project is a *work in progress* and is very incomplete; pardon
+the dust!
 
-[rl]: https://www.rust-lang.org/
 [am]: https://github.com/amethyst/amethyst
 
 ## Vision
@@ -37,23 +37,11 @@ like:
 * Serving as backends for various "mega-editors" provided by third parties or
   written in-house.
 
-## Toolchain
-
-At the moment, there is only one tool available in this distribution. Please
-suggest ideas for more tools on [our issue tracker][it].
-
-[it]: https://github.com/amethyst/tools/issues
-
-* [Amethyst CLI][ac] - Command-line interface for creating and deploying game
-  projects, intentionally very similar to [Cargo][ca].
-
-[ac]: https://github.com/amethyst/tools/tree/master/src/cli
-[ca]: https://github.com/rust-lang/cargo
-
 ## Installing
 
 ### Requirements
-* Ensure that you have the OpenSSL development headers installed (check for openssl-devel or something similar)
+* Ensure that you have the OpenSSL development headers installed (check for
+openssl-devel or something similar)
 
 By executing
 
@@ -76,9 +64,9 @@ amethyst new <project_name>
 We are a community project that welcomes contribution from anyone. If you're
 interested in helping out, please read the [CONTRIBUTING.md][cm] file before
 getting started. Don't know what to hack on? See the [Development Roadmap][dr]
-on our wiki, or search though [our issue tracker][it].
+on our wiki, or search through [our issue tracker][it].
 
-All contributions are assumed do be dual-licensed under MIT/Apache-2.0.
+All contributions are assumed to be dual-licensed under MIT/Apache-2.0.
 
 [cm]: https://github.com/amethyst/amethyst/blob/master/CONTRIBUTING.md
 [dr]: https://github.com/amethyst/amethyst/wiki/Roadmap
