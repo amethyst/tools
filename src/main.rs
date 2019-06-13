@@ -23,7 +23,8 @@ fn main() {
                     Arg::with_name("project_name")
                         .help("The directory name for the new project")
                         .required(true),
-                ).arg(
+                )
+                .arg(
                     Arg::with_name("amethyst_version")
                         .short("a")
                         .long("amethyst")
@@ -31,7 +32,8 @@ fn main() {
                         .takes_value(true)
                         .help("The requested version of Amethyst"),
                 ),
-        ).subcommand(
+        )
+        .subcommand(
             SubCommand::with_name("update")
                 .about("Checks if you can update Amethyst component")
                 .arg(
@@ -40,7 +42,8 @@ fn main() {
                         .value_name("COMPONENT_NAME")
                         .takes_value(true),
                 ),
-        ).setting(AppSettings::SubcommandRequiredElseHelp)
+        )
+        .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
     match matches.subcommand() {

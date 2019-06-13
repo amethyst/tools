@@ -54,6 +54,7 @@ fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Re
         .timeout(timeout)
         .proxy(reqwest::Proxy::custom(|url| {
             env_proxy::for_url(url).to_url()
-        })).build()?;
+        }))
+        .build()?;
     client.get(url).send()
 }

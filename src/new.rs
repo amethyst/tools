@@ -36,7 +36,11 @@ impl New {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)
         } else {
-            Command::new("git").arg("init").current_dir(path).spawn()?.try_wait()?;
+            Command::new("git")
+                .arg("init")
+                .current_dir(path)
+                .spawn()?
+                .try_wait()?;
             Ok(())
         }
     }
