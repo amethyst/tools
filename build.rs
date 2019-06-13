@@ -5,7 +5,7 @@ extern crate ron;
 use std::env;
 use std::fs::{read_dir, File};
 use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use ron::de::from_reader;
 
@@ -13,9 +13,9 @@ fn path(env: &str, s: &str) -> PathBuf {
     PathBuf::from(env::var(env).unwrap()).join(s)
 }
 
-fn read_template_index<P: AsRef<Path>>(p: P) -> Vec<String> {
+fn read_template_index<P: Into<PathBuf>>(p: P) -> Vec<String> {
     let mut path = PathBuf::new();
-    path.push(p);
+    path.push(p.into());
     path.push("index.ron");
     from_reader(File::open(&path).expect("Failed to open index.ron"))
         .expect("Failed to parse template index")
