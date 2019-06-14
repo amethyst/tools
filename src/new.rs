@@ -2,8 +2,8 @@ use std::fs::{create_dir, remove_dir_all};
 use std::path::Path;
 use std::process::Command;
 
-use error::{ErrorKind, Result, ResultExt};
-use templates;
+use crate::error::{ErrorKind, Result, ResultExt};
+use crate::templates;
 
 /// Options for the New subcommand. If `version` is None, then it uses
 /// the latest version available

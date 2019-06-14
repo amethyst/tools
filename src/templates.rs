@@ -5,8 +5,7 @@ use std::fs::{create_dir_all, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use error::{Result, ResultExt};
-
+use crate::error::{Result, ResultExt};
 use semver;
 
 pub use liquid::{Object as Parameters, Value};

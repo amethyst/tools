@@ -4,6 +4,7 @@ version = "0.7.6"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
+edition = "2018"
 build = "build.rs"
 
 repository = "https://github.com/ebkalderon/amethyst_tools"

@@ -1,11 +1,6 @@
 //! Amethyst CLI binary crate.
 //!
 
-extern crate amethyst_cli;
-extern crate ansi_term;
-extern crate clap;
-extern crate semver;
-
 use std::process::exit;
 
 use amethyst_cli as cli;
