@@ -28,8 +28,8 @@ impl New {
 
         let mut params = templates::Parameters::new();
         params.insert(
-            "project_name".to_owned(),
-            templates::Value::scalar(&self.project_name),
+            "project_name".into(),
+            templates::Value::scalar(self.project_name.to_owned()),
         );
 
         if let Err(err) = templates::deploy("main", &self.version, &path, &params) {
