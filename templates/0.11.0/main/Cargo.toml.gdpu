@@ -6,3 +6,8 @@ edition = "2018"
 
 [dependencies]
 amethyst = "{{ amethyst_version }}"
+
+[features]
+empty = ["amethyst/empty"]
+metal = ["amethyst/metal"]
+vulkan = ["amethyst/vulkan"]

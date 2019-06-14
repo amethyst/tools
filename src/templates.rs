@@ -27,7 +27,7 @@ pub fn deploy(
     let template_versions = template_map
         .keys()
         .map(|v| semver::Version::parse(v).unwrap());
-    let version = match version {
+    let version: String = match version {
         Some(ref ver) => semver::Version::parse(ver)
             .chain_err(|| format!("Could not parse version {}", ver))?
             .to_string(),
@@ -39,10 +39,13 @@ pub fn deploy(
     };
 
     let mut par = params.clone();
-    par.insert("amethyst_version".into(), Value::scalar(version.to_owned()));
+    par.insert("amethyst_version".into(), Value::scalar(version.clone()));
     let params = &par;
 
-    for &(path, content) in template_map.get::<str>(&version.to_owned()).unwrap().iter() {
+    let template_files = template_map.get::<str>(&version)
+        .ok_or_else(|| format!("No template for version {}", version))?;
+
+    for &(path, content) in template_files.iter() {
         let mut path = path.to_owned();
 
         let is_parsed = path.ends_with(LIQUID_TEMPLATE_EXTENSION);
