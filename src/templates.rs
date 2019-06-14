@@ -5,11 +5,10 @@ use std::fs::{create_dir_all, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use error::{Result, ResultExt};
-
+use crate::error::{Result, ResultExt};
 use semver;
 
-pub use liquid::{Object as Parameters, Value};
+pub use liquid::{value::Object as Parameters, value::Value};
 
 mod external {
     include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
@@ -23,7 +22,7 @@ pub fn deploy(
     output: &Path,
     params: &Parameters,
 ) -> Result<()> {
-    let parser = ParserBuilder::with_liquid().build();
+    let parser = ParserBuilder::with_liquid().build().unwrap();
     let template_map = external::template_files();
     let template_versions = template_map
         .keys()
@@ -40,10 +39,7 @@ pub fn deploy(
     };
 
     let mut par = params.clone();
-    par.insert(
-        "amethyst_version".to_owned(),
-        Value::scalar(version.to_owned()),
-    );
+    par.insert("amethyst_version".into(), Value::scalar(version.to_owned()));
     let params = &par;
 
     for &(path, content) in template_map.get::<str>(&version.to_owned()).unwrap().iter() {

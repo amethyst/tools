@@ -6,7 +6,7 @@ use serde_json as json;
 /// Most of this code is based off of cargo-edit's fetch code
 use std::time::Duration;
 
-use error::*;
+use crate::error::*;
 
 const REGISTRY_HOST: &str = "https://crates.io";
 

@@ -1,7 +1,5 @@
 //! Reads the `templates/` directory and includes all versions' templates as
 //! part of the binary to reduce installation footprint
-extern crate ron;
-
 use std::env;
 use std::fs::{read_dir, File};
 use std::io::Write;
