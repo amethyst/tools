@@ -77,8 +77,11 @@ If for some reason we don't have any open PRs in need of a review nor any good f
 [pr]: https://github.com/amethyst/tools/pulls
 [it]: https://github.com/amethyst/tools/issues
 
+## License
 
-All contributions are assumed to be dual-licensed under MIT/Apache-2.0.
+Amethyst is free and open source software distributed under the terms of both the [MIT License][lm] and the [Apache License 2.0][la].
 
-[cm]: https://github.com/amethyst/amethyst/blob/master/CONTRIBUTING.md
-[dr]: https://github.com/amethyst/amethyst/wiki/Roadmap
+[lm]: LICENSE-MIT
+[la]: LICENSE-APACHE
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
