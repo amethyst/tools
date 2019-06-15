@@ -12,9 +12,29 @@ addons:
     packages:
       - libasound2-dev
 rust:
-    - stable
-    - beta
-    - nightly
-script:
-    - cargo test --verbose
+  - stable
+  - beta
+  - nightly
 
+stages:
+  - check formatting
+  - lint
+  - test
+
+jobs:
+  include:
+    - stage: check formatting
+      rust: stable
+      install:
+        - rustup component add rustfmt
+      script:
+        - cargo fmt --all -- --check
+    - stage: lint
+      rust: stable
+      install:
+        - rustup component add clippy
+      script:
+        - cargo clippy --all-targets --all-features --verbose -- -D warnings
+
+script:
+  - cargo test --all
