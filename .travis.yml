@@ -23,6 +23,11 @@ addons:
       - gcc
       - binutils-dev
 
+os:
+  - linux
+  - osx
+  - windows
+
 rust:
   - stable
   - beta
