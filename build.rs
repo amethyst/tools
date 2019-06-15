@@ -1,9 +1,11 @@
 //! Reads the `templates/` directory and includes all versions' templates as
 //! part of the binary to reduce installation footprint
-use std::env;
-use std::fs::{read_dir, File};
-use std::io::Write;
-use std::path::PathBuf;
+use std::{
+    env,
+    fs::{read_dir, File},
+    io::Write,
+    path::PathBuf,
+};
 
 use ron::de::from_reader;
 

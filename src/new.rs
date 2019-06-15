@@ -1,9 +1,13 @@
-use std::fs::{create_dir, remove_dir_all};
-use std::path::Path;
-use std::process::Command;
+use std::{
+    fs::{create_dir, remove_dir_all},
+    path::Path,
+    process::Command,
+};
 
-use crate::error::{ErrorKind, Result, ResultExt};
-use crate::templates;
+use crate::{
+    error::{ErrorKind, Result, ResultExt},
+    templates,
+};
 
 /// Options for the New subcommand. If `version` is None, then it uses
 /// the latest version available

@@ -1,14 +1,16 @@
 /// Wrapper around the ``liquid`` crate to handle templating.
 use liquid::ParserBuilder;
 
-use std::fs::{create_dir_all, File};
-use std::io::Write;
-use std::path::{Path, PathBuf};
+use std::{
+    fs::{create_dir_all, File},
+    io::Write,
+    path::{Path, PathBuf},
+};
 
 use crate::error::{Result, ResultExt};
 use semver;
 
-pub use liquid::{value::Object as Parameters, value::Value};
+pub use liquid::value::{Object as Parameters, Value};
 
 mod external {
     include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
@@ -32,7 +34,6 @@ pub fn deploy(
             .chain_err(|| format!("Could not parse version {}", ver))?
             .to_string(),
         None => template_versions
-            .into_iter()
             .max()
             .ok_or("No template available")?
             .to_string(),
@@ -42,7 +43,8 @@ pub fn deploy(
     par.insert("amethyst_version".into(), Value::scalar(version.clone()));
     let params = &par;
 
-    let template_files = template_map.get::<str>(&version)
+    let template_files = template_map
+        .get::<str>(&version)
         .ok_or_else(|| format!("No template for version {}", version))?;
 
     for &(path, content) in template_files.iter() {
