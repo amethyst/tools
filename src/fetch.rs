@@ -58,3 +58,13 @@ fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Re
         .build()?;
     client.get(url).send()
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::get_latest_version;
+
+    #[test]
+    fn test_fetch() {
+        assert!(get_latest_version().is_ok());
+    }
+}
