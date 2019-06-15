@@ -61,10 +61,22 @@ amethyst new <project_name>
 
 ## Contributing
 
-We are a community project that welcomes contribution from anyone. If you're
-interested in helping out, please read the [CONTRIBUTING.md][cm] file before
-getting started. Don't know what to hack on? See the [Development Roadmap][dr]
-on our wiki, or search through [our issue tracker][it].
+**Note:** Any interaction with the Amethyst project is subject to our [Code of Conduct][cc].
+
+Amethyst is a community-based project that welcomes contributions from anyone. If you're interested in helping out, please read the [contribution guidelines][cm] before getting started.
+
+We have a [good first issue][gfi] category that groups all issues or feature requests that can be made without having an extensive knowledge of Rust or Amethyst. Working on those issues is a good, if not the best, way to learn.
+
+If you think you are not ready to code yet, you can still contribute by reviewing code written by other members of the community. Code reviews ensure that code merged into Amethyst is of the highest quality as possible. Pull requests that are available for reviews can be found [here][pr].
+
+If for some reason we don't have any open PRs in need of a review nor any good first issues (that would be a good thing), feel free to consult our [issue tracker][it].
+
+[cc]: https://github.com/amethyst/amethyst/blob/master/CODE_OF_CONDUCT.md
+[cm]: https://github.com/amethyst/amethyst/blob/master/docs/CONTRIBUTING.md
+[gfi]: https://github.com/amethyst/tools/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
+[pr]: https://github.com/amethyst/tools/pulls
+[it]: https://github.com/amethyst/tools/issues
+
 
 All contributions are assumed to be dual-licensed under MIT/Apache-2.0.
 
