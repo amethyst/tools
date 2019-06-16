@@ -1,20 +1,76 @@
 sudo: false
 language: rust
-cache: cargo
+
+cache:
+  cargo: true
+  directories:
+    - "$HOME/kcov"
+
 branches:
   only:
     - staging
     - trying
     - develop
     - master
+
 addons:
   apt:
     packages:
-      - libasound2-dev
-rust:
-    - stable
-    - beta
-    - nightly
-script:
-    - cargo test --verbose
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+      - gcc
+      - binutils-dev
 
+os:
+  - linux
+  - osx
+  - windows
+
+rust:
+  - stable
+  - beta
+  - nightly
+
+stages:
+  - check formatting
+  - lint
+  - test
+  - coverage
+
+jobs:
+  include:
+    - stage: check formatting
+      rust: stable
+      install:
+        - rustup component add rustfmt
+      script:
+        - cargo fmt --all -- --check
+    - stage: lint
+      rust: stable
+      install:
+        - rustup component add clippy
+      script:
+        - cargo clippy --all-targets --all-features --verbose -- -D warnings
+    - stage: coverage
+      rust: stable
+      script: |
+        if [ ! -d "{HOME}/kcov" ]; then
+          wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+          tar xzf master.tar.gz &&
+          cd kcov-master &&
+          mkdir build &&
+          cd build &&
+          cmake -DCMAKE_INSTALL_PREFIX=${HOME}/kcov .. &&
+          make &&
+          make install
+          cd ../.. &&
+          rm -rf kcov-master
+        fi
+        for file in target/debug/{amethyst-*,amethyst_cli-*}; do [ -x "${file}" ] || continue; mkdir -p "target/cov/$(basename $file)"; ${HOME}/kcov/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+        bash <(curl -s https://codecov.io/bash) &&
+        echo "Uploaded code coverage"
+
+script:
+  - cargo test --all

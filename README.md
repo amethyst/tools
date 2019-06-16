@@ -1,17 +1,20 @@
 # Amethyst Tools
 
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li]
-[![Join us on Discord][s4]][di]
+[![Join us on Discord][s4]][di] [![Code coverage][s5]][cc]
 
 [s1]: https://travis-ci.org/amethyst/tools.svg?branch=master
 [s2]: https://img.shields.io/crates/v/amethyst_tools.svg
 [s3]: https://img.shields.io/badge/license-MIT%2FApache-blue.svg
 [s4]: https://img.shields.io/discord/425678876929163284.svg?logo=discord
+[s5]: https://img.shields.io/codecov/c/github/amethyst/tools.svg
 
 [tc]: https://travis-ci.org/amethyst/tools/
 [ci]: https://crates.io/crates/amethyst_tools/
 [li]: https://github.com/amethyst/tools/blob/master/COPYING
 [di]: https://discord.gg/GnP5Whs
+[cc]: https://codecov.io/gh/amethyst/tools
+
 
 Command-line interface for the [Amethyst][am] engine to create and deploy game
 projects. This project is a *work in progress* and is very incomplete; pardon
