@@ -6,7 +6,7 @@ use std::{
 
 use crate::{
     error::{ErrorKind, Result, ResultExt},
-    templates,
+    templates::{self, Template},
 };
 
 /// Options for the New subcommand. If `version` is None, then it uses
@@ -36,7 +36,7 @@ impl New {
             templates::Value::scalar(self.project_name.to_owned()),
         );
 
-        if let Err(err) = templates::deploy("main", &self.version, &path, &params) {
+        if let Err(err) = templates::deploy(Template::Project, &self.version, &path, &params) {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)
         } else {

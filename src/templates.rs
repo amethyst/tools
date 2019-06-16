@@ -2,6 +2,7 @@
 use liquid::ParserBuilder;
 
 use std::{
+    fmt::{self, Display, Formatter},
     fs::{create_dir_all, File},
     io::Write,
     path::{Path, PathBuf},
@@ -16,10 +17,22 @@ mod external {
     include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
 }
 
+pub enum Template {
+    Project,
+}
+
+impl Display for Template {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self {
+            Template::Project => write!(f, "project"),
+        }
+    }
+}
+
 const LIQUID_TEMPLATE_EXTENSION: &str = ".gdpu";
 
 pub fn deploy(
-    template: &str,
+    template: Template,
     version: &Option<String>,
     output: &Path,
     params: &Parameters,
@@ -45,9 +58,11 @@ pub fn deploy(
 
     let template_files = template_map
         .get::<str>(&version)
-        .ok_or_else(|| format!("No template for version {}", version))?;
+        .ok_or_else(|| format!("No template for version {}", version))?
+        .get::<str>(&template.to_string())
+        .unwrap();
 
-    for &(path, content) in template_files.iter() {
+    for &(path, content) in template_files {
         let mut path = path.to_owned();
 
         let is_parsed = path.ends_with(LIQUID_TEMPLATE_EXTENSION);
@@ -85,11 +100,14 @@ pub fn deploy(
             out = out.replace("\r\n", "\n");
         }
 
+        let remove_path_str = match template {
+            Template::Project => "project",
+        };
         let path: PathBuf = output
             .join(path)
             .iter()
             .enumerate()
-            .filter_map(|(_, e)| if e != template { Some(e) } else { None })
+            .filter_map(|(_, e)| if e != remove_path_str { Some(e) } else { None })
             .collect();
 
         create_dir_all(path.parent().expect("Path has no parent"))?;

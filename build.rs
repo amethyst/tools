@@ -8,12 +8,13 @@ use std::{
 };
 
 use ron::de::from_reader;
+use std::collections::HashMap;
 
 fn path(env: &str, s: &str) -> PathBuf {
     PathBuf::from(env::var(env).unwrap()).join(s)
 }
 
-fn read_template_index<P: Into<PathBuf>>(p: P) -> Vec<String> {
+fn read_template_index<P: Into<PathBuf>>(p: P) -> HashMap<String, Vec<String>> {
     let mut path = PathBuf::new();
     path.push(p.into());
     path.push("index.ron");
@@ -33,20 +34,30 @@ fn main() {
     let mut source_code = String::from(
         "use std::collections::HashMap;
     
-pub fn template_files() -> HashMap<&'static str, Vec<(&'static str, &'static str)>> {
+pub fn template_files(
+) -> HashMap<&'static str, HashMap<&'static str, Vec<(&'static str, &'static str)>>> {
     let mut map = HashMap::new();
+
 ",
     );
-    for (version, index) in indices {
-        source_code.push_str(&format!("    map.insert({:?}, ", version));
-        source_code.push_str(&index.iter().fold("vec![".to_owned(), |s, file| {
-            format!(
-                "{}({:?}, include_str!(concat!(env!(\"CARGO_MANIFEST_DIR\"),\
-                 concat!(\"/templates/\", concat!(concat!({:?}, \"/\"), {:?}))))), ",
-                s, file, version, file,
-            )
-        }));
-        source_code.push_str("]);\n")
+    for (version, template_map) in indices {
+        for (template_type, index) in template_map {
+            source_code.push_str("    let mut inner_map = HashMap::new();\n");
+            source_code.push_str(&format!("    inner_map.insert({:?}, ", template_type));
+            source_code.push_str(&index.iter().fold("vec![".to_owned(), |s, file| {
+                format!(
+                    "{}({:?}, \
+                     include_str!(concat!(env!(\"CARGO_MANIFEST_DIR\"), \
+                     concat!(\"/templates/\", concat!(concat!({:?}, \"/\"), {:?}))))), ",
+                    s, file, version, file,
+                )
+            }));
+            source_code.push_str("]);\n");
+            source_code.push_str(&format!(
+                "    map.insert({:?}, inner_map.to_owned());\n\n",
+                version
+            ));
+        }
     }
     source_code += "    map\n}\n";
     File::create(&path("OUT_DIR", "_template_files.rs"))

@@ -1,6 +1,8 @@
-[
-    "main/.gitignore",
-    "main/Cargo.toml.gdpu",
-    "main/src/main.rs.gdpu",
-    "main/resources/display_config.ron.gdpu",
-]
+{
+    "project": [
+        "project/.gitignore",
+        "project/Cargo.toml.gdpu",
+        "project/src/main.rs.gdpu",
+        "project/resources/display_config.ron.gdpu",
+    ]
+}
