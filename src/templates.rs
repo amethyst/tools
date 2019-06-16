@@ -13,6 +13,7 @@ use semver;
 
 pub use liquid::value::{Object as Parameters, Value};
 
+#[allow(clippy::all)]
 mod external {
     include!(concat!(env!("OUT_DIR"), "/_template_files.rs"));
 }
