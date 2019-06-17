@@ -42,10 +42,6 @@ like:
 
 ## Installing
 
-### Requirements
-* Ensure that you have the OpenSSL development headers installed (check for
-openssl-devel or something similar)
-
 By executing
 
 ```sh
