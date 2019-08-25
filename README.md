@@ -60,7 +60,7 @@ amethyst new <project_name>
 
 ## Contributing
 
-**Note:** Any interaction with the Amethyst project is subject to our [Code of Conduct][cc].
+**Note:** Any interaction with the Amethyst project is subject to our [Code of Conduct][coc].
 
 Amethyst is a community-based project that welcomes contributions from anyone. If you're interested in helping out, please read the [contribution guidelines][cm] before getting started.
 
@@ -70,7 +70,7 @@ If you think you are not ready to code yet, you can still contribute by reviewin
 
 If for some reason we don't have any open PRs in need of a review nor any good first issues (that would be a good thing), feel free to consult our [issue tracker][it].
 
-[cc]: https://github.com/amethyst/amethyst/blob/master/CODE_OF_CONDUCT.md
+[coc]: https://github.com/amethyst/amethyst/blob/master/CODE_OF_CONDUCT.md
 [cm]: https://github.com/amethyst/amethyst/blob/master/docs/CONTRIBUTING.md
 [gfi]: https://github.com/amethyst/tools/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
 [pr]: https://github.com/amethyst/tools/pulls
