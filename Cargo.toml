@@ -1,6 +1,6 @@
 [package]
 name = "amethyst_tools"
-version = "0.9.0"
+version = "0.9.1"
 authors = ["Eyal Kalderon <ebkalderon@gmail.com>"]
 description = "Game development tools for the Amethyst engine"
 keywords = ["game", "engine", "tool", "editor", "amethyst"]
@@ -25,7 +25,7 @@ ansi_term = "0.11.0"
 clap = "2.33.0"
 env_proxy = "0.3.1"
 error-chain = "0.12.1"
-liquid = "0.18.2"
+liquid = "0.19.0"
 regex = "1.1.7"
 serde = "1.0.92"
 serde_derive = "1.0.92"
