@@ -1,0 +1,7 @@
+[
+    "main/.gitignore",
+    "main/README.md.gdpu",
+    "main/Cargo.toml.gdpu",
+    "main/src/main.rs.gdpu",
+    "main/config/display.ron.gdpu",
+]
