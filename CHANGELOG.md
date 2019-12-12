@@ -5,6 +5,12 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.9.1
+
+* Updated `liquid-value` to allow `amethyst_tools` to build ([#96])
+
+[#96]: https://github.com/amethyst/tools/issues/96
+
 ## 0.7.0
 
 * Complete rewrite of the tool
