@@ -39,8 +39,8 @@ pub fn get_latest_version() -> Result<String> {
 
 fn fetch_cratesio(path: &str) -> Result<Versions> {
     let url = format!("{host}/api/v1{path}", host = REGISTRY_HOST, path = path);
-    let response = get_with_timeout(&url, DEFAULT_TIMEOUT)
-        .chain_err(|| ErrorKind::FetchVersionFailure)?;
+    let response =
+        get_with_timeout(&url, DEFAULT_TIMEOUT).chain_err(|| ErrorKind::FetchVersionFailure)?;
     let version: Versions =
         json::from_reader(response).chain_err(|| ErrorKind::InvalidCratesIoJson)?;
     Ok(version)
