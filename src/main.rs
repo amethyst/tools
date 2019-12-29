@@ -53,7 +53,7 @@ fn exec_new(args: &ArgMatches) {
         .value_of("project_name")
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
-    let version = args.value_of("amethyst_version").map(|v| v.to_owned());
+    let version = args.value_of("amethyst_version").map(ToOwned::to_owned);
 
     let n = cli::New {
         project_name,
@@ -73,7 +73,7 @@ fn exec_new(args: &ArgMatches) {
 
 fn exec_update(args: &ArgMatches) {
     // We don't currently support checking anything other than the version of amethyst tools
-    let _component_name = args.value_of("component_name").map(|c| c.to_owned());
+    let _component_name = args.value_of("component_name").map(ToOwned::to_owned);
     if let Err(e) = check_version() {
         handle_error(&e);
     }

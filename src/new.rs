@@ -36,7 +36,7 @@ impl New {
             templates::Value::scalar(self.project_name.to_owned()),
         );
 
-        if let Err(err) = templates::deploy("main", &self.version, &path, &params) {
+        if let Err(err) = templates::deploy("main", &self.version, path, &params) {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)
         } else {
@@ -51,8 +51,9 @@ impl New {
 }
 
 impl Default for New {
+    #[must_use]
     fn default() -> Self {
-        New {
+        Self {
             project_name: "game".to_owned(),
             version: None,
         }

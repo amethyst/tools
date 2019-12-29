@@ -9,6 +9,7 @@ use std::time::Duration;
 use crate::error::*;
 
 const REGISTRY_HOST: &str = "https://crates.io";
+const DEFAULT_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Deserialize)]
 struct Versions {
@@ -33,20 +34,16 @@ pub fn get_latest_version() -> Result<String> {
         .ok_or(ErrorKind::FetchVersionFailure)?
         .version
         .to_string();
-    Ok(dep.to_owned())
+    Ok(dep)
 }
 
 fn fetch_cratesio(path: &str) -> Result<Versions> {
     let url = format!("{host}/api/v1{path}", host = REGISTRY_HOST, path = path);
-    let response = get_with_timeout(&url, get_default_timeout())
+    let response = get_with_timeout(&url, DEFAULT_TIMEOUT)
         .chain_err(|| ErrorKind::FetchVersionFailure)?;
     let version: Versions =
         json::from_reader(response).chain_err(|| ErrorKind::InvalidCratesIoJson)?;
     Ok(version)
-}
-
-fn get_default_timeout() -> Duration {
-    Duration::from_secs(5)
 }
 
 fn get_with_timeout(url: &str, timeout: Duration) -> reqwest::Result<reqwest::Response> {

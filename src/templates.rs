@@ -39,9 +39,9 @@ pub fn deploy(
             .to_string(),
     };
 
-    let mut par = params.clone();
-    par.insert("amethyst_version".into(), Value::scalar(version.clone()));
-    let params = &par;
+    let mut params = params.clone();
+    params.insert("amethyst_version".into(), Value::scalar(version.clone()));
+    let params = &params;
 
     let template_files = template_map
         .get::<str>(&version)
@@ -89,7 +89,7 @@ pub fn deploy(
             .join(path)
             .iter()
             .enumerate()
-            .filter_map(|(_, e)| if e != template { Some(e) } else { None })
+            .filter_map(|(_, e)| if e == template { None } else { Some(e) })
             .collect();
 
         create_dir_all(path.parent().expect("Path has no parent"))?;
