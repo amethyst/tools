@@ -52,7 +52,7 @@ jobs:
       install:
         - rustup component add clippy
       script:
-        - cargo clippy --all-targets --all-features --verbose -- -D warnings
+        - cargo clippy --all-targets --all-features --verbose -- -D clippy::pedantic -D warnings
     - stage: coverage
       rust: stable
       script: |
