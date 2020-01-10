@@ -41,6 +41,14 @@ pub fn deploy(
 
     let mut params = params.clone();
     params.insert("amethyst_version".into(), Value::scalar(version.clone()));
+    #[cfg(target_os = "macos")]
+    {
+        params.insert("graphics_backend".into(), Value::scalar("metal"));
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        params.insert("graphics_backend".into(), Value::scalar("vulkan"));
+    }
     let params = &params;
 
     let template_files = template_map

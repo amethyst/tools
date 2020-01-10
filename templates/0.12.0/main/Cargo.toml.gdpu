@@ -8,6 +8,7 @@ edition = "2018"
 amethyst = "{{ amethyst_version }}"
 
 [features]
+default = ["{{ graphics_backend }}"]
 empty = ["amethyst/empty"]
 metal = ["amethyst/metal"]
 vulkan = ["amethyst/vulkan"]
