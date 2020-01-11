@@ -37,7 +37,7 @@ impl New {
             templates::Value::scalar(self.project_name.to_owned()),
         );
 
-        if let Err(err) = templates::deploy("main", &self.version, &self.no_defaults, path, &params)
+        if let Err(err) = templates::deploy("main", &self.version, self.no_defaults, path, &params)
         {
             remove_dir_all(path).chain_err(|| "could not clean up project folder")?;
             Err(err)

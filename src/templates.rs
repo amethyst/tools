@@ -21,7 +21,7 @@ const LIQUID_TEMPLATE_EXTENSION: &str = ".gdpu";
 pub fn deploy(
     template: &str,
     version: &Option<String>,
-    no_defaults: &bool,
+    no_defaults: bool,
     output: &Path,
     params: &Parameters,
 ) -> Result<()> {
