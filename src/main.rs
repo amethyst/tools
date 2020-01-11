@@ -60,10 +60,7 @@ fn exec_new(args: &ArgMatches) {
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
     let version = args.value_of("amethyst_version").map(ToOwned::to_owned);
-    let no_defaults = match args.occurrences_of("no_defaults") {
-        0 => false,
-        1 | _ => true,
-    };
+    let no_defaults = args.is_present("no_defaults");
 
     let n = cli::New {
         project_name,
