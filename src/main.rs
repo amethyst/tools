@@ -26,6 +26,12 @@ fn main() {
                         .value_name("AMETHYST_VERSION")
                         .takes_value(true)
                         .help("The requested version of Amethyst"),
+                )
+                .arg(
+                    Arg::with_name("no_defaults")
+                        .short("n")
+                        .long("no-defaults")
+                        .help("Do not autodetect graphics backend into Cargo.toml"),
                 ),
         )
         .subcommand(
@@ -54,10 +60,15 @@ fn exec_new(args: &ArgMatches) {
         .expect("Bug: project_name is required");
     let project_name = project_name.to_owned();
     let version = args.value_of("amethyst_version").map(ToOwned::to_owned);
+    let no_defaults = match args.occurrences_of("no_defaults") {
+        0 => false,
+        1 | _ => true,
+    };
 
     let n = cli::New {
         project_name,
         version,
+        no_defaults,
     };
 
     if let Err(e) = n.execute() {
