@@ -20,6 +20,7 @@ fn main() -> amethyst::Result<()> {
 
     let app_root = application_root_dir()?;
 
+    let assets_dir = app_root.join("assets");
     let config_dir = app_root.join("config");
     let display_config_path = config_dir.join("display.ron");
 
@@ -35,7 +36,7 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?;
 
-    let mut game = Application::new("/", MyState, game_data)?;
+    let mut game = Application::new(assets_dir, MyState, game_data)?;
     game.run();
 
     Ok(())
