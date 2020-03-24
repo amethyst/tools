@@ -1,0 +1,4 @@
+(
+  title: "{{ project_name }}",
+  dimensions: Some((500, 500)),
+)
