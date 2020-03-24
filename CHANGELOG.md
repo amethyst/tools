@@ -5,6 +5,12 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.10.0
+
+* Added 0.15.0 template, which chooses a default graphics backend based on the developer's operating system. ([#104])
+
+[#96]: https://github.com/amethyst/tools/pulls/104
+
 ## 0.9.1
 
 * Updated `liquid-value` to allow `amethyst_tools` to build ([#96])
