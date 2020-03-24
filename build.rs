@@ -22,7 +22,7 @@ fn read_template_index<P: Into<PathBuf>>(p: P) -> Vec<String> {
 }
 
 fn main() {
-    let f = PathBuf::from(path("CARGO_MANIFEST_DIR", "templates"));
+    let f = path("CARGO_MANIFEST_DIR", "templates");
     let indices = read_dir(&f).unwrap().map(Result::unwrap).map(|v| {
         (
             v.file_name().into_string().unwrap(),
@@ -32,7 +32,7 @@ fn main() {
 
     let mut source_code = String::from(
         "use std::collections::HashMap;
-    
+
 pub fn template_files() -> HashMap<&'static str, Vec<(&'static str, &'static str)>> {
     let mut map = HashMap::new();
 ",
