@@ -1,0 +1,14 @@
+[package]
+name = "{{ project_name }}"
+version = "0.1.0"
+authors = []
+edition = "2018"
+
+[dependencies]
+amethyst = "{{ amethyst_version }}"
+
+[features]
+default = ["{{ graphics_backend }}"]
+empty = ["amethyst/empty"]
+metal = ["amethyst/metal"]
+vulkan = ["amethyst/vulkan"]
