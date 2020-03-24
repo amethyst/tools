@@ -9,7 +9,7 @@ adheres to [Semantic Versioning][sv].
 
 * Added 0.15.0 template, which chooses a default graphics backend based on the developer's operating system. ([#104])
 
-[#96]: https://github.com/amethyst/tools/pulls/104
+[#104]: https://github.com/amethyst/tools/pull/104
 
 ## 0.9.1
 
