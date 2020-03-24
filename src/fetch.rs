@@ -25,6 +25,11 @@ struct CrateVersion {
     yanked: bool,
 }
 
+/// Returns the latest `amethyst` crate version available.
+///
+/// # Errors
+///
+/// Returns an error when failing to fetch the `amethyst` version.
 pub fn get_latest_version() -> Result<String> {
     let crate_versions = fetch_cratesio("/crates/amethyst_tools")?;
     let dep = crate_versions

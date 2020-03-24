@@ -18,6 +18,11 @@ pub struct New {
 }
 
 impl New {
+    /// Creates the project template.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the project directory already exists, or when failing to create the directory.
     pub fn execute(&self) -> Result<()> {
         self.execute_inner()
             .chain_err(|| ErrorKind::New(self.project_name.clone()))
