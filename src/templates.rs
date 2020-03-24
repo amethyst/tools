@@ -21,6 +21,7 @@ const LIQUID_TEMPLATE_EXTENSION: &str = ".gdpu";
 pub fn deploy(
     template: &str,
     version: &Option<String>,
+    no_defaults: bool,
     output: &Path,
     params: &Parameters,
 ) -> Result<()> {
@@ -41,6 +42,18 @@ pub fn deploy(
 
     let mut params = params.clone();
     params.insert("amethyst_version".into(), Value::scalar(version.clone()));
+
+    if !no_defaults {
+        #[cfg(target_os = "macos")]
+        {
+            params.insert("graphics_backend".into(), Value::scalar("metal"));
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            params.insert("graphics_backend".into(), Value::scalar("vulkan"));
+        }
+    }
+
     let params = &params;
 
     let template_files = template_map
