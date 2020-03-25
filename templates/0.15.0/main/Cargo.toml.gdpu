@@ -8,7 +8,19 @@ edition = "2018"
 amethyst = "{{ amethyst_version }}"
 
 [features]
+{%  if graphics_backend -%}
+# This sets default graphics backend for your project, it was automatically detected based
+# on your operating system. It's a great starting point into your journey with amethyst,
+# but if you wish to share this with other people, you may wan to consider removing it
+# and appending `--feature {{ graphics_backend }}` to your commands, letting people on
+# different platforms to chose different ones.
+# Alternatively you can leave the default on, and other users can still disable it by
+# adding `--no-default-features` to their commands, followed by `--feature` of their choice.
+#
+# To read more about it, check out documentation available at:
+# https://book.amethyst.rs/stable/appendices/c_feature_gates.html?highlight=vulkan#graphics-features
 default = ["{{ graphics_backend }}"]
+{% endif -%}
 empty = ["amethyst/empty"]
 metal = ["amethyst/metal"]
 vulkan = ["amethyst/vulkan"]
