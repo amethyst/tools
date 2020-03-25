@@ -5,6 +5,12 @@ adheres to [Semantic Versioning][sv].
 
 [sv]: http://semver.org/
 
+## 0.10.1
+
+* Update 0.12->0.15 templates to honor no-defaults options in regards of default graphics backend. ([#105])
+
+[#105]: https://github.com/amethyst/tools/pull/110
+
 ## 0.10.0
 
 * Added 0.15.0 template, which chooses a default graphics backend based on the developer's operating system. ([#104])
