@@ -50,7 +50,7 @@ impl New {
             Command::new("git")
                 .arg("init")
                 .current_dir(path)
-                .spawn()?
+                .spawn().chain_err(|| "failed to execute git command (is it installed?)")?
                 .try_wait()?;
             Ok(())
         }
