@@ -8,7 +8,6 @@ use std::{
 };
 
 use crate::error::{Result, ResultExt};
-use semver;
 
 pub use liquid::value::{Object as Parameters, Value};
 
