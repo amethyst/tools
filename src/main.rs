@@ -7,6 +7,8 @@ use amethyst_cli as cli;
 use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
 
 fn main() {
+    eprintln!("WARNING! amethyst_tools has been deprecated and will stop working in future versions.");
+    eprintln!("For more details please see https://community.amethyst.rs/t/end-of-life-for-amethyst-tools-the-cli/1656");
     let matches = App::new("Amethyst CLI")
         .author("Created by Amethyst developers")
         .version(env!("CARGO_PKG_VERSION"))
