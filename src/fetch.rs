@@ -1,6 +1,3 @@
-use env_proxy;
-use reqwest;
-use semver;
 use serde_json as json;
 /// Fetches the latest version of Amethyst by pulling from crates.io
 /// Most of this code is based off of cargo-edit's fetch code

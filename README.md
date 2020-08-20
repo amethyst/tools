@@ -1,3 +1,9 @@
+# DEPRECATED
+
+This project has been deprecated. For more details please see [this forum post].
+
+[this forum post]: https://community.amethyst.rs/t/end-of-life-for-amethyst-tools-the-cli/1656
+
 # Amethyst Tools
 
 [![Build Status][s1]][tc] [![Crates.io][s2]][ci] [![MIT/Apache License][s3]][li]
